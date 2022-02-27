@@ -36,6 +36,15 @@ class AddSupplyAddGrocToSupply extends AddSupplyEvent {
   List<Object?> get props => [grocery];
 }
 
+class AddSupplyRemoveGrocFromSupply extends AddSupplyEvent {
+  AddSupplyRemoveGrocFromSupply(this.grocId);
+
+  int grocId;
+
+  @override
+  List<Object?> get props => [grocId];
+}
+
 class AddSupplySUBMIT extends AddSupplyEvent { }
 
 

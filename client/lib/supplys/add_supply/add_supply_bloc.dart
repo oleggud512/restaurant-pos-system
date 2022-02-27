@@ -66,11 +66,10 @@ class AddSupplyBloc extends Bloc {
         _inState.add(AddSupplyLoadedState(suppliers));
         break;
       
-      // case AddSupplySUBMIT:
-      //   if (supply.supplierId != null && supply.groceries.isNotEmpty) {
-      //     await repo.addSupply(supply);
-      //   }
-      //   break;
+      case AddSupplyRemoveGrocFromSupply:
+        supply.groceries.removeWhere((element) => element.grocId == event.grocId);
+        _inState.add(AddSupplyLoadedState(suppliers));
+        break;
       default:
     }
   }

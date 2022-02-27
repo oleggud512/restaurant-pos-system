@@ -60,19 +60,26 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
                             height: 200,
                             child: ListView(
                               children:[
-                                for (int i = 0; i < bloc.supply.groceries.length; i++) SizedBox(
-                                  height: 50,
-                                  child: Row(
-                                    children: [
-                                      Expanded(child: Text(bloc.supply.groceries[i].grocName!)),
-                                      Expanded(
-                                        child: TextField(
-                                          onChanged: (newVal) {
-                                            bloc.inEvent.add(AddSupplyNewCount(i, newVal));
-                                          },
+                                for (int i = 0; i < bloc.supply.groceries.length; i++) PopupMenuButton(
+                                  itemBuilder: (context) => [
+                                    PopupMenuItem(child: Text("delete"), onTap: () {
+                                      bloc.inEvent.add(AddSupplyRemoveGrocFromSupply(bloc.supply.groceries[i].grocId!));
+                                    },)
+                                  ],
+                                  child: SizedBox(
+                                    height: 50,
+                                    child: Row(
+                                      children: [
+                                        Expanded(child: Text(bloc.supply.groceries[i].grocName!)),
+                                        Expanded(
+                                          child: TextField(
+                                            onChanged: (newVal) {
+                                              bloc.inEvent.add(AddSupplyNewCount(i, newVal));
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                    ]
+                                      ]
+                                    ),
                                   ),
                                 ),
                                 PopupMenuButton<Grocery>(
@@ -107,7 +114,6 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
                             ElevatedButton(
                               child: Text("supply"),
                               onPressed: () async {
-                                print(bloc.supply.toJson());
                                 if (bloc.supply.supplierId != null && bloc.supply.groceries.isNotEmpty) {
                                   await Provider.of<Repo>(context, listen: false).addSupply(bloc.supply);
                                 }

@@ -54,31 +54,25 @@ class StoreBloc extends Bloc {
     switch (event.runtimeType) {
 
       case StoreLoadEvent:
-        print("StoreLoadEvent");
         _inState.add(StoreLoadingState());
         suppliers = await repo.getSuppliers();
         groceries = await repo.getGroceries();
         _inState.add(StoreLoadedState(suppliers, groceries)); 
-        print(outState.last);
-        print(outState.first);
         break;
 
       case StoreReloadGroceriesEvent:
-        print("StoreReloadGroceriesEvent");
         _inState.add(StoreGroceriesLoadingState());
         groceries = await repo.getGroceries(like: event.like);
         _inState.add(StoreLoadedState(suppliers, groceries));
         break;
       
       default:
-        print("error with event");
         break;
     }
   }
 
   @override
   void dispose() {
-    print("DISPOSE FROM StoreBloc");
     _eventCont.close();
     _stateCont.close();
   }

@@ -1,4 +1,5 @@
 import 'package:client/supplys/add_supply/add_supply.dart';
+import 'package:client/supplys/show_supply/show_supply.dart';
 import 'package:flutter/material.dart';
 import 'package:client/supplys/supplys_bloc.dart';
 import 'package:client/supplys/supplys_states_events.dart';
@@ -20,13 +21,12 @@ class SupplysPage extends StatefulWidget {
 class _SupplysPageState extends State<SupplysPage> {
   @override
   Widget build(BuildContext context) {
-    var bloc = BlocProvider.of<SupplysBloc>(context);
     return BlocProvider<SupplysBloc>(
       blocBuilder: () => SupplysBloc(Provider.of<Repo>(context)),
       blocDispose: (SupplysBloc bloc) => bloc.dispose(),
       child: Builder(
         builder: (context) {
-          
+          var bloc = BlocProvider.of<SupplysBloc>(context);
           return Scaffold(
             appBar: AppBar(title: const Center(
               child: Text("supplys")), 
@@ -47,7 +47,16 @@ class _SupplysPageState extends State<SupplysPage> {
                       children: [
                         for (int i = 0; i < bloc.supplys.length; i++) InkWell(
                           onTap: () {
-                    
+                            // bloc.supplys[i].groceries.forEach((element) {
+                            //   print(element.grocName);
+                            //   print(element.grocCount);
+                            // });
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ShowSupplyDialog(supply: bloc.supplys[i]);
+                              }
+                            );
                           },
                           child: Text(
                             bloc.supplys[i].supplyId.toString() + " " + 

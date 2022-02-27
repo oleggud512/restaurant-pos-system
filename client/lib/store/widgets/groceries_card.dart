@@ -36,7 +36,7 @@ class _GroceriesCardState extends State<GroceriesCard> {
             builder: (BuildContext context, AsyncSnapshot<StoreState> snapshot) {
               var state = snapshot.data;
               if (state is StoreGroceriesLoadingState || state is StoreLoadingState) {
-                print("state is StoreGroceriesLoadingState or  StoreLoadEvent");
+                // print("state is StoreGroceriesLoadingState or  StoreLoadEvent");
                 return const Expanded(child: Center(child: CircularProgressIndicator()));
               } else if (state is StoreLoadedState) {
                 return Expanded(

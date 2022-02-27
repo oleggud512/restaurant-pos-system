@@ -49,7 +49,7 @@ class Grocery {
     String grocName;
     double? supGrocPrice; // GroceriesCard doesn't need this
     String grocMeasure;
-    int avaCount;
+    double avaCount;
     List<Supplier> suppliedBy;
 
     factory Grocery.fromJson(Map<String, dynamic> json) => Grocery(
@@ -102,58 +102,9 @@ class MiniGroc {
 }
 
 
-// class Supply {
-//   int supplyId;
-//   Supplier supplier;
-//   String date;
-//   List<SupplyGroc> groceries;
-
-//   Supply({
-//     required this.supplier,
-//     required this.supplyId,
-//     required this.date,
-//     required this.groceries
-//   });
-
-  
-// }
-
-
-
-// class SupplyGroc {
-//   int? grocId;
-//   int? grocCount;
-//   String? grocName;
-
-//   SupplyGroc({
-//     required this.grocId,
-//     required this.grocCount,
-//     required this.grocName,
-//   });
-
-//   factory SupplyGroc.fromJson(Map<String, dynamic> m) => SupplyGroc(
-//     grocId: m['groc_id'],
-//     grocCount: m['groc_count'],
-//     grocName: m['groc_name']
-//   );
-
-//   factory SupplyGroc.empty() => SupplyGroc(
-//     grocId: null,
-//     grocCount: null,
-//     grocName: null
-//   );
-
-//   Map<String, dynamic> toJson() => {
-//     'groc_id': grocId,
-//     'groc_count': grocCount
-//   };
-
-// }
-
-
 Supply supplyFromJson(String str) => Supply.fromJson(json.decode(str));
 
-List<Supply> listSupplyFromJson(String str){ print(str);return List<Supply>.from(jsonDecode(str).map((x) => Supply.fromJson(x)));}
+List<Supply> listSupplyFromJson(String str){ return List<Supply>.from(jsonDecode(str).map((x) => Supply.fromJson(x)));}
 
 String supplyToJson(Supply data) => json.encode(data.toJson());
 
@@ -219,14 +170,25 @@ class SupplyGrocery {
       grocCount: 0
     );
 
-    factory SupplyGrocery.fromJson(Map<String, dynamic> json) => SupplyGrocery(
-        grocId: json["groc_id"],
-        grocName: json["groc_name"],
-        grocCount: json["groc_count"].toDouble(),
-    );
+    factory SupplyGrocery.fromJson(Map<String, dynamic> json) {
+      return SupplyGrocery(
+          grocId: json["groc_id"],
+          grocName: json["groc_name"],
+          grocCount: json["groc_count"].toDouble(),
+      );
+    }
 
     Map<String, dynamic> toJson() => {
         "groc_id": grocId,
         "groc_count": grocCount!.toInt(),
     };
+}
+
+
+enum Filter { price, date, supplier }
+
+enum Sort { asc, desc }
+
+class FilterSort {
+  
 }

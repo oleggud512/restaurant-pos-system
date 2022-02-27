@@ -30,10 +30,11 @@ class MyApp extends StatelessWidget {
         blocBuilder: () => MainBloc(),
         blocDispose: (MainBloc bloc) => bloc.dispose(),
         child: MaterialApp(
+          
           title: 'Flutter Demo',
           theme: ThemeData(
             primarySwatch: Colors.pink,
-      
+            // brightness: Brightness.dark
           ),
           
           onGenerateRoute: myRouter.onGenerateRoute,

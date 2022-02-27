@@ -20,7 +20,7 @@ class _SuppliersCardState extends State<SuppliersCard> {
   @override
   Widget build(BuildContext context) {
     StoreBloc bloc = BlocProvider.of<StoreBloc>(context);
-    print(bloc);
+    // print(bloc);
     return Card(
       elevation: 2.0,
       child: StreamBuilder(
