@@ -8,6 +8,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `add_groc_to_certain_supply`(
 BEGIN
 	INSERT INTO list_supplys(supply_id, groc_id, groc_count) 
     VALUES (sup_id, g_id, g_count);
+    UPDATE groceries SET ava_count = ava_count + g_count;
 END$$
 DELIMITER ;
 
