@@ -42,16 +42,17 @@ FROM list_supplys lsup
 								AND sup_gr.groc_id = lsup.groc_id
 GROUP BY supplys.supply_id;
 
-
 CREATE VIEW supply_groceries_view AS 
-SELECT supply_id, groc_id, groc_count
-FROM list_supplys
+SELECT ls.supply_id, ls.groc_id, ls.groc_count, gr.groc_name
+FROM list_supplys ls JOIN groceries gr USING(groc_id);
 
+CREATE VIEW max_values_view AS 
+SELECT MAX(supply_date) as max_date, MIN(supply_date) as min_date, MAX(summ) as max_summ
+FROM supply_view;
 
-
-
-
-
+CREATE VIEW mini_suppliers_view AS 
+SELECT sup.supplier_id, sup.supplier_name
+FROM suppliers sup;
 
 
 
