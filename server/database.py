@@ -1,3 +1,5 @@
+import datetime
+from xmlrpc.client import DateTime
 from mysql.connector import connect, MySQLConnection
 from mysql.connector.cursor_cext import CMySQLCursor
 from pprint import pprint
@@ -17,7 +19,10 @@ def cur_to_dict(cur: CMySQLCursor):
     for row in data:
         row_dict = {}
         for col_name, col_value in zip(cur.column_names, row):
-            row_dict[col_name] = col_value
+            if type(col_value) == datetime.date: 
+                row_dict[col_name] = col_value.isoformat()
+            else:
+                row_dict[col_name] = col_value
         result.append(row_dict)
     return result
 

@@ -1,3 +1,5 @@
+import 'package:client/services/models.dart';
+import 'package:client/supplys/supplys.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:client/router.dart';
@@ -92,7 +94,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      )
+      ), 
     );
   }
 }

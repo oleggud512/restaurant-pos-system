@@ -16,7 +16,7 @@ class SupplysBloc extends Bloc {
   Stream<SupplyState> get outState => _stateCont.stream;
   Sink<SupplyState> get _inState => _stateCont.sink;
 
-
+  FilterSortData? fsd;
   late List<Supply> supplys;
   Repo repo;
 
@@ -29,7 +29,35 @@ class SupplysBloc extends Bloc {
     switch (event.runtimeType) {
       case SupplyLoadEvent:
         _inState.add(SupplyLoadingState());
-        supplys = await repo.getSupplys();
+        if (fsd == null || fsd!.fPriceFrom <= fsd!.fPriceTo 
+            && fsd!.fDateFrom.year <= fsd!.fDateTo.year 
+            && fsd!.fDateFrom.month <= fsd!.fDateTo.month
+            && fsd!.fDateFrom.day <= fsd!.fDateTo.day) {
+          fsd ??= await repo.getFilterSortData();
+          supplys = await repo.getSupplys(fsd: fsd);
+        }
+        _inState.add(SupplyLoadedState());
+        break;
+      case SupplySortCollumnChangedEvent:
+        fsd?.sortCollumn = event.sortCollumn;
+        _inState.add(SupplyLoadedState());
+        break;
+      case SupplySortDirectionChangedEvent:
+        fsd?.sortDirection = event.sortDirection;
+        _inState.add(SupplyLoadedState());
+        break;
+      case SupplyFromPriceChangedEvent:
+        fsd?.fPriceFrom = (event.fromPrice.isNotEmpty)?double.parse(event.fromPrice):0.0;
+        break;
+      case SupplyToPriceChangedEvent:
+        fsd?.fPriceTo = (event.toPrice.isNotEmpty)?double.parse(event.toPrice):0.0;
+        break;
+      case SupplyFromDateChangedEvent:
+        fsd?.fDateFrom = event.fromDate;
+        _inState.add(SupplyLoadedState());
+        break;
+      case SupplyToDateChangedEvent:
+        fsd?.fDateTo = event.toDate;
         _inState.add(SupplyLoadedState());
         break;
       default:

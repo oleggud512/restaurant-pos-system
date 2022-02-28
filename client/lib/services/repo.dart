@@ -79,8 +79,9 @@ class Repo {
     return 'success';
   }
 
-  Future<List<Supply>> getSupplys() async {
-    var responce = await dio.get(ROOT + 'supplys');
+  Future<List<Supply>> getSupplys({FilterSortData? fsd}) async {
+    print(fsd?.toJson());
+    var responce = await dio.get(ROOT + 'supplys', queryParameters: (fsd != null) ? fsd.toJson() : null);
     return Future.delayed(const Duration(seconds: 1), () => listSupplyFromJson(responce.data));
   }
 
@@ -94,6 +95,10 @@ class Repo {
     return Future.delayed(const Duration(seconds: 1), () => responce.data);
   }
 
+  Future<FilterSortData> getFilterSortData() async {
+    var responce = await dio.get(ROOT + 'supplys/filter_sort');
+    return Future.delayed(const Duration(seconds: 1), () => filterSortDataFromJson(responce.data));
+  }
 }
 /*
 mport 'dart:convert';

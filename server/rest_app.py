@@ -4,7 +4,7 @@ from flask import Flask, redirect, render_template, request, jsonify, url_for, a
 from base64 import decodebytes
 from mysql.connector import connect, MySQLConnection
 from mysql.connector.cursor_cext import CMySQLCursor
-from json import dumps
+from simplejson import dumps
 
 from database import cur_to_dict
 
@@ -55,7 +55,7 @@ def get_groceries():
         groc['supplied_by'] = cur_to_dict(cur)
 
 
-    return dumps(groceries, indent=4)
+    return dumps(groceries, indent=4, use_decimal=True)
 
 
 @app.route('/restaurant/v1/groceries/<int:groc_id>', methods=['GET'])
@@ -80,7 +80,7 @@ def get_grocery(groc_id):
     grocery['supplied_by'] = cur_to_dict(cur)
     cur.close()
 
-    return dumps(grocery, indent=4)
+    return dumps(grocery, indent=4, use_decimal=True)
 
 
 @app.route('/restaurant/v1/groceries/<int:groc_id>', methods=['PUT'])
@@ -194,7 +194,7 @@ def get_suppliers(supplier_id=None):
         supplier["groceries"] = list(filter(lambda groc: groc['supplier_id'] == supplier['supplier_id'], groceries))
     
     cur.close()
-    return dumps(suppliers, indent=4) 
+    return dumps(suppliers, indent=4, use_decimal=True) 
 
 
 @app.route("/restaurant/v1/suppliers", methods=['POST'])
@@ -242,24 +242,65 @@ def delete_supplier(supplier_id):
 @app.route("/restaurant/v1/supplys", methods=['GET'])
 def get_supplys(supply_id=None):
     cur: CMySQLCursor = con.cursor()
+    sort_collumn = request.args['sort_collumn']
+    sort_direction = request.args['sort_direction']
+    price_from = request.args['price_from']
+    price_to = request.args['price_to']
+    date_from = request.args['date_from']
+    date_to = request.args['date_to']
+    if request.args['suppliers'] != '':
+        suppliers = list(map(lambda x: int(x), request.args['suppliers'].split('+')))
+    else: 
+        suppliers = [0]
+    print(tuple(suppliers))
+    sql = f"""
+        SELECT supply_id, supply_date, supplier_id, supplier_name, summ 
+        FROM supply_view 
+        WHERE supply_date >= DATE(\'{date_from}\') 
+            AND supply_date <= DATE(\'{date_to}\')
+            AND summ >= {price_from}
+            AND summ <= {price_to} 
+            AND supplier_id IN {tuple(suppliers) if len(suppliers) > 1 else '('+str(suppliers[0])+')'}
+        ORDER BY {sort_collumn} {sort_direction}
+    """
 
-    cur.execute(f"""
-        SELECT * FROM supply_view
-    """)
+    cur.execute(sql)
 
     supplys = cur_to_dict(cur)
 
     cur.execute(f"""
-        SELECT * FROM supply_groceries_view
+        SELECT supply_id, groc_id, groc_count, groc_name
+        FROM supply_groceries_view
     """)
 
     groceries = cur_to_dict(cur)
     
     for supply in supplys:
         supply['groceries'] = list(filter(lambda groc: groc['supply_id'] == supply['supply_id'], groceries))
-        supply['supply_date'] = supply['supply_date'].isoformat()
+
+    return dumps(supplys, indent=4, use_decimal=True)
+
+
+@app.route("/restaurant/v1/supplys/filter_sort", methods=['get'])
+def filter_sort():
+    cur: CMySQLCursor = con.cursor()
     
-    return dumps(supplys, indent=4)
+    cur.execute("""
+        SELECT max_date, max_summ, min_date
+        FROM max_values_view
+    """)
+
+    filter_sort_data = cur_to_dict(cur)[0]
+
+    cur.execute("""
+        SELECT supplier_id, supplier_name
+        FROM mini_suppliers_view
+    """)
+
+    filter_sort_data['suppliers'] = cur_to_dict(cur)
+    print(filter_sort_data)
+    return dumps(filter_sort_data, indent=4, use_decimal=True)
+
 
 @app.route("/restaurant/v1/supplys", methods=['POST'])
 def add_supply():

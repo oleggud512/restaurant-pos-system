@@ -38,8 +38,8 @@ class _AddSupplierDialogState extends State<AddSupplierDialog> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                widget.repo.addSupplier(nameCont.text, contactsCont.text);
+              onPressed: () async {
+                await widget.repo.addSupplier(nameCont.text, contactsCont.text);
                 Navigator.pop(context);
               }, 
               child: const Text("додати")

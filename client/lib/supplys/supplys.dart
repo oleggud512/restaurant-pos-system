@@ -9,6 +9,7 @@ import 'package:responsive_grid/responsive_grid.dart';
 import '../bloc_provider.dart';
 import '../services/models.dart';
 import '../services/repo.dart';
+import 'filter_sort_drawer/filter_sort_drawer.dart';
 
 
 class SupplysPage extends StatefulWidget {
@@ -27,23 +28,26 @@ class _SupplysPageState extends State<SupplysPage> {
       child: Builder(
         builder: (context) {
           var bloc = BlocProvider.of<SupplysBloc>(context);
-          return Scaffold(
-            appBar: AppBar(title: const Center(
-              child: Text("supplys")), 
-              leading: BackButton(
-                onPressed: () => Navigator.pop(context)
-              )
-            ),
-            body: Container(
-              padding: const EdgeInsets.all(10),
-              child: StreamBuilder(
-                stream: bloc.outState,
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  var state = snapshot.data;
-                  if (state is SupplyLoadingState) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is SupplyLoadedState) {
-                    return ListView(
+          return StreamBuilder(
+            stream: bloc.outState,
+            builder: (context, snapshot) {
+              var state = snapshot.data;
+              if (state is SupplyLoadingState) {
+                return Scaffold(
+                  appBar: AppBar(),
+                  body: const Center(child: CircularProgressIndicator())
+                );
+              } else if (state is SupplyLoadedState) {
+                return Scaffold(
+                  appBar: AppBar(title: const Center(
+                    child: Text("supplys")), 
+                    leading: BackButton(
+                      onPressed: () => Navigator.pop(context)
+                    )
+                  ),
+                  body: Container(
+                    padding: const EdgeInsets.all(10),
+                    child: ListView(
                       children: [
                         for (int i = 0; i < bloc.supplys.length; i++) InkWell(
                           onTap: () {
@@ -76,31 +80,15 @@ class _SupplysPageState extends State<SupplysPage> {
                           child: const Text("add supply")
                         )
                       ],
-                    );
-                  }
-                  return const Center(child: Text("wrong"),);
-                },
-              ),
-            ),
-            endDrawer: SortFilterDrawer(), 
+                    ),
+                  ),
+                  endDrawer: SortFilterDrawer(), 
+                );
+              } return Container();
+            }
           );
         }
       )
     );  
-  }
-}
-
-class SortFilterDrawer extends StatefulWidget {
-  SortFilterDrawer({Key? key}) : super(key: key);
-
-  @override
-  State<SortFilterDrawer> createState() => _SortFilterDrawerState();
-}
-
-class _SortFilterDrawerState extends State<SortFilterDrawer> {
-  @override
-  Widget build(BuildContext context) {
-    var bloc = BlocProvider.of<SupplysBloc>(context);
-    return Drawer(child: Container());
   }
 }

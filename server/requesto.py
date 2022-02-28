@@ -52,4 +52,7 @@ def get_groc():
     a = requests.get(ROOT + 'groceries/3')
     print(a.text)
 
-get_suppliers()
+# get_suppliers()
+
+a = requests.get(ROOT + "/supplys/filter_sort")
+print(a.text)
