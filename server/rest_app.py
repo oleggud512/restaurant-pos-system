@@ -228,10 +228,10 @@ def delete_supplier(supplier_id):
         WHERE supplier_id = {supplier_id}
     """) 
     
-    cur.execute(f"""
-        DELETE FROM suppliers_groc
-        WHERE supplier_id = {supplier_id}
-    """)
+    # cur.execute(f"""
+    #     DELETE FROM suppliers_groc
+    #     WHERE supplier_id = {supplier_id}
+    # """)
     
     con.commit()
     cur.close()
@@ -281,7 +281,7 @@ def get_supplys(supply_id=None):
     return dumps(supplys, indent=4, use_decimal=True)
 
 
-@app.route("/restaurant/v1/supplys/filter_sort", methods=['get'])
+@app.route("/restaurant/v1/supplys/filter_sort", methods=['GET'])
 def filter_sort():
     cur: CMySQLCursor = con.cursor()
     
@@ -319,6 +319,14 @@ def add_supply():
         cur.execute(f"CALL add_groc_to_certain_supply({supply_id}, {groc['groc_id']}, {groc['groc_count']})")
         con.commit()
 
+    cur.close()
+    return 'success'
+
+@app.route('/restaurant/v1/settings/delete_info_about_deleted_suppliers', methods=['DELETE'])
+def delete_inf_ab_del_s():
+    cur: CMySQLCursor = con.cursor()
+    cur.execute('CALL del_info_about_del_suppliers()')
+    con.commit()
     cur.close()
     return 'success'
     

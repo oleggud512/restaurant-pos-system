@@ -1,3 +1,4 @@
+import 'package:client/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:client/main.dart';
 import 'package:client/store/store.dart';
@@ -21,6 +22,11 @@ class MyRouter {
         return MaterialPageRoute<void>(
           settings: const RouteSettings(name: '/supplys'),
           builder: (context) => SupplysPage()
+        );
+      case '/settings':
+        return MaterialPageRoute<void>(
+          settings: const RouteSettings(name: '/settings'),
+          builder: (context) =>SettingsPage()
         );
       default:
         return MaterialPageRoute<void>(

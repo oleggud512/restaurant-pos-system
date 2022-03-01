@@ -20,7 +20,6 @@ BEGIN
 END$$
 DELIMITER ;
 
-
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_supply`(supl_id INT)
 BEGIN 
@@ -28,6 +27,7 @@ BEGIN
     WHERE supply_id = supl_id;
 END$$
 DELIMITER ;
+
 
 CREATE VIEW supply_view AS 
 SELECT supplys.supply_id, 
@@ -42,23 +42,50 @@ FROM list_supplys lsup
 								AND sup_gr.groc_id = lsup.groc_id
 GROUP BY supplys.supply_id;
 
+
 CREATE VIEW supply_groceries_view AS 
 SELECT ls.supply_id, ls.groc_id, ls.groc_count, gr.groc_name
 FROM list_supplys ls JOIN groceries gr USING(groc_id);
 
+
 CREATE VIEW max_values_view AS 
 SELECT MAX(supply_date) as max_date, MIN(supply_date) as min_date, MAX(summ) as max_summ
 FROM supply_view;
+
 
 CREATE VIEW mini_suppliers_view AS 
 SELECT sup.supplier_id, sup.supplier_name
 FROM suppliers sup;
 
 
+DELIMITER //
+CREATE PROCEDURE del_info_about_del_suppliers()
+BEGIN
+	DELETE FROM suppliers
+    WHERE supplier_name = 'deleted';
+END //
+DELIMITER ;
 
+DELIMITER //
+CREATE TRIGGER del_all_info_about_supplier
+BEFORE DELETE ON suppliers
+FOR EACH ROW
+BEGIN
+	DELETE FROM suppliers_groc
+    WHERE supplier_id = old.supplier_id;
+    DELETE FROM supplys # дальше вызывает триггер на удаление из list_supplys
+    WHERE supplier_id = old.supplier_id;
+END //
+DELIMITER ;
 
-
-
-
+DELIMITER //
+CREATE TRIGGER on_delete_supply
+BEFORE DELETE ON supplys
+FOR EACH ROW
+BEGIN 
+	DELETE FROM list_supplys
+    WHERE supply_id = old.supply_id;
+END //
+DELIMITER ;
 
 

@@ -99,6 +99,11 @@ class Repo {
     var responce = await dio.get(ROOT + 'supplys/filter_sort');
     return Future.delayed(const Duration(seconds: 1), () => filterSortDataFromJson(responce.data));
   }
+
+  Future<String> delInfoDelSuppliers() async {
+    var responce = await dio.delete(ROOT + 'settings/delete_info_about_deleted_suppliers');
+    return Future.delayed(const Duration(seconds: 1), () => responce.data);
+  }
 }
 /*
 mport 'dart:convert';

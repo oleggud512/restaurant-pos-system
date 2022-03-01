@@ -95,6 +95,12 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ), 
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.settings),
+        onPressed: () {
+          Navigator.pushNamed(context, '/settings');
+        },
+      ),
     );
   }
 }
