@@ -27,7 +27,7 @@ class _StorePageState extends State<StorePage> {
       blocBuilder: () => StoreBloc(Provider.of<Repo>(context)),
       blocDispose: (StoreBloc bloc) => bloc.dispose(),
       child: Scaffold(
-        appBar: AppBar(title: const Center(child: Text("склад || добавить сортировку в grocery и в поиске, удалять поставщиков и удалять ингредиенты"))),
+        appBar: AppBar(title: const Center(child: Text("склад || удалять ингредиенты"))),
         body: Container(
           padding: const EdgeInsets.all(8),
           child: Row(

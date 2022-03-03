@@ -248,6 +248,7 @@ def get_supplys(supply_id=None):
     price_to = request.args['price_to']
     date_from = request.args['date_from']
     date_to = request.args['date_to']
+
     if request.args['suppliers'] != '':
         suppliers = list(map(lambda x: int(x), request.args['suppliers'].split('+')))
     else: 
@@ -312,13 +313,6 @@ def add_supply():
     """)
     supply_id = cur.lastrowid
     con.commit()
-    # cur.execute("""
-    #     SELECT supply_id
-    #     FROM supplys
-    #     ORDER BY supply_id DESC
-    #     LIMIT 1
-    # """)
-    # supply_id = cur.fetchall()[0][0]
     for groc in request.json['groceries']:
         cur.execute(f"""
             CALL add_groc_to_certain_supply(
@@ -332,6 +326,16 @@ def add_supply():
     cur.close()
     return 'success'
 
+
+@app.route("/restaurant/v1/supplys/<int:supply_id>", methods=['DELETE'])
+def delete_supply(supply_id):
+    cur: CMySQLCursor = con.cursor()
+    cur.execute(f'CALL delete_supply({supply_id})')
+    con.commit()
+    cur.close()
+    return 'success'
+
+
 @app.route('/restaurant/v1/settings/delete_info_about_deleted_suppliers', methods=['DELETE'])
 def delete_inf_ab_del_s():
     cur: CMySQLCursor = con.cursor()
@@ -339,7 +343,7 @@ def delete_inf_ab_del_s():
     con.commit()
     cur.close()
     return 'success'
-    
+
 
 if __name__ == '__main__':
     app.run()

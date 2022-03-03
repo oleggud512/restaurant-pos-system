@@ -70,7 +70,7 @@ class _GroceriesCardState extends State<GroceriesCard> {
                         title: Text(state.groceries[index].grocName),
                         subtitle: Text(state.groceries[index].avaCount.toString() + 
                           ((state.groceries[index].grocMeasure == 'gram') ? 
-                            '  (грам)' : '  (літр)')),
+                            '  (kg)' : '  (l)')),
                         onTap: () async {
                           // диалог из которого мы можем изменить имя, грам/литр и количество
                           await showDialog(

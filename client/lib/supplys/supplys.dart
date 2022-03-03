@@ -52,7 +52,19 @@ class _SupplysPageState extends State<SupplysPage> {
                       children: [
                         for (int i = 0; i < bloc.supplys.length; i++) SupplyContainer(
                           supply: bloc.supplys[i], 
-                          view: View.list
+                          view: View.list,
+                          onTap: () async {
+                            bool reload = await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ShowSupplyDialog(supply: bloc.supplys[i]);
+                              }
+                            );
+                            if (reload) {
+                              bloc.inEvent.add(SupplyLoadEvent());
+                            }
+                          }
+                          
                         ),
                         AddSupplyContainer(bloc: bloc, view: View.list)
                       ],
@@ -61,7 +73,18 @@ class _SupplysPageState extends State<SupplysPage> {
                       children: [
                         for (int i = 0; i < bloc.supplys.length; i++) SupplyContainer(
                           supply: bloc.supplys[i],
-                          view: View.grid
+                          view: View.grid,
+                          onTap: () async {
+                            bool reload = await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ShowSupplyDialog(supply: bloc.supplys[i]);
+                              }
+                            );
+                            if (reload) {
+                              bloc.inEvent.add(SupplyLoadEvent());
+                            }
+                          }
                         ),
                         AddSupplyContainer(bloc: bloc, view: View.grid)
                       ],
@@ -76,6 +99,7 @@ class _SupplysPageState extends State<SupplysPage> {
       )
     );  
   }
+
 
   AppBar buildAppBar() {
     return AppBar(

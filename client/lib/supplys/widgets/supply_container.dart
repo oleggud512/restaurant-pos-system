@@ -7,10 +7,11 @@ import '../supplys_states_events.dart';
 
 
 class SupplyContainer extends StatelessWidget {
-  SupplyContainer({Key? key, required this.supply, required this.view}) : super(key: key);
+  SupplyContainer({Key? key, required this.supply, required this.view, required this.onTap}) : super(key: key);
 
   Supply supply;
   View view;
+  void Function()? onTap;
 
   TextStyle style = const TextStyle(
     fontWeight: FontWeight.bold
@@ -21,14 +22,7 @@ class SupplyContainer extends StatelessWidget {
     return Card(
       elevation: 3.0,
       child: InkWell(
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return ShowSupplyDialog(supply: supply);
-            }
-          );
-        },
+        onTap: onTap,
         child: Container(
           padding: const EdgeInsets.all(10),
           width: 300, 

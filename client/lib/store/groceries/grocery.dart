@@ -52,6 +52,7 @@ class _GroceryDialogState extends State<GroceryDialog> {
                           buildText(context, state, bloc),
                           buildTable(context, bloc),
                           buildCount(context, state, bloc),
+                          const SizedBox(height: 10),
                           buildButtons(context, state, bloc),
                         ]
                       )
@@ -82,7 +83,7 @@ class _GroceryDialogState extends State<GroceryDialog> {
           const SizedBox(width: 10),
           Expanded(
             child: Center(
-              child: Text(state.grocery.grocMeasure, style: Theme.of(context).textTheme.headline6)
+              child: Text((state.grocery.grocMeasure == 'gram')? "кг": "литр", style: Theme.of(context).textTheme.headline6)
             ),
           )
         ],

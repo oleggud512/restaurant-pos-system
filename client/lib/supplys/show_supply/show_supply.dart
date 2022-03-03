@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../services/models.dart';
+import '../../services/repo.dart';
 
 class ShowSupplyDialog extends StatelessWidget {
   ShowSupplyDialog({Key? key, required this.supply}) : super(key: key);
@@ -14,7 +16,7 @@ class ShowSupplyDialog extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         width: 500,
         height: 500,
-        child: ListView(
+        child: Column(
           children: [
             SizedBox(
               child: Center(
@@ -39,6 +41,19 @@ class ShowSupplyDialog extends StatelessWidget {
                   ]
                 )
               ]
+            ), 
+            const Spacer(),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed:() async {
+                    await Provider.of<Repo>(context, listen: false).deleteSupply(supply.supplyId!);
+                    Navigator.pop(context, true);
+                  },
+                  child: const Icon(Icons.delete)
+                ),
+                const Spacer()
+              ],
             )
           ]
         )

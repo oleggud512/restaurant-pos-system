@@ -18,8 +18,8 @@ class GramLiterDropdown extends StatelessWidget {
       ),
       value: value,
       items: const [
-        DropdownMenuItem(child: Text("литр"), value: "liter"),
-        DropdownMenuItem(child: Text("грам"), value: "gram"),
+        DropdownMenuItem(child: Text("лiтр"), value: "liter"),
+        DropdownMenuItem(child: Text("кiлограм"), value: "gram"),
       ],
       onChanged: onChanged
     );
