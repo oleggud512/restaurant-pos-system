@@ -40,7 +40,7 @@ def get_groceries():
     cur.execute(f"""
         SELECT groc_id, groc_name, groc_measure, ava_count
         FROM groceries
-        WHERE groc_name LIKE '{request.args["like"]}%'
+        WHERE groc_name LIKE '%{request.args["like"]}%'
     """)
 
     groceries = cur_to_dict(cur)
@@ -252,7 +252,7 @@ def get_supplys(supply_id=None):
         suppliers = list(map(lambda x: int(x), request.args['suppliers'].split('+')))
     else: 
         suppliers = [0]
-    print(tuple(suppliers))
+
     sql = f"""
         SELECT supply_id, supply_date, supplier_id, supplier_name, summ 
         FROM supply_view 
@@ -269,13 +269,13 @@ def get_supplys(supply_id=None):
     supplys = cur_to_dict(cur)
 
     cur.execute(f"""
-        SELECT supply_id, groc_id, groc_count, groc_name
+        SELECT supply_id, groc_id, groc_count, groc_name, groc_price
         FROM supply_groceries_view
     """)
 
     groceries = cur_to_dict(cur)
     
-    for supply in supplys:
+    for supply in supplys: # присваивание поставкам их продуктов, указаных в list_supplys
         supply['groceries'] = list(filter(lambda groc: groc['supply_id'] == supply['supply_id'], groceries))
 
     return dumps(supplys, indent=4, use_decimal=True)
@@ -289,7 +289,7 @@ def filter_sort():
         SELECT max_date, max_summ, min_date
         FROM max_values_view
     """)
-
+    
     filter_sort_data = cur_to_dict(cur)[0]
 
     cur.execute("""
@@ -306,17 +306,27 @@ def filter_sort():
 def add_supply():
     cur: CMySQLCursor = con.cursor()
     pprint(request.json)
-    cur.execute(f"CALL add_supply({request.json['supplier_id']})")
-    con.commit()
-    cur.execute("""
-        SELECT supply_id
-        FROM supplys
-        ORDER BY supply_id DESC
-        LIMIT 1
+    cur.execute(f"""
+        INSERT INTO supplys(supplier_id, summ) 
+        VALUES ({request.json['supplier_id']}, {request.json['summ']})
     """)
-    supply_id = cur.fetchall()[0][0]
+    supply_id = cur.lastrowid
+    con.commit()
+    # cur.execute("""
+    #     SELECT supply_id
+    #     FROM supplys
+    #     ORDER BY supply_id DESC
+    #     LIMIT 1
+    # """)
+    # supply_id = cur.fetchall()[0][0]
     for groc in request.json['groceries']:
-        cur.execute(f"CALL add_groc_to_certain_supply({supply_id}, {groc['groc_id']}, {groc['groc_count']})")
+        cur.execute(f"""
+            CALL add_groc_to_certain_supply(
+                {supply_id}, 
+                {groc['groc_id']}, 
+                {groc['groc_count']}
+            )
+        """)
         con.commit()
 
     cur.close()

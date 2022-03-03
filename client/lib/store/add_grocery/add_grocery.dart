@@ -26,37 +26,52 @@ class _AddGroceryDialogState extends State<AddGroceryDialog> {
         width: 300,
         height: 400,
         alignment: Alignment.center,
-        child: Column(
-          children: [
-            const Text("додати інгрідієнт"),
-            MyTextField(
-              hintText: "введіть назву",
-              onChanged: (newVal) {
-                widget.groc.grocName = newVal;
-              },
-            ),
-            GramLiterDropdown(
-              value: widget.groc.grocMeasure,
-              onChanged: (newVal) {
-                setState(() {
-                  widget.groc.grocMeasure = newVal!;
-                });
-              }
-            ),
-            MyTextField(
-              hintText: 'введіть кількість',
-              onChanged: (newVal) {
-                widget.groc.avaCount = int.parse(newVal);
-              },
-            ),
-            TextButton(
-              child: Text("додати"),
-              onPressed: () {
-                widget.repo.addGrocery(widget.groc);
-                Navigator.pop(context);
-              },
-            )
-          ]
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 10,),
+              Center(child: Text("додати інгрідієнт", style: Theme.of(context).textTheme.headline6)),
+              const SizedBox(height: 10,),
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: "назва",
+                  border: OutlineInputBorder()
+                ),
+                onChanged: (newVal) {
+                  widget.groc.grocName = newVal;
+                },
+              ),
+              const SizedBox(height: 10,),
+              GramLiterDropdown(
+                value: widget.groc.grocMeasure,
+                onChanged: (newVal) {
+                  setState(() {
+                    widget.groc.grocMeasure = newVal!;
+                  });
+                }
+              ),
+              const SizedBox(height: 10,),
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: "кількість",
+                  border: OutlineInputBorder()
+                ),
+                onChanged: (newVal) {
+                  widget.groc.avaCount = int.parse(newVal);
+                },
+              ),
+              const Spacer(),
+              ElevatedButton(
+                child: Text("додати", style: TextStyle(fontSize: 15)),
+                onPressed: () async {
+                  await widget.repo.addGrocery(widget.groc);
+                  Navigator.pop(context);
+                },
+              )
+            ]
+          ),
         )
       )
     );

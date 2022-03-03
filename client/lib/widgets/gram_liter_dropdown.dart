@@ -12,7 +12,10 @@ class GramLiterDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
+    return DropdownButtonFormField<String>(
+      decoration: const InputDecoration(
+        border: OutlineInputBorder()
+      ),
       value: value,
       items: const [
         DropdownMenuItem(child: Text("литр"), value: "liter"),

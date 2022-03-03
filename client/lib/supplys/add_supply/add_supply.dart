@@ -35,94 +35,41 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
                   if (state is AddSupplyLoadingState) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is AddSupplyLoadedState) {
-                    return ListView(
-                      children: [
-                        const Text("supply"),
-                        DropdownButton<Supplier>(
-                          value: (bloc.supplier != null) ? bloc.supplier : null,
-                          hint: const Text("choose supplier"),
-                          items: [
-                            const DropdownMenuItem(child: Text("none"), value: null),
-                            for (int i = 0; i < state.suppliers.length; i++) DropdownMenuItem(
-                              child: Text(state.suppliers[i].supplierName),
-                              value: state.suppliers[i]
-                            )
-                          ],
-                          onChanged: (newVal) {
-                            bloc.inEvent.add(AddSupplySupplierSelectedEvent(newVal));
-                          }
-                        ),
-                        Container(
-                          color: Colors.lightBlue,
-                          child: (bloc.supplier != null) ? Container(
-                            padding: const EdgeInsets.all(10),
-                            color: Colors.green[200],
-                            height: 200,
-                            child: ListView(
-                              children:[
-                                for (int i = 0; i < bloc.supply.groceries.length; i++) PopupMenuButton(
-                                  itemBuilder: (context) => [
-                                    PopupMenuItem(child: Text("delete"), onTap: () {
-                                      bloc.inEvent.add(AddSupplyRemoveGrocFromSupply(bloc.supply.groceries[i].grocId!));
-                                    },)
-                                  ],
-                                  child: SizedBox(
-                                    height: 50,
-                                    child: Row(
-                                      children: [
-                                        Expanded(child: Text(bloc.supply.groceries[i].grocName!)),
-                                        Expanded(
-                                          child: TextField(
-                                            onChanged: (newVal) {
-                                              bloc.inEvent.add(AddSupplyNewCount(i, newVal));
-                                            },
-                                          ),
-                                        ),
-                                      ]
-                                    ),
-                                  ),
-                                ),
-                                PopupMenuButton<Grocery>(
-                                  itemBuilder: (context) {
-                                    return [
-                                      for (int i = 0; i < bloc.supplier!.groceries!.length; i++) PopupMenuItem(
-                                        child: Text(
-                                          bloc.supplier!.groceries![i].grocName + " || " + 
-                                          bloc.supplier!.groceries![i].supGrocPrice.toString()
-                                        ),
-                                         value: bloc.supplier!.groceries![i],
-                                      )
-                                    ];
-                                  },
-                                  onSelected: (newVal) {
-                                    bloc.inEvent.add(AddSupplyAddGrocToSupply(newVal));
-                                  },
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    color: Colors.red,
-                                    child: const Icon(Icons.add)
-                                  ),
-                                )
-                              ]
-                            )
-                          ) : const Text("select supplier")
-                        ),
-                        Row(
-                          children: [
-                            Text("summ: ${bloc.summ}"), 
-                            const Spacer(),
-                            ElevatedButton(
-                              child: Text("supply"),
-                              onPressed: () async {
-                                if (bloc.supply.supplierId != null && bloc.supply.groceries.isNotEmpty) {
-                                  await Provider.of<Repo>(context, listen: false).addSupply(bloc.supply);
-                                }
+                    return Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Center(
+                            child: Text("supply", style: Theme.of(context).textTheme.headline6)
+                          ),
+                          buildDropdownSumm(bloc, state),
+                          Expanded(
+                            child: SupplyConsistsContainer(
+                              child: (bloc.supplier != null) ? buildSupplyContent(bloc) : Center(
+                                child: Text("select supplier", style: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20
+                                ))
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            child: Text("supply"),
+                            onPressed: () async {
+                              if (bloc.supply.supplierId != null && bloc.supply.groceries.isNotEmpty &&
+                                bloc.supply.groceries.where(
+                                  (element) => element.grocCount == null || element.grocCount == 0).isEmpty
+                                ) {
+                                await Provider.of<Repo>(context, listen: false).addSupply(bloc.supply);
                                 Navigator.pop(context);
                               }
-                            )
-                          ],
-                        )
-                      ],
+                              
+                            }
+                          )
+                        ],
+                      ),
                     );
                   } return Container();
                 }
@@ -131,6 +78,103 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
           );
         }
       )
+    );
+  }
+
+  Widget buildDropdownSumm(AddSupplyBloc bloc, dynamic state) {
+    return Row(
+      children: [
+        DropdownButton<Supplier>(
+          value: (bloc.supplier != null) ? bloc.supplier : null,
+          hint: const Text("choose supplier"),
+          items: [
+            const DropdownMenuItem(child: Text("none"), value: null),
+            for (int i = 0; i < state.suppliers.length; i++) DropdownMenuItem(
+              child: Text(state.suppliers[i].supplierName),
+              value: state.suppliers[i]
+            )
+          ],
+          onChanged: (newVal) {
+            bloc.inEvent.add(AddSupplySupplierSelectedEvent(newVal));
+          }
+        ),
+        const Spacer(),
+        Text("summ: ${bloc.supply.summ}")
+      ],
+    );
+  }
+
+  Widget buildSupplyContent(AddSupplyBloc bloc) {
+    return ListView(
+      children:[
+        for (int i = 0; i < bloc.supply.groceries.length; i++) PopupMenuButton(
+          itemBuilder: (context) => [
+            PopupMenuItem(child: Text("delete"), onTap: () {
+              bloc.inEvent.add(AddSupplyRemoveGrocFromSupply(bloc.supply.groceries[i].grocId!));
+            },)
+          ],
+          child: Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: Text(bloc.supply.groceries[i].grocName!, style: const TextStyle(
+                  fontWeight: FontWeight.bold
+                ))
+              ),
+              Expanded(
+                child: TextField(
+                  onChanged: (newVal) {
+                    bloc.inEvent.add(AddSupplyNewCount(i, newVal));
+                  },
+                ),
+              ),
+            ]
+          ),
+        ),
+        PopupMenuButton<Grocery>(
+          itemBuilder: (context) {
+            return [
+              for (int i = 0; i < bloc.supplier!.groceries!.length; i++) PopupMenuItem(
+                child: Text(
+                  bloc.supplier!.groceries![i].grocName + " || " + 
+                  bloc.supplier!.groceries![i].supGrocPrice.toString()
+                ),
+                  value: bloc.supplier!.groceries![i],
+              )
+            ];
+          },
+          onSelected: (newVal) {
+            bloc.inEvent.add(AddSupplyAddGrocToSupply(newVal));
+          },
+          child: Card(
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            child: Container(
+              alignment: Alignment.center,
+              child: const Icon(Icons.add)
+            ),
+          ),
+        )
+      ]
+    );
+  }
+}
+
+
+class SupplyConsistsContainer extends StatelessWidget {
+  SupplyConsistsContainer({Key? key, this.child}) : super(key: key);
+
+  Widget? child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
+        borderRadius: BorderRadius.circular(10)
+      ),
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: child
     );
   }
 }

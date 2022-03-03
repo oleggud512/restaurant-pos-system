@@ -43,7 +43,8 @@ class StoreBloc extends Bloc {
   Repo repo;
   List<Supplier> suppliers = [];
   List<Grocery> groceries = [];
-  // bool groceriesSortDesc = true;
+
+  Sorting grocSortNow = Sorting.desc;
 
   StoreBloc(this.repo) {
     _eventCont.stream.listen((event) {_handleEvent(event);});
@@ -66,6 +67,29 @@ class StoreBloc extends Bloc {
         _inState.add(StoreLoadedState(suppliers, groceries));
         break;
       
+      case StoreSortGrocEvent:
+        grocSortNow = event.direction;
+        groceries.sort((a, b) {
+          if (grocSortNow == Sorting.desc) {
+            if (a.avaCount == b.avaCount) {
+              return 0;
+            } else if (a.avaCount > b.avaCount) {
+              return -1;
+            } else if (a.avaCount < b.avaCount) {
+              return 1;
+            }
+          } else if (grocSortNow == Sorting.asc) {
+            if (a.avaCount == b.avaCount) {
+              return 0;
+            } else if (a.avaCount < b.avaCount) {
+              return -1;
+            } else if (a.avaCount > b.avaCount) {
+              return 1;
+            }
+          } return 0; // never occures
+        });
+        _inState.add(StoreLoadedState(suppliers, groceries));
+        break;
       default:
         break;
     }

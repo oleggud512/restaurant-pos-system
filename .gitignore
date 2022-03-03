@@ -30,6 +30,7 @@
 /client/.pub-cache/
 /client/.pub/
 /client/build/
+/client/lib/TODO.txt
 
 # Web related
 /client/lib/generated_plugin_registrant.dart
@@ -46,3 +47,4 @@
 /client/android/app/release
 
 /server/__pycache__
+/server/Bla.png

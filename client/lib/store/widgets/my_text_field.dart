@@ -17,6 +17,7 @@ class MyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
+        height: 60,
         margin: const EdgeInsets.all(8.0),
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
@@ -29,7 +30,7 @@ class MyTextField extends StatelessWidget {
         child: TextFormField(
           decoration: const InputDecoration(
             border: InputBorder.none,
-            // hintText: 'введіть назву інгредієнту',
+            hintText: 'введіть назву інгредієнту',
           ),
           onChanged: onChanged,
           controller: controller,

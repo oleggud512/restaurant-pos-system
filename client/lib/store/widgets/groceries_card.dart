@@ -1,3 +1,4 @@
+import 'package:client/services/models.dart';
 import 'package:flutter/material.dart';
 
 import 'package:client/store/groceries/grocery.dart';
@@ -26,10 +27,31 @@ class _GroceriesCardState extends State<GroceriesCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          MyTextField( 
-            onChanged: (newVal) {
-              bloc.inEvent.add(StoreReloadGroceriesEvent(like: newVal));
-            }
+          Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: MyTextField( 
+                  onChanged: (newVal) {
+                    bloc.inEvent.add(StoreReloadGroceriesEvent(like: newVal));
+                  }
+                ),
+              ),
+              FloatingActionButton(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                child: (bloc.grocSortNow == Sorting.asc) ? Icon(Icons.south_rounded) : Icon(Icons.north_rounded),
+                onPressed: () {
+                  setState(() {
+                    bloc.grocSortNow = (bloc.grocSortNow == Sorting.asc) ? Sorting.desc : Sorting.asc;
+                  });
+                  bloc.inEvent.add(StoreSortGrocEvent(bloc.grocSortNow));
+                }
+              ),
+              const SizedBox(width: 10)
+            ],
           ),
           StreamBuilder(
             stream: bloc.outState,

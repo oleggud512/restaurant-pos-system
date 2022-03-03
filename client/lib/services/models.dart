@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+enum View { list, grid }
+enum Sorting { asc, desc }
+
 class Supplier {
     Supplier({
         required this.supplierId,
@@ -142,21 +145,24 @@ class Supply {
       supplyDate: DateTime.now(),
       groceries: [],
       supplierId: null,
-      supplyId: null
+      supplyId: null,
     );
 
     Map<String, dynamic> toJson() => {
+        "summ": summ,
         "supplier_id": supplierId,
         "supply_date": "${supplyDate.year.toString().padLeft(4, '0')}-${supplyDate.month.toString().padLeft(2, '0')}-${supplyDate.day.toString().padLeft(2, '0')}",
         "groceries": List<dynamic>.from(groceries.map((x) => x.toJson())),
     };
 }
 
+
 class SupplyGrocery {
     SupplyGrocery({
         required this.grocId,
         required this.grocName,
         required this.grocCount,
+        required this.supGrocPrice
     });
 
     int? grocId;
@@ -164,14 +170,17 @@ class SupplyGrocery {
     double? grocCount;
     double? supGrocPrice;
 
+
     factory SupplyGrocery.empty() => SupplyGrocery(
       grocId: null,
       grocName: null,
-      grocCount: 0
+      grocCount: 0,
+      supGrocPrice: 0
     );
 
     factory SupplyGrocery.fromJson(Map<String, dynamic> json) {
       return SupplyGrocery(
+          supGrocPrice: json["groc_price"],
           grocId: json["groc_id"],
           grocName: json["groc_name"],
           grocCount: json["groc_count"].toDouble(),

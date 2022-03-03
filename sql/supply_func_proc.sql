@@ -1,6 +1,6 @@
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_groc_to_certain_supply`(
+DELIMITER //
+CREATE PROCEDURE add_groc_to_certain_supply(
 	sup_id INT, 
     g_id INT, 
     g_count INT
@@ -9,23 +9,23 @@ BEGIN
 	INSERT INTO list_supplys(supply_id, groc_id, groc_count) 
     VALUES (sup_id, g_id, g_count);
     UPDATE groceries SET ava_count = ava_count + g_count;
-END$$
+END //
 DELIMITER ;
 
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_supply`(sup_id INT)
+DELIMITER //
+CREATE PROCEDURE add_supply(sup_id INT)
 BEGIN
 	INSERT INTO supplys(supply_date, supplier_id) VALUES (DATE(NOW()), sup_id);
-END$$
+END //
 DELIMITER ;
 
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_supply`(supl_id INT)
+DELIMITER //
+CREATE PROCEDURE delete_supply(supl_id INT)
 BEGIN 
 	DELETE FROM supplys
     WHERE supply_id = supl_id;
-END$$
+END //
 DELIMITER ;
 
 

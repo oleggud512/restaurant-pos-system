@@ -10,6 +10,7 @@ import '../bloc_provider.dart';
 import '../services/models.dart';
 import '../services/repo.dart';
 import 'filter_sort_drawer/filter_sort_drawer.dart';
+import 'widgets/supply_container.dart';
 
 
 class SupplysPage extends StatefulWidget {
@@ -20,6 +21,10 @@ class SupplysPage extends StatefulWidget {
 }
 
 class _SupplysPageState extends State<SupplysPage> {
+
+  View view = View.grid;
+
+  GlobalKey<ScaffoldState> scgl = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SupplysBloc>(
@@ -39,46 +44,26 @@ class _SupplysPageState extends State<SupplysPage> {
                 );
               } else if (state is SupplyLoadedState) {
                 return Scaffold(
-                  appBar: AppBar(title: const Center(
-                    child: Text("supplys")), 
-                    leading: BackButton(
-                      onPressed: () => Navigator.pop(context)
-                    )
-                  ),
+                  key: scgl,
+                  appBar: buildAppBar(),
                   body: Container(
                     padding: const EdgeInsets.all(10),
-                    child: ListView(
+                    child: (view == View.list) ? ListView(
                       children: [
-                        for (int i = 0; i < bloc.supplys.length; i++) InkWell(
-                          onTap: () {
-                            // bloc.supplys[i].groceries.forEach((element) {
-                            //   print(element.grocName);
-                            //   print(element.grocCount);
-                            // });
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return ShowSupplyDialog(supply: bloc.supplys[i]);
-                              }
-                            );
-                          },
-                          child: Text(
-                            bloc.supplys[i].supplyId.toString() + " " + 
-                            bloc.supplys[i].supplierName + " " + 
-                            dateToString(bloc.supplys[i].supplyDate) + " " + 
-                            bloc.supplys[i].summ.toString()
-                          ),
+                        for (int i = 0; i < bloc.supplys.length; i++) SupplyContainer(
+                          supply: bloc.supplys[i], 
+                          view: View.list
                         ),
-                        InkWell(
-                          onTap: () async {
-                            await showDialog(
-                              context: context,
-                              builder: (context) => AddSupplyDialog()
-                            );
-                            bloc.inEvent.add(SupplyLoadEvent());
-                          },
-                          child: const Text("add supply")
-                        )
+                        AddSupplyContainer(bloc: bloc, view: View.list)
+                      ],
+                    ) : ResponsiveGridList(
+                      desiredItemWidth: 250,
+                      children: [
+                        for (int i = 0; i < bloc.supplys.length; i++) SupplyContainer(
+                          supply: bloc.supplys[i],
+                          view: View.grid
+                        ),
+                        AddSupplyContainer(bloc: bloc, view: View.grid)
                       ],
                     ),
                   ),
@@ -91,4 +76,39 @@ class _SupplysPageState extends State<SupplysPage> {
       )
     );  
   }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      title: const Center(
+      child: Text("supplys")), 
+      leading: BackButton(
+        onPressed: () => Navigator.pop(context)
+      ),
+      actions: [ 
+        (view == View.list) ? IconButton(
+          icon: const Icon(Icons.view_module_rounded),
+          onPressed: () {
+            setState(() {
+              view = View.grid;
+            });
+          }
+        ) : IconButton(
+          icon: const Icon(Icons.view_headline_rounded),
+          onPressed: () {
+            setState(() {
+              view = View.list;
+            });
+          }
+        ),
+        IconButton(
+          icon: const Icon(Icons.filter_alt_outlined),
+          onPressed: () {
+            scgl.currentState!.openEndDrawer();
+          },
+        ),
+      ]
+    
+    );
+  }
 }
+

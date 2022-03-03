@@ -29,10 +29,8 @@ class SupplysBloc extends Bloc {
     switch (event.runtimeType) {
       case SupplyLoadEvent:
         _inState.add(SupplyLoadingState());
-        if (fsd == null || fsd!.fPriceFrom <= fsd!.fPriceTo 
-            && fsd!.fDateFrom.year <= fsd!.fDateTo.year 
-            && fsd!.fDateFrom.month <= fsd!.fDateTo.month
-            && fsd!.fDateFrom.day <= fsd!.fDateTo.day) {
+        if (fsd == null || (fsd!.fPriceFrom <= fsd!.fPriceTo 
+            && fsd!.fDateFrom.compareTo(fsd!.fDateTo) <= 0)) {
           fsd ??= await repo.getFilterSortData();
           supplys = await repo.getSupplys(fsd: fsd);
         }

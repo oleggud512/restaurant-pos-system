@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
         blocBuilder: () => MainBloc(),
         blocDispose: (MainBloc bloc) => bloc.dispose(),
         child: MaterialApp(
-          
-          title: 'Flutter Demo',
+          debugShowCheckedModeBanner: false,
+          title: 'restaurant',
           theme: ThemeData(
             primarySwatch: Colors.pink,
             // brightness: Brightness.dark

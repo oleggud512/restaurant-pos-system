@@ -19,6 +19,15 @@ class StoreReloadGroceriesEvent extends StoreEvent {
   StoreReloadGroceriesEvent({this.like=''});
 }
 
+class StoreSortGrocEvent extends StoreEvent {
+  StoreSortGrocEvent(this.direction);
+
+  Sorting direction;
+
+  @override
+  List<Object?> get props => [direction];
+}
+
 
 // class StoreGroceriesLoadEvent extends StoreLoadEvent { }
 

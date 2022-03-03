@@ -21,8 +21,6 @@ class AddSupplyBloc extends Bloc {
   late List<Supplier> suppliers;
   Supply supply = Supply.empty();
 
-  double summ = 0;
-
   AddSupplyBloc(this.repo) {
     _outEvent.listen((event) => _handleEvent(event),);
     inEvent.add(AddSupplyLoadEvent());
@@ -75,8 +73,8 @@ class AddSupplyBloc extends Bloc {
   }
 
   _countSumm() {
-    summ = 0;
-    for (var element in supply.groceries) {summ += element.supGrocPrice! * element.grocCount!;}
+    supply.summ = 0;
+    for (var element in supply.groceries) {supply.summ += element.supGrocPrice! * element.grocCount!;}
   }
 
   @override 

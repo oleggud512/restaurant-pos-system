@@ -1,3 +1,4 @@
+import 'package:client/widgets/yes_no_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:client/bloc_provider.dart';
 import 'package:client/store/suppliers/sup_states_events.dart';
@@ -159,18 +160,30 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
   Widget buildButtons(BuildContext context, SupBloc bloc, dynamic state) {
     return Row(
       children: [
-        Tooltip(
-          message: "видалити постачальника",
-          child: ElevatedButton(
-            onPressed: () async {
-              // не отправляю событие а сразу выполняю логику здесь 
-              // для того чтобы suppliers в store перезагружались только после удаления
+        ElevatedButton(
+          onPressed: () async {
+            // не отправляю событие а сразу выполняю логику здесь 
+            // для того чтобы suppliers в store перезагружались только после удаления
+            bool? save = await showDialog(
+              context: context,
+              builder: (contex) => YesNoDialog(
+                title: Text("Delete supplier?"),
+                onNo: () {
+                  Navigator.pop(contex, false);
+                }, 
+                onYes: () {
+                  Navigator.pop(contex, true);
+                }
+              )
+            );
+            if (save != null && save == true) {
               await Provider.of<Repo>(context, listen: false).deleteSupplier(bloc.supplierId);
               Navigator.pop(context);
-            }, 
-            child: const Icon(Icons.delete)
-          ),
+            }
+          }, 
+          child: const Icon(Icons.delete)
         ),
+        const SizedBox(width: 10),
         ...(!bloc.showAddGrocForm) ? [
           Tooltip( //                     |delete|addGroc |                 |ok|
             message: "додати інгрeдієнт",
@@ -188,6 +201,7 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
               bloc.inEvent.add(SupAddGroceryEvent());
             }
           ),
+          const SizedBox(width: 10),
           ElevatedButton(
             onPressed: () {
               bloc.inEvent.add(SupHideAddGroceryFormEvent());

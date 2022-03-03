@@ -34,9 +34,9 @@ class GrocNameChanged extends GroceryEvent {
 }
 
 class GrocCountChanged extends GroceryEvent {
-  final int newCount;
+  final double newCount;
 
-  GrocCountChanged(String newCount) : newCount = int.parse((newCount == '') ? '0' : newCount);
+  GrocCountChanged(String newCount) : newCount = double.parse((newCount == '') ? '0' : newCount);
   
   @override
   List<Object?> get props => [newCount];

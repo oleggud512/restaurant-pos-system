@@ -20,7 +20,7 @@ class AddSupplySupplierSelectedEvent extends AddSupplyEvent {
 }
 
 class AddSupplyNewCount extends AddSupplyEvent {
-  AddSupplyNewCount(this.index, newCount) : newCount = double.parse(newCount);
+  AddSupplyNewCount(this.index, String newCount) : newCount = double.parse((newCount.isNotEmpty) ? newCount : '0');
   int index;
   double newCount;
 

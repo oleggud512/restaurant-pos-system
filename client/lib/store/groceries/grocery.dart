@@ -76,12 +76,13 @@ class _GroceryDialogState extends State<GroceryDialog> {
           Expanded(
             flex: 3,
             child: Center(
-              child: Text(state.grocery.grocName)
+              child: Text(state.grocery.grocName, style: Theme.of(context).textTheme.headline6)
             ),
           ),
+          const SizedBox(width: 10),
           Expanded(
             child: Center(
-              child: Text(state.grocery.grocMeasure)
+              child: Text(state.grocery.grocMeasure, style: Theme.of(context).textTheme.headline6)
             ),
           )
         ],
@@ -91,13 +92,18 @@ class _GroceryDialogState extends State<GroceryDialog> {
         children: [
           Expanded(
             flex: 3,
-            child: MyTextField(
+            child: TextField(
+              decoration: const InputDecoration(
+                labelText: "назва",
+                border: OutlineInputBorder()
+              ),
               controller: TextEditingController(text: state.grocery.grocName),
               onChanged: (newVal) {
                 bloc.inEvent.add(GrocNameChanged(newVal));
               },
             ),
           ),
+          const SizedBox(width: 10),
           Expanded(
             child: GramLiterDropdown(
               value: state.grocery.grocMeasure,
@@ -111,14 +117,42 @@ class _GroceryDialogState extends State<GroceryDialog> {
     } return const Text("something wrong");
   }
 
-
+  bool ascending = true;
   // везде одна и та же
   Widget buildTable(BuildContext context, GroceryBloc bloc) {
     return Expanded(
       child: DataTable(
-        columns: const [
-          DataColumn(label: Text("постачальник")),
-          DataColumn(label: Text("ціна"), numeric: true)
+        sortAscending: ascending,
+        columns: [
+          DataColumn(
+            label: Text("постачальник", 
+              style: TextStyle(
+                fontWeight: FontWeight.bold
+              )
+            )
+          ),
+          DataColumn(
+            onSort: ((int columnIndex, bool _) {
+              setState(() {
+                bloc.grocery.suppliedBy.sort((a,b) {
+                  if (a.supGrocPrice! == b.supGrocPrice!) {
+                    return 0;
+                  } else if (a.supGrocPrice! > b.supGrocPrice!) {
+                    return 1;
+                  } else {
+                    return -1;
+                  }
+                });
+                if (!ascending) bloc.grocery.suppliedBy = bloc.grocery.suppliedBy.reversed.toList();
+                ascending = !ascending;
+              });
+            }),
+            label: Text("ціна", 
+              style: TextStyle(
+                fontWeight: FontWeight.bold
+              )
+            ), 
+            numeric: true)
         ],
         rows: [
           for (int i = 0; i < bloc.grocery.suppliedBy.length; i++) DataRow(
@@ -137,15 +171,27 @@ class _GroceryDialogState extends State<GroceryDialog> {
       child: Row(
         children: [
           const Expanded(
-            child: Text("Залишилося: ")
+            child: Center(
+              child: Text("Залишилося: ", 
+                style: TextStyle(
+                  fontSize: 20,       
+                )
+              )
+            )
           ),
           Expanded(
             child: Builder(
               builder: (context) {
                 if (state is GrocLoadedState) {
-                  return Center(child: Text(state.grocery.avaCount.toString()));
+                  return Center(child: Text(state.grocery.avaCount.toString(), style: const TextStyle(
+                    fontSize: 20, 
+                  )));
                 } else if (state is GrocEditState) {
-                  return MyTextField(
+                  return TextField(
+                    decoration: const InputDecoration(
+                      labelText: "кількість",
+                      border: OutlineInputBorder()
+                    ),
                     controller: TextEditingController(text: state.grocery.avaCount.toString()),
                     onChanged: (newVal) {
                       // сделать отклик на изменение количества

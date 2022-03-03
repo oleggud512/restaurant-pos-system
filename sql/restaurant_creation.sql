@@ -45,7 +45,8 @@ CREATE TABLE dish_consists (
 # таблиця постачальників 
 CREATE TABLE suppliers(
 	supplier_id INT PRIMARY KEY AUTO_INCREMENT,
-    supplier_name VARCHAR(70) NOT NULL
+    supplier_name VARCHAR(70) NOT NULL,
+    contacts VARCHAR(70)
 ) ENGINE=InnoDB CHARACTER SET utf8;
 
 # який постачальник що постачає
@@ -61,7 +62,7 @@ CREATE TABLE suppliers_groc(
 # поставки
 CREATE TABLE supplys(
 	supply_id INT PRIMARY KEY AUTO_INCREMENT,
-    supply_date DATE NOT NULL,
+    supply_date DATE NOT NULL DEFAULT(CURDATE()),
     supplier_id INT NOT NULL,
     CONSTRAINT supplys_sup_ref FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id)
 ) ENGINE=InnoDB CHARACTER SET utf8;

@@ -22,29 +22,43 @@ class _AddSupplierDialogState extends State<AddSupplierDialog> {
       child: SizedBox(
         width: 250, 
         height: 300,
-        child: Column(
-          children: [
-            const Text("додати постачальника"),
-            TextFormField(
-              controller: nameCont,
-              decoration: const InputDecoration(
-                hintText: "назва"
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Text("Додати постачальника", style: Theme.of(context).textTheme.headline6)
               ),
-            ),
-            TextFormField(
-              controller: contactsCont,
-              decoration: const InputDecoration(
-                hintText: "контакти"
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: nameCont,
+                decoration: const InputDecoration(
+                  labelText: "ім'я/назва",
+                  border: OutlineInputBorder()
+                ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                await widget.repo.addSupplier(nameCont.text, contactsCont.text);
-                Navigator.pop(context);
-              }, 
-              child: const Text("додати")
-            )
-          ],
+              const SizedBox(height: 15),
+              TextFormField(
+                controller: contactsCont,
+                decoration: const InputDecoration(
+                  labelText: "контакти",
+                  border: OutlineInputBorder()
+                ),
+              ),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () async {
+                  await widget.repo.addSupplier(nameCont.text, contactsCont.text);
+                  Navigator.pop(context);
+                }, 
+                child: const Text("додати", style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15
+                ))
+              )
+            ],
+          ),
         )
       )
     );
