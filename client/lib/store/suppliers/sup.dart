@@ -23,7 +23,6 @@ class SupplierDetailsDialog extends StatefulWidget {
 class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
   @override
   Widget build(BuildContext context) {
-    print(BlocProvider.of<MainBloc>(context).aa);
     return BlocProvider(
       blocBuilder: () => SupBloc(Provider.of<Repo>(context), widget.id, widget.groceries), 
       blocDispose: (SupBloc bloc) => bloc.dispose(), 

@@ -24,7 +24,8 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
     var toCont = TextEditingController(text: bloc.fsd?.fPriceTo.toString());
     
     return Drawer(
-      child: Column(
+      child: ListView(
+        controller: ScrollController(), // ScrollController is currently attached to more than one ScrollPosition.
         children: [
           ListTile(title: Text("sorting")),
           ListTile(
@@ -107,27 +108,23 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
               )),
             ],
           )),
-          Expanded(
-            child: SingleChildScrollView(
-              child: DataTable(
-                columns: const [
-                  DataColumn(label: Text('постачальники', style: TextStyle(fontWeight: FontWeight.bold)))
+          DataTable(
+            columns: const [
+              DataColumn(label: Text('постачальники', style: TextStyle(fontWeight: FontWeight.bold)))
+            ],
+            rows: [
+              for (int i = 0; i < bloc.fsd!.suppliers.length; i++) DataRow(
+                selected: bloc.fsd!.suppliers[i].selected,
+                cells: [
+                  DataCell(Text(bloc.fsd!.suppliers[i].supplierName))
                 ],
-                rows: [
-                  for (int i = 0; i < bloc.fsd!.suppliers.length; i++) DataRow(
-                    selected: bloc.fsd!.suppliers[i].selected,
-                    cells: [
-                      DataCell(Text(bloc.fsd!.suppliers[i].supplierName))
-                    ],
-                    onSelectChanged: (newVal) {
-                      setState(() {
-                        bloc.fsd!.suppliers[i].selected = newVal!;
-                      });
-                    }
-                  )
-                ]
-              ),
-            ),
+                onSelectChanged: (newVal) {
+                  setState(() {
+                    bloc.fsd!.suppliers[i].selected = newVal!;
+                  });
+                }
+              )
+            ]
           ),
           ListTile(
             title: ElevatedButton(

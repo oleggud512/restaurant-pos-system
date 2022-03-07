@@ -296,3 +296,105 @@ class FilterSoort{
 
   
 }
+
+///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////===// DISHES //===///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+List<Dish> listDishFromJson(String str) => List<Dish>.from(json.decode(str).map((x) => Dish.fromJson(x)));
+
+String listDishToJson(List<Dish> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class Dish {
+    Dish({
+        required this.dishId,
+        required this.dishName,
+        required this.dishPrice,
+        required this.dishGrId,
+        required this.dishGrocs,
+    });
+
+    int? dishId;
+    String dishName;
+    double? dishPrice;
+    int dishGrId;
+    List<DishGroc> dishGrocs;
+
+    factory Dish.initial() => Dish(
+      dishId: null,
+      dishName: '',
+      dishPrice: null,
+      dishGrId: 1, // unsorted
+      dishGrocs: []
+    );
+
+    factory Dish.fromJson(Map<String, dynamic> json) => Dish(
+        dishId: json["dish_id"],
+        dishName: json["dish_name"],
+        dishPrice: json["dish_price"].toDouble(),
+        dishGrId: json["dish_gr_id"],
+        dishGrocs: List<DishGroc>.from(json["consist"].map((x) => DishGroc.fromJson(x))),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "dish_id": dishId,
+        "dish_name": dishName,
+        "dish_price": dishPrice,
+        "dish_gr_id": dishGrId,
+        "consist": List<dynamic>.from(dishGrocs.map((x) => x.toJson())),
+    };
+}
+
+class DishGroc {
+    DishGroc({
+        required this.grocId,
+        required this.grocName,
+        required this.grocCount,
+    });
+
+    int grocId;
+    String grocName;
+    double grocCount;
+
+    factory DishGroc.initial(int grocId, String grocName) => DishGroc(
+      grocCount: 0,
+      grocId: grocId,
+      grocName: grocName,
+    );
+
+    factory DishGroc.fromJson(Map<String, dynamic> json) => DishGroc(
+        grocId: json["groc_id"],
+        grocName: json["groc_name"],
+        grocCount: json["dc_count"].toDouble(),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "groc_id": grocId,
+        "groc_name": grocName,
+        "groc_count": grocCount,
+    };
+}
+
+List<DishGroup> groupFromJson(String str) => List<DishGroup>.from(json.decode(str).map((x) => DishGroup.fromJson(x)));
+
+String groupToJson(List<DishGroup> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class DishGroup {
+    DishGroup({
+        required this.groupId,
+        required this.groupName,
+    });
+
+    int groupId;
+    String groupName;
+
+    factory DishGroup.fromJson(Map<String, dynamic> json) => DishGroup(
+        groupId: json["dish_gr_id"],
+        groupName: json["dish_gr_name"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "dish_gr_id": groupId,
+        "dish_gr_name": groupName,
+    };
+}

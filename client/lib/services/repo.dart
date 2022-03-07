@@ -104,6 +104,29 @@ class Repo {
     var responce = await dio.delete(ROOT + 'settings/delete_info_about_deleted_suppliers');
     return Future.delayed(const Duration(seconds: 1), () => responce.data);
   }
+
+  Future<Map<String, dynamic>> getDishes() async {
+    var responce = await dio.get(ROOT + 'menu');
+    Map<String, dynamic> data = jsonDecode(responce.data) as Map<String, dynamic>;
+    List<Dish> dishes = List<Dish>.from(data['dishes'].map((e) => Dish.fromJson(e)));
+    List<DishGroup> groups = List<DishGroup>.from(data['groups'].map((e) => DishGroup.fromJson(e)));
+    return Future.delayed(const Duration(milliseconds: 500), () => {
+      "dishes" : dishes,
+      "groups" : groups
+    });
+  }
+
+  Future<String> addDish(Dish dish) async {
+    var responce = await dio.post(ROOT + 'menu', data: dish.toJson());
+    return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
+  }
+
+  Future<double> getPrimeCost(Dish dish) async { // вот это не работает правильно и на стороне python тоже
+    var responce = await dio.get(ROOT + 'menu/prime-cost/' + 
+      dish.dishGrocs.map((e) => e.grocId.toString() + '|' + e.grocCount.toString()).join('+')
+    );
+    return Future.delayed(const Duration(milliseconds: 500), () => jsonDecode(responce.data)['total'].toDouble());
+  }
 }
 /*
 mport 'dart:convert';

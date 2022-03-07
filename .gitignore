@@ -48,3 +48,5 @@
 
 /server/__pycache__
 /server/Bla.png
+/server/static/descr/*
+/server/static/images/*

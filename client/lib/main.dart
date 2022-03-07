@@ -28,24 +28,33 @@ class MyApp extends StatelessWidget {
         Provider<Repo>(create: (context) => Repo()),
         Provider<Constants>(create: (context) => Constants()),
       ],
-      child: BlocProvider(
-        blocBuilder: () => MainBloc(),
-        blocDispose: (MainBloc bloc) => bloc.dispose(),
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'restaurant',
-          theme: ThemeData(
-            primarySwatch: Colors.pink,
-            // brightness: Brightness.dark
-          ),
-          
-          onGenerateRoute: myRouter.onGenerateRoute,
-          // routes: {
-          //   '/': (context) => HomePage(),
-          //   '/store': (context) => StorePage()
-          // },
-          // initialRoute: '/',
-        ),
+      child: Builder(
+        builder: (context) {
+          return BlocProvider(
+            blocBuilder: () => MainBloc(Provider.of<Repo>(context)),
+            blocDispose: (MainBloc bloc) => bloc.dispose(),
+            child: Builder(
+              builder: (context) {
+                var bloc = BlocProvider.of<MainBloc>(context);
+                return StreamBuilder<Object>(
+                  stream: bloc.outState,
+                  builder: (context, snapshot) {
+                    return MaterialApp(
+                      debugShowCheckedModeBanner: false,
+                      title: 'restaurant',
+                      theme: ThemeData(
+                        primarySwatch: Colors.pink,
+                        primaryColor: Colors.pink,
+                        brightness: bloc.curBr
+                      ),
+                      onGenerateRoute: myRouter.onGenerateRoute,
+                    );
+                  }
+                );
+              }
+            ),
+          );
+        }
       ),
     );
   }
@@ -84,6 +93,12 @@ class _HomePageState extends State<HomePage> {
               child: const Text("поставки"),
               onPressed: () {
                 Navigator.pushNamed(context, '/supplys');
+              },
+            ),
+            MainButton(
+              child: const Text("меню"),
+              onPressed: () {
+                Navigator.pushNamed(context, '/menu');
               },
             ),
             MainButton(

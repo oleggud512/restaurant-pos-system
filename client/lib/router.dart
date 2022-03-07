@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:client/main.dart';
 import 'package:client/store/store.dart';
 import 'package:client/supplys/supplys.dart';
+import 'package:client/menu/add_dish/add_dish.dart';
+import 'package:client/menu/menu.dart';
 
 class MyRouter {
   Route onGenerateRoute(RouteSettings settings) {
@@ -28,6 +30,16 @@ class MyRouter {
           settings: const RouteSettings(name: '/settings'),
           builder: (context) =>SettingsPage()
         );
+      case '/menu':
+        return MaterialPageRoute<void>(
+          settings: const RouteSettings(name: '/menu'),
+          builder: (context) => MenuPage()
+        );
+      // case '/menu/add-dish':
+      //   return MaterialPageRoute<void>(
+      //     settings: const RouteSettings(name: '/menu/add-dish'),
+      //     builder: (context) => AddDishPage()
+      //   );
       default:
         return MaterialPageRoute<void>(
             settings: const RouteSettings(name: '/error'),

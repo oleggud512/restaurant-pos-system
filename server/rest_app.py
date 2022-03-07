@@ -1,10 +1,14 @@
 import datetime
+from functools import reduce
 from pprint import pprint
+from typing import Any
 from flask import Flask, redirect, render_template, request, jsonify, url_for, abort, make_response
 from base64 import decodebytes
 from mysql.connector import connect, MySQLConnection
 from mysql.connector.cursor_cext import CMySQLCursor
 from simplejson import dumps
+import services as srv
+import collections
 
 from database import cur_to_dict
 
@@ -343,6 +347,155 @@ def delete_inf_ab_del_s():
     con.commit()
     cur.close()
     return 'success'
+
+
+@app.route('/restaurant/v1/menu', methods=['GET'])
+def get_menu():
+    cur: CMySQLCursor = con.cursor()
+
+    like = request.args.get('like', '')
+    min_price = request.args.get('min_price', 0)
+    max_price = request.args.get('max_price')
+    
+    cur.execute(f"""
+        SELECT dish_id, dish_name, dish_price, dish_gr_id FROM dishes
+        WHERE dish_name LIKE '%{like}%'
+    """)
+    
+    dishes = cur_to_dict(cur)
+
+    cur.execute(f"""
+        SELECT dc.groc_id, g.groc_name, dc.dc_count, dc.dish_id
+        FROM dish_consists dc JOIN groceries g USING(groc_id)
+    """)
+
+    groceries = cur_to_dict(cur)
+
+    for dish in dishes:
+        dish['consist'] = list(filter(lambda x: dish['dish_id'] == x['dish_id'], groceries))
+
+    cur.execute(f"""
+        SELECT dish_gr_id, dish_gr_name FROM dish_groups
+    """)
+
+    groups = cur_to_dict(cur)
+
+    cur.execute(f"""
+        SELECT MIN(dish_price) AS min_price, MAX(dish_price) AS max_price
+        FROM dishes
+    """)
+
+    filter_sort_data = cur_to_dict(cur)[0]
+    print(dumps(
+        {
+            'dishes' : dishes, 
+            'groups' : groups, 
+            'filter_sort_data': filter_sort_data
+        }, 
+        indent=4
+    ))
+    cur.close()
+    return dumps(
+        {
+            'dishes' : dishes, 
+            'groups' : groups, 
+            'filter_sort_data': filter_sort_data
+        }, 
+        indent=4
+    )
+
+
+@app.route('/restaurant/v1/menu', methods=['POST'])
+def add_dish():
+    cur: CMySQLCursor = con.cursor()
+
+    groceries = request.json['consist']
+
+    # с процедурами не работает cur.lastrowid
+    cur.execute(f"""
+        INSERT INTO dishes(dish_name, dish_price, dish_gr_id)
+        VALUES (
+            '{request.json['dish_name']}',
+            {request.json['dish_price']},
+            {request.json['dish_gr_id']}
+        );
+    """)
+    dish_id = cur.lastrowid
+    con.commit()
+
+
+    for groc in groceries:
+        cur.execute(f"""
+            CALL add_grocery_to_certain_dish(
+                {dish_id},
+                {groc['groc_id']},
+                {groc['groc_count']}
+            )
+        """)
+        print("PROCEDURE")
+        con.commit()
+
+    cur.close()
+    return 'success'
+
+
+@app.route('/restaurant/v1/menu/prime-cost/<string:groc_ids>', methods=['GET'])
+def get_prime_cost(groc_ids):
+    """
+        находит минимальную цену за указаные продукты
+            {
+                total: total_summ,
+                consist: [
+                    {
+                        supplier_id: 
+                        supplier_name:
+                        min_price:
+                        groc_name:
+                    }
+                ]
+            }
+    """
+    # groceries - список id продуктов
+    cur: CMySQLCursor = con.cursor()
+    groc_id_count = srv.decode_list_of_dict(groc_ids, 'groc_id', 'groc_count')
+    
+    prime_cost = {'consist' : [], 'total': 0}
+
+    for groc in groc_id_count:
+        print(groc)
+        # CALL get_min_groc_price({groc_id}) ---> не работает...
+        cur.execute(f"""SELECT 
+                s.supplier_id, 
+                s.supplier_name, 
+                MIN(sg.sup_groc_price) AS min_price, 
+                g.groc_name
+            FROM suppliers_groc sg 
+                JOIN suppliers s USING(supplier_id)
+                JOIN groceries g USING(groc_id)
+            WHERE groc_id = {groc['groc_id']}
+        """)
+        grocery = cur_to_dict(cur)[0]
+
+        if (grocery['min_price'] == None): return dumps(
+            {
+                'total': 0,
+                'consist': [
+                    {
+                        "supplier_id" : 666,
+                        "supplier_name" : "no no no no",
+                        "min_price" : 666
+                    }
+                ],
+            }
+        )
+
+        prime_cost['total'] += float(grocery['min_price']) * float(groc['groc_count'])
+        prime_cost['consist'].append(grocery)
+
+    print(dumps(prime_cost, indent=2))
+
+    cur.close()
+    return dumps(prime_cost, indent=2)
 
 
 if __name__ == '__main__':
