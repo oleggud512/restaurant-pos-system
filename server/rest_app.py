@@ -40,10 +40,15 @@ def get_some():
 def get_groceries():
     """list of groceries"""
     cur: CMySQLCursor = con.cursor()
+    try:
+        supplied_only = True if request.args['supplied_only'] == 'true' else False
+    except:
+        supplied_only = False
+    # print(type(supplied_only), supplied_only)
 
     cur.execute(f"""
-        SELECT groc_id, groc_name, groc_measure, ava_count
-        FROM groceries
+        SELECT DISTINCT groc_id, groc_name, groc_measure, ava_count 
+        FROM groceries {'JOIN suppliers_groc USING(groc_id) ' if supplied_only else ' '}
         WHERE groc_name LIKE '%{request.args["like"]}%'
     """)
 
@@ -439,6 +444,19 @@ def add_dish():
     return 'success'
 
 
+@app.route('/restaurant/v1/menu/add-dish-group', methods=['POST'])
+def add_dish_group():
+    cur : CMySQLCursor = con.cursor()
+
+    name = request.json['name']
+
+    cur.execute(f'INSERT INTO dish_groups(dish_gr_name) VALUES (\'{name}\')')
+    con.commit()
+
+    cur.close()
+    return 'success'
+
+
 @app.route('/restaurant/v1/menu/prime-cost/<string:groc_ids>', methods=['GET'])
 def get_prime_cost(groc_ids):
     """
@@ -463,7 +481,7 @@ def get_prime_cost(groc_ids):
 
     for groc in groc_id_count:
         print(groc)
-        # CALL get_min_groc_price({groc_id}) ---> не работает...
+        # CALL get_min_groc_price({groc_id}) # ---> не работает...
         cur.execute(f"""SELECT 
                 s.supplier_id, 
                 s.supplier_name, 
@@ -488,8 +506,9 @@ def get_prime_cost(groc_ids):
                 ],
             }
         )
-
-        prime_cost['total'] += float(grocery['min_price']) * float(groc['groc_count'])
+        grocery['groc_count'] = groc['groc_count']
+        grocery['groc_total'] = float(grocery['min_price']) * float(groc['groc_count'])
+        prime_cost['total'] += grocery['groc_total']
         prime_cost['consist'].append(grocery)
 
     print(dumps(prime_cost, indent=2))

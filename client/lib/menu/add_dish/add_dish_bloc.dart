@@ -25,7 +25,7 @@ class AddDishBloc extends Bloc {
   late List<Grocery> groceries;
   List<Grocery> tempGrocs = [];
   Dish dish = Dish.initial();
-  double primeCost = 0;
+  Map<String, dynamic> primeCost = <String, dynamic>{'total': 0.0};
 
   AddDishBloc(this.repo, this.dishGroups) {
     _outEvent.listen((event) => _handleEvent(event),);
@@ -35,7 +35,7 @@ class AddDishBloc extends Bloc {
   _handleEvent(dynamic event) async {
     if (event is AddDishLoadEvent) {
       _inState.add(AddDishLoadingState());
-      groceries = await repo.getGroceries();
+      groceries = await repo.getGroceries(suppliedOnly: true);
       tempGrocs = List.from(groceries);
       _inPrimeCost.add(AddDishPrimeCostLoadedState());
       // await Future.delayed(Duration(seconds: 1), () => null);
@@ -44,7 +44,6 @@ class AddDishBloc extends Bloc {
       tempGrocs = List<Grocery>.from(groceries.where((element) => element.grocName.contains(event.like)));
     } 
     else if (event is AddDishAddGrocEvent) {
-      inEvent.add(AddDishLoadPrimeCostEvent());
       if (dish.dishGrocs.where((element) => element.grocId == event.groc.grocId).isEmpty) {
         dish.dishGrocs.add(DishGroc.initial(event.groc.grocId, event.groc.grocName));
       }
@@ -71,7 +70,7 @@ class AddDishBloc extends Bloc {
       if (dish.dishGrocs.isNotEmpty) {
         primeCost = await repo.getPrimeCost(dish);
       } else {
-        primeCost = 0;
+        primeCost = <String, dynamic>{'total': 0.0};
       }
       _inPrimeCost.add(AddDishPrimeCostLoadedState());
     }

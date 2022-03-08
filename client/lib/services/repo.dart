@@ -26,8 +26,8 @@ class Repo {
     return Future.delayed(const Duration(seconds: 1), () =>'success');
   }
 
-  Future<List<Grocery>> getGroceries({String like=''}) async {
-    var responce = await dio.get(ROOT + "groceries", queryParameters: {'like': like});
+  Future<List<Grocery>> getGroceries({String like='', bool suppliedOnly=false}) async {
+    var responce = await dio.get(ROOT + "groceries", queryParameters: {'like': like, 'supplied_only': suppliedOnly});
     var data = jsonDecode(responce.data);
     return Future.delayed(const Duration(seconds: 1), () => data.map<Grocery>((e) => Grocery.fromJson(e)).toList());
     // return data.map<Grocery>((e) => Grocery.fromJson(e)).toList();
@@ -121,15 +121,23 @@ class Repo {
     return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
   }
 
-  Future<double> getPrimeCost(Dish dish) async { // вот это не работает правильно и на стороне python тоже
+  Future<dynamic> getPrimeCost(Dish dish) async { // вот это не работает правильно и на стороне python тоже
     var responce = await dio.get(ROOT + 'menu/prime-cost/' + 
       dish.dishGrocs.map((e) => e.grocId.toString() + '|' + e.grocCount.toString()).join('+')
     );
-    return Future.delayed(const Duration(milliseconds: 500), () => jsonDecode(responce.data)['total'].toDouble());
+    // не преобразовую это в объект
+    // передаю просто List<Map<String, dynamic>>
+    return Future.delayed(const Duration(milliseconds: 500), () => jsonDecode(responce.data)); 
+  }
+
+  Future<String> addDishGroup(String name) async {
+    var responce = await dio.post(ROOT + 'menu/add-dish-group', data: {'name': name});
+    return Future.delayed(const Duration(milliseconds: 500), () => responce.data); 
   }
 }
+
 /*
-mport 'dart:convert';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'classes.dart';

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../bloc_provider.dart';
 import '../services/repo.dart';
 import 'add_dish/add_dish.dart';
+import 'add_dish/add_dish_group/add_dish_group_dialog.dart';
 import 'menu_bloc.dart';
 
 
@@ -89,9 +90,15 @@ class _MenuPageState extends State<MenuPage> {
                             ),
                             const SizedBox(width: 8),
                             TextButton.icon(
-                              onPressed: () {
+                              onPressed: () async {
                                 // диалог добавления группы
-                                print(bloc.dishes[1].toJson());
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AddDishGroupDialog();
+                                  }
+                                );
+                                bloc.inEvent.add(MenuLoadEvent());
                               }, 
                               icon: Icon(Icons.add), 
                               label: Text("group")

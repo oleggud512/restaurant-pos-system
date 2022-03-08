@@ -1,4 +1,5 @@
 # Miscellaneous
+
 /client/*.class
 /client/*.log
 /client/*.pyc
@@ -50,3 +51,4 @@
 /server/Bla.png
 /server/static/descr/*
 /server/static/images/*
+design.png
