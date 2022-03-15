@@ -28,7 +28,7 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
         controller: ScrollController(), // ScrollController is currently attached to more than one ScrollPosition.
         children: [
           ListTile(title: Text("sorting")),
-          ListTile(
+          ListTile(  // выбор того по чем сортируем
             leading: Radio<String>(
               value: "summ",
               groupValue: bloc.fsd?.sortCollumn,
@@ -38,7 +38,7 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
             ),
             title: Text("по цене")
           ),
-          ListTile(
+          ListTile(  // выбор того по чем сортируем
             leading: Radio<String>(
               value: "supply_date",
               groupValue: bloc.fsd?.sortCollumn,
@@ -48,9 +48,14 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
             ),
             title: Text("по дате")
           ),
-          ListTile(title: AscDescDropdown()),
-          ListTile(title: Text("filtering")),
-          ListTile(title: Row(
+          ListTile(title: AscDescDropdown(
+            value: bloc.fsd?.sortDirection,
+            onChanged: (newVal) {
+              bloc.inEvent.add(SupplySortDirectionChangedEvent(newVal!));
+            },
+          )), // выбор направления
+          ListTile(title: Text("filtering")), 
+          ListTile(title: Row( // цена от до
             children: [
               Text("price: "),
               Expanded(child: TextFormField( // вынести в отдельный класс с стилями нужными
@@ -70,7 +75,7 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
               )),
             ],
           )),
-          ListTile(title: Row(
+          ListTile(title: Row( // дата от до
             children: [
               Text("date: "),
               Expanded(child: TextButton(
@@ -108,7 +113,7 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
               )),
             ],
           )),
-          DataTable(
+          DataTable( // какие поставщики
             columns: const [
               DataColumn(label: Text('постачальники', style: TextStyle(fontWeight: FontWeight.bold)))
             ],
@@ -143,7 +148,10 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
 
 
 class AscDescDropdown extends StatefulWidget {
-  AscDescDropdown({Key? key}) : super(key: key);
+  AscDescDropdown({Key? key, required this.value, required this.onChanged}) : super(key: key);
+  
+  String? value;
+  void Function(String?)? onChanged;
 
   @override
   State<AscDescDropdown> createState() => _AscDescDropdownState();
@@ -152,17 +160,14 @@ class AscDescDropdown extends StatefulWidget {
 class _AscDescDropdownState extends State<AscDescDropdown> {
   @override
   Widget build(BuildContext context) {
-    var bloc = BlocProvider.of<SupplysBloc>(context);
     return DropdownButton<String>(
-      value: bloc.fsd?.sortDirection,
+      value: widget.value,
       isExpanded: true,
       items: const [
         DropdownMenuItem(child: Text("по возрастанию"), value: "asc"),
         DropdownMenuItem(child: Text("по убыванию"), value: "desc")
       ],
-      onChanged: (newVal) {
-        bloc.inEvent.add(SupplySortDirectionChangedEvent(newVal!));
-      },
+      onChanged: widget.onChanged
     );
   }
 }

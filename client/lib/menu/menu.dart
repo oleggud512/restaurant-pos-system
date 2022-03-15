@@ -1,3 +1,4 @@
+import 'package:client/menu/dish_details/dish_details.dart';
 import 'package:client/menu/menu_states_events.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,8 +6,9 @@ import 'package:provider/provider.dart';
 import '../bloc_provider.dart';
 import '../services/repo.dart';
 import 'add_dish/add_dish.dart';
-import 'add_dish/add_dish_group/add_dish_group_dialog.dart';
+import 'add_dish_group/add_dish_group_dialog.dart';
 import 'menu_bloc.dart';
+import 'menu_filter_sort/filter_sort_menu.dart';
 
 
 class MenuPage extends StatefulWidget {
@@ -52,8 +54,11 @@ class _MenuPageState extends State<MenuPage> {
                                 bloc.dishes[i].dishPrice.toString() + " \$\n" + 
                                 bloc.groups.firstWhere((element) => element.groupId == bloc.dishes[i].dishGrId).groupName
                               ),
-                              onTap: () {
-                                
+                              onTap: () async {
+                                await Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => DishDetalsPage(dish: bloc.dishes[i], groups: bloc.groups) // чтобы группу можно было менять
+                                ));
+                                bloc.inEvent.add(MenuLoadEvent());
                               }
                             )
                           ],
@@ -119,6 +124,7 @@ class _MenuPageState extends State<MenuPage> {
                   //     print(i);
                   //   },
                   // )
+                  endDrawer: FilterSortMenuDrawer(),
                 );
               } return Container(color: Colors.green);
             }

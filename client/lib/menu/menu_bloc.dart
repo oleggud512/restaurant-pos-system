@@ -20,6 +20,7 @@ class MenuBloc extends Bloc {
   
   late List<DishGroup> groups;
   late List<Dish> dishes;
+  late FilterSortMenu fsMenu;
   // late DishFilterSortData dishFilterSortData;
 
   MenuBloc(this.repo) {
@@ -33,6 +34,7 @@ class MenuBloc extends Bloc {
       var data = await repo.getDishes();
       groups = data['groups'];
       dishes = data['dishes'];
+      fsMenu = data['filter_sort_data'];
       _inState.add(MenuLoadedState());
     }
   }

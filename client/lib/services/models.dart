@@ -336,6 +336,14 @@ class Dish {
         dishGrocs: List<DishGroc>.from(json["consist"].map((x) => DishGroc.fromJson(x))),
     );
 
+    factory Dish.copy(Dish other) => Dish(
+      dishId: other.dishId,
+      dishName: other.dishName,
+      dishPrice: other.dishPrice,
+      dishGrId: other.dishGrId,
+      dishGrocs: List.from(other.dishGrocs)
+    );
+
     Map<String, dynamic> toJson() => {
         "dish_id": dishId,
         "dish_name": dishName,
@@ -343,6 +351,11 @@ class Dish {
         "dish_gr_id": dishGrId,
         "consist": List<dynamic>.from(dishGrocs.map((x) => x.toJson())),
     };
+
+    bool get isSaveable => dishPrice != 0 
+      && dishName.isNotEmpty 
+      && !dishGrocs.map<double>((e) => e.grocCount).contains(0) 
+      && dishGrocs.isNotEmpty;
 }
 
 class DishGroc {
@@ -355,6 +368,11 @@ class DishGroc {
     int grocId;
     String grocName;
     double grocCount;
+
+    @override
+    String toString() {
+      return toJson().toString();
+    }
 
     factory DishGroc.initial(int grocId, String grocName) => DishGroc(
       grocCount: 0,
@@ -397,4 +415,35 @@ class DishGroup {
         "dish_gr_id": groupId,
         "dish_gr_name": groupName,
     };
+}
+
+
+class FilterSortMenu {
+  String asc = 'desc';
+  String sortColumn = 'dish_name'; // 'dish_price'
+  String like = '';
+  List<Grocery> groceries = [];
+  double priceFrom;
+  double priceTo;
+
+  FilterSortMenu({
+    // required this.groceries,
+    required this.priceFrom,
+    required this.priceTo
+  });
+
+  factory FilterSortMenu.fromJson(Map m) => FilterSortMenu(
+    // groceries: [],
+    priceFrom: m['min_price'],
+    priceTo: m['max_price']
+  );
+
+  Map<String, dynamic> toJson() => {
+      "asc" : asc,
+      "sort_column" : sortColumn,
+      "like" : like,
+      "price_from" : priceFrom,
+      "price_to" : priceTo,
+      "groceries" : List<int>.from(groceries.map((e) => e.grocId))
+  };
 }

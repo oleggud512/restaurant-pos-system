@@ -1,5 +1,6 @@
 import 'package:client/menu/add_dish/prime_cost_details/prime_cost_details_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../bloc_provider.dart';
@@ -7,6 +8,7 @@ import '../../services/models.dart';
 import '../../services/repo.dart';
 import 'add_dish_bloc.dart';
 import 'add_dish_states_events.dart';
+import '../widgets/group_picker.dart';
 
 
 class AddDishPage extends StatefulWidget {
@@ -88,6 +90,10 @@ class _AddDishPageState extends State<AddDishPage> {
           }
         ),
         TextFormField(
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))
+          ],
           decoration: const InputDecoration(
             labelText: "dish price",
           ),
@@ -112,7 +118,8 @@ class _AddDishPageState extends State<AddDishPage> {
                         await showDialog(
                           context: context,
                           builder: (context) {
-                            return PrimeCostDetailsDialog(data: bloc.primeCost);
+                            // return PrimeCostDetailsDialog(data: bloc.primeCost);
+                            return PrimeCostDetailsDialog(dish: bloc.dish);
                           }
                         );
                       }
@@ -124,14 +131,9 @@ class _AddDishPageState extends State<AddDishPage> {
             ),
           ],
         ),
-        DropdownButton<int>(
-          value: bloc.dish.dishGrId,
-          items: [
-            for (int i = 0; i < bloc.dishGroups.length; i++) DropdownMenuItem(
-              child: Text(bloc.dishGroups[i].groupName),
-              value: bloc.dishGroups[i].groupId
-            )
-          ],
+        GroupPicker(
+          value: bloc.dish.dishGrId, 
+          groups: bloc.dishGroups, 
           onChanged: (newVal) {
             bloc.inEvent.add(AddDishGroupChanged(newVal!));
           },
@@ -167,9 +169,12 @@ class _AddDishPageState extends State<AddDishPage> {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: TextFormField(
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,3}'))
+                  ],
                   decoration: const InputDecoration(
-                    labelText: "count",
-
+                    labelText: "kg",
                   ),
                   onChanged: (newVal) {
                     bloc.inEvent.add(AddDishDishGrocCountChangedEvent(bloc.dish.dishGrocs[i].grocId, newVal));
@@ -222,8 +227,10 @@ class _AddDishPageState extends State<AddDishPage> {
           title: ElevatedButton(
             onPressed: () async {
               print(bloc.dish.toJson());
-              await Provider.of<Repo>(context, listen: false).addDish(bloc.dish);
-              Navigator.pop(context);
+              if (bloc.dish.isSaveable) {
+                await Provider.of<Repo>(context, listen: false).addDish(bloc.dish);
+                Navigator.pop(context);
+              }
             }, 
             child: const Text("add")
           ),

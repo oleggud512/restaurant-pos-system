@@ -110,9 +110,12 @@ class Repo {
     Map<String, dynamic> data = jsonDecode(responce.data) as Map<String, dynamic>;
     List<Dish> dishes = List<Dish>.from(data['dishes'].map((e) => Dish.fromJson(e)));
     List<DishGroup> groups = List<DishGroup>.from(data['groups'].map((e) => DishGroup.fromJson(e)));
+    FilterSortMenu fsMenu = FilterSortMenu.fromJson(data['filter_sort_data']);
+    print(fsMenu);
     return Future.delayed(const Duration(milliseconds: 500), () => {
       "dishes" : dishes,
-      "groups" : groups
+      "groups" : groups,
+      'filter_sort_data': fsMenu
     });
   }
 
@@ -132,6 +135,11 @@ class Repo {
 
   Future<String> addDishGroup(String name) async {
     var responce = await dio.post(ROOT + 'menu/add-dish-group', data: {'name': name});
+    return Future.delayed(const Duration(milliseconds: 500), () => responce.data); 
+  }
+
+  Future<String> updateDish(Dish dish) async {
+    var responce = await dio.put(ROOT + 'menu', data: dish.toJson());
     return Future.delayed(const Duration(milliseconds: 500), () => responce.data); 
   }
 }

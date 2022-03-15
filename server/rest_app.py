@@ -50,6 +50,7 @@ def get_groceries():
         SELECT DISTINCT groc_id, groc_name, groc_measure, ava_count 
         FROM groceries {'JOIN suppliers_groc USING(groc_id) ' if supplied_only else ' '}
         WHERE groc_name LIKE '%{request.args["like"]}%'
+        ORDER BY groc_name ASC
     """)
 
     groceries = cur_to_dict(cur)
@@ -444,6 +445,43 @@ def add_dish():
     return 'success'
 
 
+@app.route('/restaurant/v1/menu', methods=['PUT'])
+def update_dish():
+    cur: CMySQLCursor = con.cursor()
+    
+    dish_id = request.json.get('dish_id')
+    dish_name = request.json.get('dish_name')
+    dish_price = request.json.get('dish_price')
+    dish_gr_id = request.json.get('dish_gr_id')
+    consist = request.json.get('consist')
+
+    cur.execute(f"""
+        UPDATE dishes
+        SET dish_name = "{dish_name}",
+            dish_price = {dish_price},
+            dish_gr_id = {dish_gr_id}
+        WHERE dish_id = {dish_id};
+    """)
+    con.commit()
+    cur.execute(f"""
+        DELETE FROM dish_consists
+        WHERE dish_id = {dish_id}
+    """)
+    con.commit()
+
+    sql = "INSERT INTO dish_consists(dish_id, groc_id, dc_count) VALUES "
+
+    for groc in consist:
+        sql += str((dish_id, groc['groc_id'], groc['groc_count'])) + ', '
+    sql = sql[:-2]
+
+    cur.execute(sql)
+    con.commit()
+
+    cur.close()
+    return 'success'
+
+
 @app.route('/restaurant/v1/menu/add-dish-group', methods=['POST'])
 def add_dish_group():
     cur : CMySQLCursor = con.cursor()
@@ -506,7 +544,7 @@ def get_prime_cost(groc_ids):
                 ],
             }
         )
-        grocery['groc_count'] = groc['groc_count']
+        grocery['groc_count'] = float(groc['groc_count'])
         grocery['groc_total'] = float(grocery['min_price']) * float(groc['groc_count'])
         prime_cost['total'] += grocery['groc_total']
         prime_cost['consist'].append(grocery)
