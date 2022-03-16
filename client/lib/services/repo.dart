@@ -105,18 +105,23 @@ class Repo {
     return Future.delayed(const Duration(seconds: 1), () => responce.data);
   }
 
-  Future<Map<String, dynamic>> getDishes() async {
-    var responce = await dio.get(ROOT + 'menu');
+  Future<Map<String, dynamic>> getDishes(FilterSortMenu fsMenu) async {
+    var responce = await dio.get(ROOT + 'menu', queryParameters: fsMenu.toJson());
     Map<String, dynamic> data = jsonDecode(responce.data) as Map<String, dynamic>;
     List<Dish> dishes = List<Dish>.from(data['dishes'].map((e) => Dish.fromJson(e)));
     List<DishGroup> groups = List<DishGroup>.from(data['groups'].map((e) => DishGroup.fromJson(e)));
-    FilterSortMenu fsMenu = FilterSortMenu.fromJson(data['filter_sort_data']);
-    print(fsMenu);
+    
     return Future.delayed(const Duration(milliseconds: 500), () => {
       "dishes" : dishes,
-      "groups" : groups,
-      'filter_sort_data': fsMenu
+      "groups" : groups
     });
+  }
+
+  Future<FilterSortMenu> getFilterSortMenu() async {
+    var responce = await dio.get(ROOT + 'menu/filter-sort');
+    return Future.delayed(const Duration(milliseconds: 500), 
+      () => FilterSortMenu.fromJson(jsonDecode(responce.data))
+    );
   }
 
   Future<String> addDish(Dish dish) async {

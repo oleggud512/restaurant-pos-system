@@ -37,6 +37,7 @@ class Supplier {
 }
 
 class Grocery {
+
     Grocery({
         required this.supplierId,
         required this.grocId,
@@ -54,6 +55,7 @@ class Grocery {
     String grocMeasure;
     double avaCount;
     List<Supplier> suppliedBy;
+    bool selected = false;
 
     factory Grocery.fromJson(Map<String, dynamic> json) => Grocery(
         supplierId: json["supplier_id"],
@@ -398,6 +400,7 @@ List<DishGroup> groupFromJson(String str) => List<DishGroup>.from(json.decode(st
 String groupToJson(List<DishGroup> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class DishGroup {
+
     DishGroup({
         required this.groupId,
         required this.groupName,
@@ -405,6 +408,7 @@ class DishGroup {
 
     int groupId;
     String groupName;
+    bool selected = false;
 
     factory DishGroup.fromJson(Map<String, dynamic> json) => DishGroup(
         groupId: json["dish_gr_id"],
@@ -423,6 +427,7 @@ class FilterSortMenu {
   String sortColumn = 'dish_name'; // 'dish_price'
   String like = '';
   List<Grocery> groceries = [];
+  List<DishGroup> groups = [];
   double priceFrom;
   double priceTo;
 
@@ -444,6 +449,7 @@ class FilterSortMenu {
       "like" : like,
       "price_from" : priceFrom,
       "price_to" : priceTo,
-      "groceries" : List<int>.from(groceries.map((e) => e.grocId))
+      "groceries" : List<int>.from(groceries.map((e) => e.grocId)).join('+'),
+      "groups" : List<int>.from(groups.map((e) => e.groupId)).join('+'),
   };
 }

@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../services/models.dart';
+
 
 class MenuEvent extends Equatable {
 
@@ -12,6 +14,21 @@ class MenuLoadEvent extends MenuEvent { }
 class MenuReloadMenuEvent extends MenuEvent { }
 
 class MenuReloadGroupsEvent extends MenuEvent { }
+
+class MenuFiterGroceriesChangedEvent extends MenuEvent {
+  MenuFiterGroceriesChangedEvent(this.grocIndex);
+  int grocIndex;
+}
+
+class MenuFiterGroupsChangedEvent extends MenuEvent {
+  MenuFiterGroupsChangedEvent(this.groupIndex);
+  int groupIndex;
+}
+
+class MenuFilterDishNameEvent extends MenuEvent {
+  MenuFilterDishNameEvent(this.like);
+  String like;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 

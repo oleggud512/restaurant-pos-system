@@ -40,7 +40,13 @@ class _MenuPageState extends State<MenuPage> {
               }
               if (state is MenuLoadedState) {
                 return Scaffold(
-                  appBar: AppBar(),
+                  appBar: AppBar(
+                    leading: BackButton( // понятия не имею, какого фига эта кнопка не появилась сама...
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
                   body: Column(
                     // crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -48,15 +54,15 @@ class _MenuPageState extends State<MenuPage> {
                         flex: 1,
                         child: ListView(
                           children: [
-                            for (int i = 0; i < bloc.dishes.length; i++) InkWell(
-                              child: Text(bloc.dishes[i].dishId.toString() + "\nname: " + 
-                                bloc.dishes[i].dishName + "\n" +
-                                bloc.dishes[i].dishPrice.toString() + " \$\n" + 
-                                bloc.groups.firstWhere((element) => element.groupId == bloc.dishes[i].dishGrId).groupName
+                            for (var dish in bloc.toShowDishes) InkWell(
+                              child: Text(dish.dishId.toString() + "\nname: " + 
+                                dish.dishName + "\n" +
+                                dish.dishPrice.toString() + " \$\n" + 
+                                bloc.groups.firstWhere((element) => element.groupId == dish.dishGrId).groupName
                               ),
                               onTap: () async {
                                 await Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => DishDetalsPage(dish: bloc.dishes[i], groups: bloc.groups) // чтобы группу можно было менять
+                                  builder: (context) => DishDetalsPage(dish: dish, groups: bloc.groups) // чтобы группу можно было менять
                                 ));
                                 bloc.inEvent.add(MenuLoadEvent());
                               }

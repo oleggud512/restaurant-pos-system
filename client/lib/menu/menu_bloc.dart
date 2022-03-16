@@ -20,7 +20,12 @@ class MenuBloc extends Bloc {
   
   late List<DishGroup> groups;
   late List<Dish> dishes;
-  late FilterSortMenu fsMenu;
+  late List<Dish> toShowDishes;
+  FilterSortMenu? fsMenu;
+  late List<Grocery> groceries;
+
+  bool showGrocList = false;
+  bool showGroupList = false;
   // late DishFilterSortData dishFilterSortData;
 
   MenuBloc(this.repo) {
@@ -31,12 +36,40 @@ class MenuBloc extends Bloc {
   _handleEvent(dynamic event) async {
     if (event is MenuLoadEvent) {
       _inState.add(MenuLoadingState());
-      var data = await repo.getDishes();
+
+      groceries = await repo.getGroceries(suppliedOnly: false);
+      fsMenu ??= await repo.getFilterSortMenu();
+
+      var data = await repo.getDishes(fsMenu!);
       groups = data['groups'];
       dishes = data['dishes'];
-      fsMenu = data['filter_sort_data'];
+      setShownDishes(fsMenu!.like);
+      _inState.add(MenuLoadedState());
+    } else if (event is MenuFiterGroceriesChangedEvent) {
+      groceries[event.grocIndex].selected = !groceries[event.grocIndex].selected;
+      if (groceries[event.grocIndex].selected) {
+        fsMenu!.groceries.add(groceries[event.grocIndex]);
+      } else {
+        fsMenu!.groceries.remove(groceries[event.grocIndex]);
+      }
+      _inState.add(MenuLoadedState());
+    } else if (event is MenuFiterGroupsChangedEvent) {
+      groups[event.groupIndex].selected = !groups[event.groupIndex].selected;
+      if (groups[event.groupIndex].selected) {
+        fsMenu!.groups.add(groups[event.groupIndex]);
+      } else {
+        fsMenu!.groups.remove(groups[event.groupIndex]);
+      }
+      _inState.add(MenuLoadedState());
+    } else if (event is MenuFilterDishNameEvent) {
+      fsMenu!.like = event.like;
+      setShownDishes(event.like);
       _inState.add(MenuLoadedState());
     }
+  }
+
+  void setShownDishes(String like) {
+    toShowDishes = dishes.where((e) => e.dishName.contains(like)).toList();
   }
 
   @override

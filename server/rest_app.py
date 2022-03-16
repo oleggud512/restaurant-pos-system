@@ -359,13 +359,25 @@ def delete_inf_ab_del_s():
 def get_menu():
     cur: CMySQLCursor = con.cursor()
 
-    like = request.args.get('like', '')
-    min_price = request.args.get('min_price', 0)
-    max_price = request.args.get('max_price')
+    price_from = request.args.get('price_from')
+    price_to = request.args.get('price_to')
+    sort_column = request.args.get('sort_column')
+    asc = request.args.get('asc')
+    groceries = srv.decode_array(request.args.get('groceries'), is_tuple=True, is_int=True)
+    groups = srv.decode_array(request.args.get('groups'), is_tuple=True, is_int=True)
     
     cur.execute(f"""
-        SELECT dish_id, dish_name, dish_price, dish_gr_id FROM dishes
-        WHERE dish_name LIKE '%{like}%'
+        SELECT d.dish_id, d.dish_name, d.dish_price, d.dish_gr_id 
+        FROM dishes d
+        WHERE dish_price >= {price_from} 
+            AND dish_price <= {price_to}
+            {f'AND dish_gr_id IN {groups}' if len(groups) > 0 else ''}
+            {f'''
+               AND {groceries} IN (SELECT dc.groc_id
+                   FROM dish_consist dc 
+                   WHERE dc.dish_id = d.dish_id)
+            ''' if len(groceries) > 0 else ''}
+        ORDER BY {sort_column} {asc}
     """)
     
     dishes = cur_to_dict(cur)
@@ -391,7 +403,7 @@ def get_menu():
         FROM dishes
     """)
 
-    filter_sort_data = cur_to_dict(cur)[0]
+    filter_sort_data = cur_to_dict(cur)[0]      # УБРАТЬ ЭТО НУЖНО потом
     print(dumps(
         {
             'dishes' : dishes, 
@@ -409,6 +421,21 @@ def get_menu():
         }, 
         indent=4
     )
+
+
+@app.route('/restaurant/v1/menu/filter-sort', methods=['GET'])
+def get_menu_filter_sort():
+    cur: CMySQLCursor = con.cursor()
+
+    cur.execute(f"""
+        SELECT MIN(dish_price) AS min_price, MAX(dish_price) AS max_price
+        FROM dishes
+    """)
+
+    filter_sort_data = cur_to_dict(cur)[0]
+
+    cur.close()
+    return dumps(filter_sort_data, indent=4)
 
 
 @app.route('/restaurant/v1/menu', methods=['POST'])
