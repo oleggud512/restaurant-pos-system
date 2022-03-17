@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:client/menu/add_dish/prime_cost_details/prime_cost_details_dialog.dart';
 import 'package:client/menu/widgets/groc_picker.dart';
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,6 +12,8 @@ import '../../services/constants.dart';
 import '../../services/models.dart';
 import '../../services/repo.dart';
 import '../widgets/group_picker.dart';
+import '../widgets/label_icon_button.dart';
+import '../widgets/photo.dart';
 import 'dish_details_bloc.dart';
 import 'dish_details_states_events.dart';
 
@@ -22,9 +28,11 @@ class DishDetalsPage extends StatefulWidget {
 }
 
 class _DishDetalsPageState extends State<DishDetalsPage> {
+  
 
   @override
   Widget build(BuildContext context) {
+    
     return BlocProvider<DishDtBloc>(
       blocBuilder: () => DishDtBloc(Provider.of<Repo>(context), widget.dish, widget.groups),
       blocDispose: (DishDtBloc bloc) => bloc.dispose(),
@@ -67,11 +75,12 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
   }
 
   Widget buildFirstRow(DishDtBloc bloc, DishDtLoadedState state) {
+    
     return Row(
       children: [
         Expanded(
           flex: 1,
-          child: Container(color: Colors.green)
+          child: Photo(dish: bloc.dish, edit: bloc.isEdit)
         ),
         Expanded(
           flex: 2,
@@ -79,6 +88,15 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
         )
       ]
     );
+  }
+
+  Future<void> setPhoto(DishDtBloc bloc) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result == null) { return; }
+    File file = File(result.files.single.path!);
+    setState(() {
+      bloc.dish.photo = file;
+    });
   }
 
   Widget buildGrocShow(DishDtBloc bloc, DishDtLoadedState state) {
@@ -104,7 +122,7 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
     return GrocPicker(grocCurState: bloc.dish.dishGrocs,);
   }
 
-  Widget buildSecondRow(DishDtBloc bloc, DishDtLoadedState state) {
+  Widget buildSecondRow(DishDtBloc bloc, DishDtLoadedState state)  {
     return Row(
       children: [
         Expanded(
@@ -113,8 +131,13 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
         ),
         Expanded(
           flex: 2,
-          child: Container(
-            color: Colors.blue
+          child: FutureBuilder(
+            future: Dio().get('http://127.0.0.1:5000/static/descr/0.md'),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Text(snapshot.data.toString());
+              } return Container();
+            }
           )
         )
       ],

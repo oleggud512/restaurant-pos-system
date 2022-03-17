@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'dart:io';
+
 enum View { list, grid }
 enum Sorting { asc, desc }
 
@@ -313,7 +315,8 @@ class Dish {
         required this.dishName,
         required this.dishPrice,
         required this.dishGrId,
-        required this.dishGrocs,
+        required this.dishGrocs, 
+        required this.dishPhotoIndex,
     });
 
     int? dishId;
@@ -321,12 +324,15 @@ class Dish {
     double? dishPrice;
     int dishGrId;
     List<DishGroc> dishGrocs;
+    int dishPhotoIndex;
+    File? photo;
 
     factory Dish.initial() => Dish(
       dishId: null,
       dishName: '',
       dishPrice: null,
       dishGrId: 1, // unsorted
+      dishPhotoIndex: 0,
       dishGrocs: []
     );
 
@@ -335,6 +341,7 @@ class Dish {
         dishName: json["dish_name"],
         dishPrice: json["dish_price"].toDouble(),
         dishGrId: json["dish_gr_id"],
+        dishPhotoIndex: json['dish_photo_index'],
         dishGrocs: List<DishGroc>.from(json["consist"].map((x) => DishGroc.fromJson(x))),
     );
 
@@ -343,6 +350,7 @@ class Dish {
       dishName: other.dishName,
       dishPrice: other.dishPrice,
       dishGrId: other.dishGrId,
+      dishPhotoIndex: other.dishPhotoIndex,
       dishGrocs: List.from(other.dishGrocs)
     );
 
@@ -352,6 +360,7 @@ class Dish {
         "dish_price": dishPrice,
         "dish_gr_id": dishGrId,
         "consist": List<dynamic>.from(dishGrocs.map((x) => x.toJson())),
+        "photo": (photo != null) ? base64Encode(photo!.readAsBytesSync()) : null
     };
 
     bool get isSaveable => dishPrice != 0 

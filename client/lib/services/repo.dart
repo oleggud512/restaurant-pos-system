@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 import 'models.dart';
 
@@ -146,6 +147,10 @@ class Repo {
   Future<String> updateDish(Dish dish) async {
     var responce = await dio.put(ROOT + 'menu', data: dish.toJson());
     return Future.delayed(const Duration(milliseconds: 500), () => responce.data); 
+  }
+
+  String getImagePath({int imageId=0}) {
+    return 'http://127.0.0.1:5000/static/images/$imageId.jpg';
   }
 }
 

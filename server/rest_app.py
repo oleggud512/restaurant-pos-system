@@ -4,6 +4,7 @@ from pprint import pprint
 from typing import Any
 from flask import Flask, redirect, render_template, request, jsonify, url_for, abort, make_response
 from base64 import decodebytes
+from itsdangerous import base64_decode, base64_encode
 from mysql.connector import connect, MySQLConnection
 from mysql.connector.cursor_cext import CMySQLCursor
 from simplejson import dumps
@@ -367,7 +368,7 @@ def get_menu():
     groups = srv.decode_array(request.args.get('groups'), is_tuple=True, is_int=True)
     
     cur.execute(f"""
-        SELECT d.dish_id, d.dish_name, d.dish_price, d.dish_gr_id 
+        SELECT d.dish_id, d.dish_name, d.dish_price, d.dish_gr_id, d.dish_photo_index
         FROM dishes d
         WHERE dish_price >= {price_from} 
             AND dish_price <= {price_to}
@@ -476,17 +477,25 @@ def add_dish():
 def update_dish():
     cur: CMySQLCursor = con.cursor()
     
+    photo = request.json.get('photo', None)
+    # print(photo, type(photo))
+    
+        
     dish_id = request.json.get('dish_id')
     dish_name = request.json.get('dish_name')
     dish_price = request.json.get('dish_price')
     dish_gr_id = request.json.get('dish_gr_id')
     consist = request.json.get('consist')
 
+    if photo != None:
+        srv.save_photo(photo, dish_id)
+
     cur.execute(f"""
         UPDATE dishes
         SET dish_name = "{dish_name}",
             dish_price = {dish_price},
-            dish_gr_id = {dish_gr_id}
+            dish_gr_id = {dish_gr_id},
+            dish_photo_index = {dish_id}
         WHERE dish_id = {dish_id};
     """)
     con.commit()

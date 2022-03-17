@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../bloc_provider.dart';
 import '../../services/models.dart';
 import '../../services/repo.dart';
+import '../widgets/photo.dart';
 import 'add_dish_bloc.dart';
 import 'add_dish_states_events.dart';
 import '../widgets/group_picker.dart';
@@ -77,10 +78,7 @@ class _AddDishPageState extends State<AddDishPage> {
     return ListView(
       controller: ScrollController(),
       children: [
-        Container( // image
-          height: 300,
-          color: Colors.green
-        ),
+        Photo(dish: bloc.dish, edit: true),
         TextFormField(
           decoration: const InputDecoration(
             labelText: "dish name",

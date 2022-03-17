@@ -33,7 +33,7 @@ BEGIN
 END //
 DELIMITER ;
 
-call add_grocery_to_certain_dish(1, 8, 1);
+CALL add_grocery_to_certain_dish(1, 8, 1);
 /* для расчета себестоимости */
 DELIMITER //
 CREATE PROCEDURE get_min_groc_price(groc_id INT)
@@ -42,7 +42,10 @@ BEGIN
     FROM suppliers_groc sg JOIN suppliers s USING(supplier_id)
     WHERE groc_id = groc_id;
 END; //
-DELIMITER ;
+
+
+
+
 
 
 

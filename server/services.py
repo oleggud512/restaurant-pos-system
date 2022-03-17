@@ -1,3 +1,7 @@
+from itsdangerous import base64_decode
+import sys, os
+
+
 def decode_list_of_dict(string, *param_names):
     """
         5|4+3|2 
@@ -40,3 +44,8 @@ def decode_array(string:str, is_int=False, is_float=False, is_tuple=False):
     if is_tuple:
         return tuple(res)
     return list(res)
+
+def save_photo(photo, dish_id):
+    os.remove(f'static/images/{dish_id}.jpg')
+    with open(f'static/images/{dish_id}.jpg', 'wb') as file:
+        file.write(base64_decode(photo))

@@ -71,7 +71,9 @@ def get_groc():
 # a = requests.get(ROOT + 'hellonio', params={'mumbai': [1, 2, 3, 4, 5]})
 # print(a.text)
 
-t = '1|2+2|1+3|2.356'
-a = requests.get(ROOT + 'menu/prime-cost/' + t)
-# print(decode_list_of_dict(t, 'groc_id', 'groc_count'))
-print(a.text)
+# t = '1|2+2|1+3|2.356'
+# a = requests.get(ROOT + 'menu/prime-cost/' + t)
+# # print(decode_list_of_dict(t, 'groc_id', 'groc_count'))
+# print(a.text)
+
+
