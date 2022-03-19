@@ -368,7 +368,7 @@ def get_menu():
     groups = srv.decode_array(request.args.get('groups'), is_tuple=True, is_int=True)
     
     cur.execute(f"""
-        SELECT d.dish_id, d.dish_name, d.dish_price, d.dish_gr_id, d.dish_photo_index
+        SELECT d.dish_id, d.dish_name, d.dish_price, d.dish_gr_id, d.dish_photo_index, d.dish_descr
         FROM dishes d
         WHERE dish_price >= {price_from} 
             AND dish_price <= {price_to}
@@ -447,16 +447,24 @@ def add_dish():
 
     # с процедурами не работает cur.lastrowid
     cur.execute(f"""
-        INSERT INTO dishes(dish_name, dish_price, dish_gr_id)
+        INSERT INTO dishes(dish_name, dish_price, dish_gr_id, dish_descr)
         VALUES (
             '{request.json['dish_name']}',
             {request.json['dish_price']},
-            {request.json['dish_gr_id']}
+            {request.json['dish_gr_id']},
+            '{request.json['dish_descr']}'
         );
     """)
     dish_id = cur.lastrowid
     con.commit()
+    photo = request.json.get('photo', None)
 
+    if photo != None:
+        srv.save_photo(photo, dish_id)
+        cur.execute(f"""
+            UPDATE dishes SET dish_photo_index = {dish_id} WHERE dish_id = {dish_id}
+        """)
+        con.commit()
 
     for groc in groceries:
         cur.execute(f"""
@@ -466,7 +474,6 @@ def add_dish():
                 {groc['groc_count']}
             )
         """)
-        print("PROCEDURE")
         con.commit()
 
     cur.close()
@@ -479,23 +486,24 @@ def update_dish():
     
     photo = request.json.get('photo', None)
     # print(photo, type(photo))
-    
-        
+    dish_photo_index = request.json.get('dish_photo_index')
     dish_id = request.json.get('dish_id')
     dish_name = request.json.get('dish_name')
     dish_price = request.json.get('dish_price')
     dish_gr_id = request.json.get('dish_gr_id')
     consist = request.json.get('consist')
+    dish_descr = request.json.get('dish_descr')
 
     if photo != None:
         srv.save_photo(photo, dish_id)
-
+    print(str(dish_descr) + "MAMBA")
     cur.execute(f"""
         UPDATE dishes
         SET dish_name = "{dish_name}",
             dish_price = {dish_price},
             dish_gr_id = {dish_gr_id},
-            dish_photo_index = {dish_id}
+            dish_photo_index = {dish_photo_index},
+            dish_descr = "{dish_descr}"
         WHERE dish_id = {dish_id};
     """)
     con.commit()
@@ -573,7 +581,7 @@ def get_prime_cost(groc_ids):
                 'total': 0,
                 'consist': [
                     {
-                        "supplier_id" : 666,
+                        "supplier_id" : 666, 
                         "supplier_name" : "no no no no",
                         "min_price" : 666
                     }
@@ -586,7 +594,6 @@ def get_prime_cost(groc_ids):
         prime_cost['consist'].append(grocery)
 
     print(dumps(prime_cost, indent=2))
-
     cur.close()
     return dumps(prime_cost, indent=2)
 

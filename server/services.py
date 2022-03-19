@@ -46,6 +46,7 @@ def decode_array(string:str, is_int=False, is_float=False, is_tuple=False):
     return list(res)
 
 def save_photo(photo, dish_id):
-    os.remove(f'static/images/{dish_id}.jpg')
+    try: os.remove(f'static/images/{dish_id}.jpg')
+    except FileNotFoundError: ...
     with open(f'static/images/{dish_id}.jpg', 'wb') as file:
         file.write(base64_decode(photo))

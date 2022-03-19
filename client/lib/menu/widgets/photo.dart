@@ -12,10 +12,11 @@ import '../../services/repo.dart';
 import '../dish_details/dish_details_bloc.dart';
 
 class Photo extends StatefulWidget {
-  Photo({Key? key, required this.dish, this.edit=true}) : super(key: key);
+  Photo({Key? key, required this.dish, this.edit=true, this.height=200}) : super(key: key);
 
   Dish dish;
   bool edit;
+  double height;
 
   @override
   State<Photo> createState() => _PhotoState();
@@ -29,7 +30,7 @@ class _PhotoState extends State<Photo> {
       там же есть кнопка изменить (которая появляется только если edit)
   */
   late String url;
-  late Widget _photo;
+  late Widget _photo; // загружено из инета
 
   @override
   void initState() {
@@ -40,7 +41,7 @@ class _PhotoState extends State<Photo> {
 
   _updateImgWidget() async {
     setState(() {
-      _photo = const CircularProgressIndicator();
+      _photo = const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
     });
     Uint8List bytes = (await NetworkAssetBundle(Uri.parse(url)).load(url))
         .buffer
@@ -58,7 +59,7 @@ class _PhotoState extends State<Photo> {
         //     Provider.of<Repo>(context, listen: false).getImagePath(imageId: widget.dish.dishPhotoIndex),
         //     height: 200,
         //   ) : Image.file(widget.dish.photo!, height: 200),
-        (widget.dish.photo == null) ? _photo : Image.file(widget.dish.photo!, height: 200),
+        (widget.dish.photo == null) ? _photo : Image.file(widget.dish.photo!, height: widget.height),
         Row(
           children: [
             Expanded(
@@ -73,7 +74,9 @@ class _PhotoState extends State<Photo> {
             ElevatedButton(
               child: Icon(Icons.close),
               onPressed: () async {
-                setState((){widget.dish.photo = null;});
+                widget.dish.dishPhotoIndex = 0;
+                url = Provider.of<Repo>(context, listen: false).getImagePath(imageId: 0);
+                _updateImgWidget();
               },
             ),
           ],
@@ -85,6 +88,7 @@ class _PhotoState extends State<Photo> {
   Future<void> setPhoto() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result == null) { return; }
+    widget.dish.dishPhotoIndex = widget.dish.dishId ?? 0;
     File file = File(result.files.single.path!);
     setState(() {
       widget.dish.photo = file;

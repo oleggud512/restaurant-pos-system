@@ -1,7 +1,9 @@
 import 'package:client/menu/dish_details/dish_details.dart';
 import 'package:client/menu/menu_states_events.dart';
+import 'package:client/menu/widgets/dish_container.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:responsive_grid/responsive_grid.dart';
 
 import '../bloc_provider.dart';
 import '../services/repo.dart';
@@ -52,14 +54,12 @@ class _MenuPageState extends State<MenuPage> {
                     children: [
                       Expanded(
                         flex: 1,
-                        child: ListView(
+                        child: ResponsiveGridList(
+                          desiredItemWidth: 250,
                           children: [
-                            for (var dish in bloc.toShowDishes) InkWell(
-                              child: Text(dish.dishId.toString() + "\nname: " + 
-                                dish.dishName + "\n" +
-                                dish.dishPrice.toString() + " \$\n" + 
-                                bloc.groups.firstWhere((element) => element.groupId == dish.dishGrId).groupName
-                              ),
+                            for (var dish in bloc.toShowDishes) DishContainer(
+                              dish: dish, 
+                              group: bloc.groups.firstWhere((element) => element.groupId == dish.dishGrId),
                               onTap: () async {
                                 await Navigator.push(context, MaterialPageRoute(
                                   builder: (context) => DishDetalsPage(dish: dish, groups: bloc.groups) // чтобы группу можно было менять

@@ -317,6 +317,7 @@ class Dish {
         required this.dishGrId,
         required this.dishGrocs, 
         required this.dishPhotoIndex,
+        required this.dishDescr,
     });
 
     int? dishId;
@@ -325,6 +326,7 @@ class Dish {
     int dishGrId;
     List<DishGroc> dishGrocs;
     int dishPhotoIndex;
+    String dishDescr;
     File? photo;
 
     factory Dish.initial() => Dish(
@@ -333,6 +335,7 @@ class Dish {
       dishPrice: null,
       dishGrId: 1, // unsorted
       dishPhotoIndex: 0,
+      dishDescr: '',
       dishGrocs: []
     );
 
@@ -342,6 +345,7 @@ class Dish {
         dishPrice: json["dish_price"].toDouble(),
         dishGrId: json["dish_gr_id"],
         dishPhotoIndex: json['dish_photo_index'],
+        dishDescr: json['dish_descr'],
         dishGrocs: List<DishGroc>.from(json["consist"].map((x) => DishGroc.fromJson(x))),
     );
 
@@ -351,6 +355,7 @@ class Dish {
       dishPrice: other.dishPrice,
       dishGrId: other.dishGrId,
       dishPhotoIndex: other.dishPhotoIndex,
+      dishDescr: other.dishDescr,
       dishGrocs: List.from(other.dishGrocs)
     );
 
@@ -359,8 +364,10 @@ class Dish {
         "dish_name": dishName,
         "dish_price": dishPrice,
         "dish_gr_id": dishGrId,
+        "dish_photo_index" : dishPhotoIndex,
         "consist": List<dynamic>.from(dishGrocs.map((x) => x.toJson())),
-        "photo": (photo != null) ? base64Encode(photo!.readAsBytesSync()) : null
+        "photo": (photo != null) ? base64Encode(photo!.readAsBytesSync()) : null,
+        "dish_descr": dishDescr,
     };
 
     bool get isSaveable => dishPrice != 0 

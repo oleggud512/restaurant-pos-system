@@ -14,6 +14,7 @@ import '../../services/repo.dart';
 import '../widgets/group_picker.dart';
 import '../widgets/label_icon_button.dart';
 import '../widgets/photo.dart';
+import '../widgets/text_editor.dart';
 import 'dish_details_bloc.dart';
 import 'dish_details_states_events.dart';
 
@@ -75,7 +76,6 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
   }
 
   Widget buildFirstRow(DishDtBloc bloc, DishDtLoadedState state) {
-    
     return Row(
       children: [
         Expanded(
@@ -131,13 +131,13 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
         ),
         Expanded(
           flex: 2,
-          child: FutureBuilder(
-            future: Dio().get('http://127.0.0.1:5000/static/descr/0.md'),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(snapshot.data.toString());
-              } return Container();
-            }
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextEditor(
+              text: bloc.dish.dishDescr, 
+              isEdit: bloc.isEdit, 
+              onChanged: (newVal) => bloc.dish.dishDescr = newVal,
+            ),
           )
         )
       ],

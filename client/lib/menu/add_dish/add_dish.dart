@@ -1,4 +1,5 @@
 import 'package:client/menu/add_dish/prime_cost_details/prime_cost_details_dialog.dart';
+import 'package:client/menu/widgets/text_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,8 @@ class AddDishPage extends StatefulWidget {
 }
 
 class _AddDishPageState extends State<AddDishPage> {
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -224,7 +227,6 @@ class _AddDishPageState extends State<AddDishPage> {
         ListTile(
           title: ElevatedButton(
             onPressed: () async {
-              print(bloc.dish.toJson());
               if (bloc.dish.isSaveable) {
                 await Provider.of<Repo>(context, listen: false).addDish(bloc.dish);
                 Navigator.pop(context);
@@ -232,7 +234,12 @@ class _AddDishPageState extends State<AddDishPage> {
             }, 
             child: const Text("add")
           ),
-        )
+        ), 
+        Expanded(child: TextEditor(
+          text: bloc.dish.dishDescr, 
+          isEdit: true, 
+          onChanged: (newVal) => bloc.dish.dishDescr = newVal,
+        ))
       ],
     );
   }

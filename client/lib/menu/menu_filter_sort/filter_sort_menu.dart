@@ -62,7 +62,7 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
                 ListTile(title: Text("filtering")), 
                 ListTile(           // поиск по названию (работает сразу)
                   title: TextFormField(
-                    controller: TextEditingController(text: bloc.fsMenu!.like),
+                    // controller: TextEditingController(text: bloc.fsMenu!.like),
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "назва страви"
@@ -109,7 +109,7 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
                           padding: const EdgeInsets.all(10), 
                           child: Center(
                             child: (!bloc.showGrocList) ? Icon(Icons.arrow_drop_down) : RotatedBox(
-                              quarterTurns: 2, 
+                              quarterTurns: 2,
                               child: Icon(Icons.arrow_drop_down)
                             )
                           )
@@ -188,7 +188,7 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
                 elevation: MaterialStateProperty.all(0),
               ),
               onPressed: () {
-                print(bloc.fsMenu!.toJson());
+                Navigator.pop(context);
                 bloc.inEvent.add(MenuLoadEvent());
               }
             )
