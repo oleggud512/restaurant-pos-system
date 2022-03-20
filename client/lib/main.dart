@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:client/router.dart';
 
 import 'bloc_provider.dart';
+import 'employees/employees.dart';
 import 'main_bloc.dart';
 import 'widgets/main_button.dart';
 
@@ -78,12 +79,6 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             MainButton(
-              child: const Text("* * * * * *"),
-              onPressed: () {
-
-              },
-            ),
-            MainButton(
               child: const Text("склад"),
               onPressed: () {
                 Navigator.pushNamed(context, '/store');
@@ -99,6 +94,12 @@ class _HomePageState extends State<HomePage> {
               child: const Text("меню"),
               onPressed: () {
                 Navigator.pushNamed(context, '/menu');
+              },
+            ),
+            MainButton(
+              child: const Text("работники"),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => Employees()));
               },
             ),
             MainButton(

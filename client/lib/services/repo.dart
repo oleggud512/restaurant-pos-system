@@ -152,6 +152,28 @@ class Repo {
   String getImagePath({int imageId=0}) {
     return 'http://127.0.0.1:5000/static/images/$imageId.jpg';
   }
+
+
+
+  Future<List<Role>> getRoles() async {
+    var respocne = await dio.get(ROOT + 'roles');
+    return Future.delayed(const Duration(milliseconds: 500), () => roleListFromJson(respocne.data));
+  }
+
+  Future<String> addRole(Role role) async {
+    var responce = await dio.post(ROOT + 'roles', data: role.toJson());
+    return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
+  }
+
+  Future<String> deleteRole(int roleId) async {
+    var responce = await dio.delete(ROOT + 'roles/' + roleId.toString());
+    return Future.delayed(const Duration(milliseconds: 500), () => responce.data); 
+  }
+
+  Future<String> updateRole(Role role) async {
+    var responce = await dio.put(ROOT + 'roles', data: role.toJson());
+    return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
+  }
 }
 
 /*

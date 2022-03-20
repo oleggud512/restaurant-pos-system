@@ -43,8 +43,15 @@ BEGIN
     WHERE groc_id = groc_id;
 END; //
 
-
-
+DELIMITER //
+CREATE TRIGGER delete_dish
+BEFORE DELETE ON dishes
+FOR EACH ROW
+BEGIN 
+	DELETE FROM dish_consists
+    WHERE dish_id = old.dish_id;
+END; //
+DELIMITER ;
 
 
 

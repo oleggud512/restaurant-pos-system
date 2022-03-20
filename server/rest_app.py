@@ -597,6 +597,152 @@ def get_prime_cost(groc_ids):
     cur.close()
     return dumps(prime_cost, indent=2)
 
+######################################################################################
+###########################-|| E M P L O Y E E S ||-##################################
+######################################################################################
+
+
+@app.route('/restaurant/v1/roles', methods=['POST'])
+def add_role():
+    cur: CMySQLCursor = con.cursor()
+
+    role_name = request.json['role_name']
+    salary_per_hour = request.json['salary_per_hour']
+
+    cur.execute(f"""
+        INSERT INTO roles(role_name, salary_per_hour)
+        VALUES ('{role_name}', {salary_per_hour})
+    """)
+    con.commit()
+
+    cur.close()
+    return 'success'
+
+@app.route('/restaurant/v1/roles', methods=['PUT'])
+def update_role():
+    cur: CMySQLCursor = con.cursor()
+
+    role_id = request.json['role_id']
+    role_name = request.json['role_name']
+    salary_per_hour = request.json['salary_per_hour']
+
+    print(request.json)
+
+    cur.execute(f"""
+        UPDATE roles 
+        SET role_name = '{role_name}', 
+            salary_per_hour = {salary_per_hour}
+        WHERE role_id = {role_id}
+    """)
+    con.commit()
+
+    cur.close()
+    return 'success'
+
+@app.route('/restaurant/v1/roles', methods=['GET'])
+def get_roles(serialize=False):
+    cur: CMySQLCursor = con.cursor()
+
+    cur.execute(f"""
+        SELECT r.role_id, r.role_name, r.salary_per_hour
+        FROM roles r
+    """)
+
+    roles = cur_to_dict(cur)
+
+    cur.close()
+    return roles if serialize else dumps(roles, indent=4)
+
+@app.route('/restaurant/v1/roles/<int:role_id>', methods=['DELETE'])
+def delete_role(role_id):
+    cur: CMySQLCursor = con.cursor()
+
+    cur.execute(f"""
+        DELETE FROM roles WHERE role_id = {role_id}
+    """)
+    con.commit()
+
+    cur.close()
+    return 'success'
+
+
+
+
+
+@app.route('/restaurant/v1/employees', methods=['POST'])
+def add_employee():
+    cur: CMySQLCursor = con.cursor()
+
+    role_id = request.json['role_id']
+    emp_fname = request.json['emp_fname'] # str 
+    emp_lname = request.json['emp_lname'] # str
+    birthday = request.json['birthday'] # 2000-01-20
+    phone = request.json['phone'] # str
+    email = request.json['email'] # str
+    gender = request.json['gender'] # str 'm' | 'f'
+    hours_per_week = request.json['hours_per_week'] # int
+
+    cur.execute(f"""
+        INSERT INTO employees(role_id, emp_fname, emp_lname, birthday, phone, email, gender, hours_per_week) 
+        VALUES ('{emp_fname}', '{emp_lname}', DATE('{birthday}'), '{phone}', '{email}', '{gender}', {hours_per_week})
+    """)
+    cur.close()
+    return 'success'
+
+@app.route('/restaurant/v1/employees', methods=['PUT'])
+def update_employee():
+    cur: CMySQLCursor = con.cursor()
+
+    role_id = request.json['role_id']
+    emp_fname = request.json['emp_fname'] # str 
+    emp_lname = request.json['emp_lname'] # str
+    birthday = request.json['birthday'] # 2000-01-20
+    phone = request.json['phone'] # str
+    email = request.json['email'] # str
+    gender = request.json['gender'] # str 'm' | 'f'
+    hours_per_week = request.json['hours_per_week'] # int
+
+    cur.execut(f"""
+        UPDATE employees
+        SET role_id = {role_id},
+            emp_fname = '{emp_fname}',
+            emp_lname = '{emp_lname}',
+            birthday = DATE('{birthday}'),
+            phone = '{phone}',
+            email = '{email}',
+            gender = '{gender}',
+            hours_per_week = {hours_per_week}
+        WHERE role_id = {role_id}
+    """)
+    con.commit()
+
+    cur.close()
+    return 'success'
+
+@app.route('/restaurant/v1/employees/<int:emp_id>', methods=['DELETE'])
+def delete_employee(emp_id):
+    """удалит всё нахрен. Работника не существовало"""
+    cur: CMySQLCursor = con.commit()
+
+    
+
+    cur.close()
+    return 'success'
+
+
+@app.route('/restaurant/v1/employees', methods=['GET'])
+def get_employees(emp_id):
+    cur: CMySQLCursor = con.commit()
+
+    cur.execute(f"""
+        SELECT role_id, emp_fname, emp_lname, birthday, phone, email, gender, hours_per_week
+        FROM employees
+    """)
+    employees = cur_to_dict(cur)
+
+    cur.close()
+    return dumps(employees, indent=4)
+
 
 if __name__ == '__main__':
     app.run()
