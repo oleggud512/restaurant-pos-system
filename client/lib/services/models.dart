@@ -512,3 +512,119 @@ class Role {
     bool get saveable => salaryPerHour > 0.0 && roleName.isNotEmpty;
 
 }
+
+
+
+List<Employee> employeeListFromJson(String str) => List<Employee>.from(json.decode(str).map((x) => Employee.fromJson(x)));
+
+String employeeToJson(List<Employee> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class Employee {
+    Employee({
+        required this.empId,
+        required this.roleId,
+        required this.isWaiter,
+        required this.empFname,
+        required this.empLname,
+        required this.birthday,
+        required this.phone,
+        required this.email,
+        required this.gender,
+        required this.hoursPerMonth,
+    });
+
+    int? empId;
+    int roleId;
+    int isWaiter;
+    String empFname;
+    String empLname;
+    DateTime birthday;
+    String phone;
+    String email;
+    String gender;
+    int hoursPerMonth;
+
+    factory Employee.fromJson(Map<String, dynamic> json) => Employee(
+        empId: json['emp_id'],
+        roleId: json["role_id"],
+        isWaiter: json['is_waiter'],
+        empFname: json["emp_fname"],
+        empLname: json["emp_lname"],
+        birthday: DateTime.parse(json["birthday"]),
+        phone: json["phone"],
+        email: json["email"],
+        gender: json["gender"],
+        hoursPerMonth: json["hours_per_month"],
+    );
+
+    factory Employee.init() => Employee(
+        empId: null,
+        roleId: 0,
+        isWaiter: 0,
+        empFname: '',
+        empLname: '',
+        birthday: DateTime.parse('2000-01-01'),
+        phone: '',
+        email: '',
+        gender: 'm',
+        hoursPerMonth: 0,
+    );
+
+    Map<String, dynamic> toJson() => {
+        "emp_id": empId,
+        "is_waiter": isWaiter,
+        "role_id": roleId,
+        "emp_fname": empFname,
+        "emp_lname": empLname,
+        "birthday": "${birthday.year.toString().padLeft(4, '0')}-${birthday.month.toString().padLeft(2, '0')}-${birthday.day.toString().padLeft(2, '0')}",
+        "phone": phone,
+        "email": email,
+        "gender": gender,
+        "hours_per_month": hoursPerMonth,
+    };
+
+    bool get saveable => roleId != 0 && empFname.isNotEmpty && empLname.isNotEmpty;
+}
+
+List<Diary> diaryListFromJson(String str) => List<Diary>.from(json.decode(str).map((x) => Diary.fromJson(x)));
+
+String diaryToJson(List<Diary> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class Diary {
+    Diary({
+        required this.dId,
+        required this.date,
+        required this.empId,
+        required this.startTime,
+        required this.endTime,
+        required this.gone,
+        required this.empName
+    });
+
+    int dId;
+    DateTime date;
+    int empId;
+    String startTime;
+    String endTime;
+    bool gone;
+    String empName;
+
+    factory Diary.fromJson(Map<String, dynamic> json) => Diary(
+        dId: json["d_id"],
+        date: DateTime.parse(json["date_"]),
+        empId: json["emp_id"],
+        startTime: json["start_time"],
+        endTime: json["end_time"],
+        gone: json["gone"] == 1 ? true : false,
+        empName: json['emp_name']
+    );
+
+    Map<String, dynamic> toJson() => {
+        "d_id": dId,
+        "date_": "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
+        "emp_id": empId,
+        "start_time": startTime,
+        "end_time": endTime,
+        "gone": gone,
+    };
+}

@@ -76,5 +76,5 @@ def get_groc():
 # # print(decode_list_of_dict(t, 'groc_id', 'groc_count'))
 # print(a.text)
 
-a = requests.post(ROOT + 'employees', data={'my_super_variable': 666666666})
+a = requests.get(ROOT + 'diary')
 print(a.text)

@@ -174,6 +174,54 @@ class Repo {
     var responce = await dio.put(ROOT + 'roles', data: role.toJson());
     return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
   }
+
+
+  Future<List<Employee>> getEmployees() async {
+    var responce = await dio.get(ROOT + 'employees');
+    return Future.delayed(const Duration(milliseconds: 500), () => employeeListFromJson(responce.data));
+  }
+
+  Future<String> addEmployee(Employee emp) async {
+    var responce = await dio.post(ROOT + 'employees', data: emp.toJson());
+    return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
+  }
+
+  Future<String> updateEmployee(Employee emp) async {
+    var responce = await dio.put(ROOT + 'employees', data: emp.toJson());
+    return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
+  }
+
+  Future<Map<String, dynamic>> getRolesEmployees() async {
+    var responce = await dio.get(ROOT + 'roles-employees');
+    print(responce.data);
+    var data = jsonDecode(responce.data) as Map<String, dynamic>;
+    return Future.delayed(const Duration(milliseconds: 500), () => <String, dynamic>{
+      'employees': List<Employee>.from(data['employees'].map((e) => Employee.fromJson(e))),
+      'roles': List<Role>.from(data['roles'].map((e) => Role.fromJson(e))),
+      'diary': List<Diary>.from(data['diary'].map((e) => Diary.fromJson(e)))
+    });
+  }
+
+  Future<String> diaryStart(int empId) async {
+    var responce = await dio.post(ROOT + 'diary/start/' + empId.toString());
+    return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
+  }
+
+  Future<String> diaryGone(int empId) async {
+    var responce = await dio.put(ROOT + 'diary/gone/' + empId.toString());
+    return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
+  }
+
+  Future<List<Diary>> getDiary() async {
+    var responce = await dio.get(ROOT + 'diary');
+    return Future.delayed(const Duration(milliseconds: 500), () => diaryListFromJson(responce.data));
+  }
+
+  Future<String> deleteDiary(int dId) async {
+    var responce = await dio.delete(ROOT + 'diary/' + dId.toString());
+    return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
+  }
+  
 }
 
 /*

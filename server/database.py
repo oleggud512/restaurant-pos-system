@@ -21,6 +21,8 @@ def cur_to_dict(cur: CMySQLCursor):
         for col_name, col_value in zip(cur.column_names, row):
             if type(col_value) == datetime.date: 
                 row_dict[col_name] = col_value.isoformat()
+            elif type(col_value) == datetime.timedelta:
+                row_dict[col_name] = datetime.datetime.fromtimestamp(col_value.seconds).strftime('%H:%M')
             else:
                 row_dict[col_name] = col_value
         result.append(row_dict)

@@ -18,6 +18,8 @@ class EmployeeBloc extends Bloc {
 
   Repo repo;
   late List<Role> roles;
+  late List<Employee> employees;
+  late List<Diary> diary;
 
   EmployeeBloc(this.repo) {
     _outEvent.listen((event) => _handleEvent(event),);
@@ -27,7 +29,15 @@ class EmployeeBloc extends Bloc {
   _handleEvent(dynamic event) async {
     if (event is EmployeeLoadEvent) {
       _inState.add(EmployeeLoadingState());
-      roles = await repo.getRoles();
+      var data = await repo.getRolesEmployees();
+      roles = data['roles'];
+      employees = data['employees'];
+      diary = data['diary'];
+      _inState.add(EmployeeLoadedState());
+      
+    } else if (event is EmployeeReloadDiary) {
+      _inState.add(EmployeeLoadingState());
+      diary = await repo.getDiary();
       _inState.add(EmployeeLoadedState());
     }
   }

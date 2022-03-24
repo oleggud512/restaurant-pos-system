@@ -9,7 +9,7 @@ class EmployeeEvent extends Equatable {
 
 class EmployeeLoadEvent extends EmployeeEvent { }
 
-
+class EmployeeReloadDiary extends EmployeeEvent { }
 
 ///////////////////////////////////////////////////////////////////////////////
 

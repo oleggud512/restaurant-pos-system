@@ -640,7 +640,7 @@ def update_role():
     return 'success'
 
 @app.route('/restaurant/v1/roles', methods=['GET'])
-def get_roles(serialize=False):
+def get_roles(serialize=True):
     cur: CMySQLCursor = con.cursor()
 
     cur.execute(f"""
@@ -651,7 +651,7 @@ def get_roles(serialize=False):
     roles = cur_to_dict(cur)
 
     cur.close()
-    return roles if serialize else dumps(roles, indent=4)
+    return dumps(roles, indent=4) if serialize else roles
 
 @app.route('/restaurant/v1/roles/<int:role_id>', methods=['DELETE'])
 def delete_role(role_id):
@@ -674,18 +674,20 @@ def add_employee():
     cur: CMySQLCursor = con.cursor()
 
     role_id = request.json['role_id']
+    is_waiter = request.json['is_waiter']
     emp_fname = request.json['emp_fname'] # str 
     emp_lname = request.json['emp_lname'] # str
     birthday = request.json['birthday'] # 2000-01-20
     phone = request.json['phone'] # str
     email = request.json['email'] # str
     gender = request.json['gender'] # str 'm' | 'f'
-    hours_per_week = request.json['hours_per_week'] # int
+    hours_per_month = request.json['hours_per_month'] # int
 
     cur.execute(f"""
-        INSERT INTO employees(role_id, emp_fname, emp_lname, birthday, phone, email, gender, hours_per_week) 
-        VALUES ('{emp_fname}', '{emp_lname}', DATE('{birthday}'), '{phone}', '{email}', '{gender}', {hours_per_week})
+        INSERT INTO employees(role_id, is_waiter, emp_fname, emp_lname, birthday, phone, email, gender, hours_per_month) 
+        VALUES ({role_id}, {is_waiter}, '{emp_fname}', '{emp_lname}', DATE('{birthday}'), '{phone}', '{email}', '{gender}', {hours_per_month})
     """)
+    con.commit()
     cur.close()
     return 'success'
 
@@ -693,26 +695,29 @@ def add_employee():
 def update_employee():
     cur: CMySQLCursor = con.cursor()
 
+    emp_id = request.json['emp_id']
     role_id = request.json['role_id']
+    is_waiter = request.json['is_waiter']
     emp_fname = request.json['emp_fname'] # str 
     emp_lname = request.json['emp_lname'] # str
     birthday = request.json['birthday'] # 2000-01-20
     phone = request.json['phone'] # str
     email = request.json['email'] # str
     gender = request.json['gender'] # str 'm' | 'f'
-    hours_per_week = request.json['hours_per_week'] # int
+    hours_per_month = request.json['hours_per_month'] # int
 
-    cur.execut(f"""
+    cur.execute(f"""
         UPDATE employees
         SET role_id = {role_id},
             emp_fname = '{emp_fname}',
+            is_waiter = {is_waiter},
             emp_lname = '{emp_lname}',
             birthday = DATE('{birthday}'),
             phone = '{phone}',
             email = '{email}',
             gender = '{gender}',
-            hours_per_week = {hours_per_week}
-        WHERE role_id = {role_id}
+            hours_per_month = {hours_per_month}
+        WHERE emp_id = {emp_id}
     """)
     con.commit()
 
@@ -722,7 +727,7 @@ def update_employee():
 @app.route('/restaurant/v1/employees/<int:emp_id>', methods=['DELETE'])
 def delete_employee(emp_id):
     """удалит всё нахрен. Работника не существовало"""
-    cur: CMySQLCursor = con.commit()
+    cur: CMySQLCursor = con.cursor()
 
     
 
@@ -731,17 +736,87 @@ def delete_employee(emp_id):
 
 
 @app.route('/restaurant/v1/employees', methods=['GET'])
-def get_employees(emp_id):
-    cur: CMySQLCursor = con.commit()
+def get_employees(serialize=True):
+    cur: CMySQLCursor = con.cursor()
 
     cur.execute(f"""
-        SELECT role_id, emp_fname, emp_lname, birthday, phone, email, gender, hours_per_week
+        SELECT is_waiter, emp_id, role_id, emp_fname, emp_lname, birthday, phone, email, gender, hours_per_month
         FROM employees
     """)
     employees = cur_to_dict(cur)
 
     cur.close()
-    return dumps(employees, indent=4)
+    return dumps(employees, indent=4) if serialize else employees
+
+
+@app.route('/restaurant/v1/roles-employees', methods=['GET'])
+def get_roles_and_employees():
+    return dumps({
+        'employees': get_employees(serialize=False),
+        'roles': get_roles(serialize=False),
+        'diary': get_diary(serialize=False)
+    }, indent=4)
+
+
+@app.route('/restaurant/v1/diary/start/<int:emp_id>', methods=['POST'])
+def employee_comes(emp_id):
+    cur: CMySQLCursor = con.cursor()
+
+    cur.execute(f"""
+        INSERT INTO diary(emp_id) VALUES ({emp_id})
+    """)
+    con.commit()
+
+    cur.close()
+    return 'success'
+
+@app.route('/restaurant/v1/diary/gone/<int:emp_id>', methods=['PUT'])
+def employee_has_gone(emp_id):  
+    cur: CMySQLCursor = con.cursor()
+
+    cur.execute(f"""
+        UPDATE diary 
+        SET end_time = TIME(NOW()),
+            gone = 1
+        WHERE gone = 0 AND emp_id = {emp_id}
+    """)
+
+    cur.close()
+    return 'success'
+
+@app.route('/restaurant/v1/diary', methods=['GET'])
+def get_diary(serialize=True):
+    cur: CMySQLCursor = con.cursor()
+
+    cur.execute(f"""
+        SELECT d.d_id, 
+            d.date_, 
+            d.emp_id, 
+            d.start_time, 
+            d.end_time, 
+            d.gone, 
+            CONCAT(e.emp_lname, " ", e.emp_fname) as emp_name
+        FROM diary d JOIN employees e USING(emp_id)
+    """)
+
+    diary = cur_to_dict(cur)
+    print(diary)
+    
+
+    cur.close()
+    return dumps(diary, indent=4) if serialize else diary
+
+@app.route('/restaurant/v1/diary/<int:d_id>', methods=['DELETE'])
+def delete_diary(d_id):
+    cur: CMySQLCursor = con.cursor()
+    
+    cur.execute(f"""
+        DELETE FROM diary WHERE d_id = {d_id}
+    """)
+    con.commit()
+
+    cur.close()
+    return 'success'
 
 
 if __name__ == '__main__':

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../services/constants.dart';
 import '../../services/models.dart';
 
 
@@ -18,34 +20,37 @@ class _RoleContainerState extends State<RoleContainer> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 3.0,
-      child: InkWell(
-        onTap: widget.onTap,
-        child: Row(
-          children: [
-            Container(
-              width: 20,
-              color: Colors.grey,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
-                child: Center(child: Text(widget.role.roleId!.toString())),
+      child: SizedBox(
+        height: 25,
+        child: InkWell(
+          onTap: widget.onTap,
+          child: Row(
+            children: [
+              Container(
+                width: 20,
+                color: Provider.of<Constants>(context, listen: false).grey,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
+                  child: Center(child: Text(widget.role.roleId!.toString())),
+                ),
               ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
-                child: Text(widget.role.roleName, overflow: TextOverflow.ellipsis),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
+                  child: Text(widget.role.roleName, overflow: TextOverflow.ellipsis),
+                )
+              ),
+              Container(
+                width: 100,
+                color: Provider.of<Constants>(context, listen: false).grey,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
+                  child: Center(child: Text(widget.role.salaryPerHour.toString(), overflow: TextOverflow.ellipsis)),
+                ),
               )
-            ),
-            Container(
-              width: 100,
-              color: Colors.grey,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
-                child: Center(child: Text(widget.role.salaryPerHour.toString(), overflow: TextOverflow.ellipsis)),
-              ),
-            )
-          ]
-        )
+            ]
+          )
+        ),
       )
     );
   }
