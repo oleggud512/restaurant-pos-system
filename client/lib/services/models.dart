@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'dart:io';
 
+import 'package:client/employees/filter_sort_employee/filter_sort_employee.dart';
+import 'package:flutter/material.dart';
+
 enum View { list, grid }
 enum Sorting { asc, desc }
 
@@ -346,7 +349,7 @@ class Dish {
         dishGrId: json["dish_gr_id"],
         dishPhotoIndex: json['dish_photo_index'],
         dishDescr: json['dish_descr'],
-        dishGrocs: List<DishGroc>.from(json["consist"].map((x) => DishGroc.fromJson(x))),
+        dishGrocs: List<DishGroc>.from(json["consist"]?.map((x) => DishGroc.fromJson(x)) ?? []),
     );
 
     factory Dish.copy(Dish other) => Dish(
@@ -444,8 +447,8 @@ class FilterSortMenu {
   String like = '';
   List<Grocery> groceries = [];
   List<DishGroup> groups = [];
-  double priceFrom;
-  double priceTo;
+  double? priceFrom;
+  double? priceTo;
 
   FilterSortMenu({
     // required this.groceries,
@@ -457,6 +460,11 @@ class FilterSortMenu {
     // groceries: [],
     priceFrom: m['min_price'],
     priceTo: m['max_price']
+  );
+
+  factory FilterSortMenu.init() => FilterSortMenu(
+    priceFrom: null,
+    priceTo: null
   );
 
   Map<String, dynamic> toJson() => {
@@ -481,6 +489,7 @@ List<Role> roleListFromJson(String str) => List<Role>.from(json.decode(str).map(
 String roleToJson(List<Role> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Role {
+
     Role({
         required this.roleId,
         required this.roleName,
@@ -490,6 +499,7 @@ class Role {
     int? roleId;
     String roleName;
     double salaryPerHour;
+    bool selected = false;
 
     factory Role.fromJson(Map<String, dynamic> json) => Role(
         roleId: json["role_id"],
@@ -535,7 +545,7 @@ class Employee {
 
     int? empId;
     int roleId;
-    int isWaiter;
+    bool isWaiter;
     String empFname;
     String empLname;
     DateTime birthday;
@@ -547,7 +557,7 @@ class Employee {
     factory Employee.fromJson(Map<String, dynamic> json) => Employee(
         empId: json['emp_id'],
         roleId: json["role_id"],
-        isWaiter: json['is_waiter'],
+        isWaiter: json['is_waiter'] == 1 ? true : false,
         empFname: json["emp_fname"],
         empLname: json["emp_lname"],
         birthday: DateTime.parse(json["birthday"]),
@@ -560,7 +570,7 @@ class Employee {
     factory Employee.init() => Employee(
         empId: null,
         roleId: 0,
-        isWaiter: 0,
+        isWaiter: false,
         empFname: '',
         empLname: '',
         birthday: DateTime.parse('2000-01-01'),
@@ -572,7 +582,7 @@ class Employee {
 
     Map<String, dynamic> toJson() => {
         "emp_id": empId,
-        "is_waiter": isWaiter,
+        "is_waiter": isWaiter ? 1 : 0,
         "role_id": roleId,
         "emp_fname": empFname,
         "emp_lname": empLname,
@@ -626,5 +636,179 @@ class Diary {
         "start_time": startTime,
         "end_time": endTime,
         "gone": gone,
+    };
+}
+
+
+
+
+class OrderNode {
+  Dish dish;
+  int count;
+  double price;
+
+  OrderNode({
+    required this.dish,
+    required this.count,
+    required this.price
+  });
+
+  factory OrderNode.toAdd(Dish dish, int count) => OrderNode(
+    count: count,
+    dish: dish,
+    price: count * dish.dishPrice!
+  );
+
+  factory OrderNode.fromJson(Map<String, dynamic> json) => OrderNode(
+    dish: Dish.fromJson(json['dish']),
+    count: json['lord_count'],
+    price: json['lord_price']
+  );
+
+  Map<String, dynamic> toJson() {
+    return {
+      "dish_id": dish.dishId,
+      "count": count,
+      "price": price
+    };
+  }
+
+  void incr() {
+    count += 1;
+    price += dish.dishPrice!;
+  }
+
+  void decr() {
+    count -= 1;
+    price -= dish.dishPrice!;
+  }
+
+}
+
+List<Order> orderListFromJson(String str) => List<Order>.from(json.decode(str).map((x) => Order.fromJson(x)));
+
+String orderToJson(List<Order> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class Order {
+    Order({
+        required this.ordId,
+        required this.ordDate,
+        required this.ordStartTime,
+        required this.ordEndTime,
+        required this.moneyFromCustomer,
+        required this.totalPrice,
+        required this.empId,
+        this.empName,
+        required this.comm,
+        required this.isEnd,
+        required this.listOrders
+    });
+    int? ordId;
+    DateTime ordDate;
+    DateTime ordStartTime;
+    DateTime ordEndTime;
+    double moneyFromCustomer;
+    double totalPrice;
+    int empId;
+    String? empName;
+    String comm;
+    bool isEnd;
+    List<OrderNode> listOrders;
+
+    factory Order.init(int emp_id) {
+      return Order(
+        ordId: null,
+        ordDate: DateTime.now(),
+        ordStartTime: DateTime.now(),
+        ordEndTime: DateTime.now(),
+        moneyFromCustomer: 0,
+        totalPrice: 0,
+        empId: emp_id,
+        comm: '',
+        isEnd: false,
+        listOrders: []
+      );
+    } 
+
+    factory Order.fromJson(Map<String, dynamic> json) {
+      print(json);
+      return Order(
+        ordId: json['ord_id'],
+        ordDate: DateTime.parse(json["ord_date"]),
+        ordStartTime: DateTime.parse(json["ord_start_time"]),
+        ordEndTime: DateTime.parse(json["ord_end_time"]),
+        moneyFromCustomer: json["money_from_customer"].toDouble(),
+        totalPrice: json['total_price'],
+        empId: json["emp_id"],
+        empName: json['emp_name'],
+        comm: json["comm"],
+        isEnd: json['is_end'] == 1 ? true : false,
+        listOrders: List<OrderNode>.from(json['list_orders'].map((e) => OrderNode.fromJson(e)))
+    );}
+
+    Map<String, dynamic> toJson() => {
+        // "ord_date": "${ordDate.year.toString().padLeft(4, '0')}-${ordDate.month.toString().padLeft(2, '0')}-${ordDate.day.toString().padLeft(2, '0')}",
+        // "ord_start_time": ordStartTime,
+        // "ord_end_time": ordEndTime,
+        // "money_from_customer": moneyFromCustomer,
+        "emp_id": empId,
+        "comm": comm,
+        "is_end": isEnd ? 1 : 0,
+        "list_orders" : List<Map<String, dynamic>>.from(listOrders.map((e) => e.toJson()))
+    };
+
+    void refreshTotalPrice() => (listOrders.isNotEmpty) ? 
+      totalPrice = listOrders.map<double>((e) => e.price).reduce((value, element) => value + element) : 
+      totalPrice = 0;
+
+    bool get payable => moneyFromCustomer >= totalPrice;
+    bool get addable => empId != 0;
+    double get change => moneyFromCustomer - totalPrice;
+}
+
+
+FilterSortEmployeeData filterSortEmployeeDataFromJson(String str) => FilterSortEmployeeData.fromJson(json.decode(str));
+
+String filterSortEmployeeDataToJson(FilterSortEmployeeData data) => json.encode(data.toJson());
+
+class FilterSortEmployeeData {
+    FilterSortEmployeeData({
+        required this.birthdayFrom,
+        required this.birthdayTo,
+        required this.hoursPerMonthFrom,
+        required this.hoursPerMonthTo,
+        required this.gender,
+        required this.sortColumn,
+        required this.asc
+    });
+
+    DateTime birthdayFrom;
+    DateTime birthdayTo;
+    int hoursPerMonthFrom;
+    int hoursPerMonthTo;
+    String gender;
+    String sortColumn;
+    String asc;
+    List<int> roles = [];
+
+    factory FilterSortEmployeeData.fromJson(Map<String, dynamic> json) => FilterSortEmployeeData(
+        birthdayFrom: DateTime.parse(json["birthday_from"]),
+        birthdayTo: DateTime.parse(json["birthday_to"]),
+        hoursPerMonthFrom: json["hours_per_month_from"],
+        hoursPerMonthTo: json["hours_per_month_to"],
+        gender: json["gender"],
+        sortColumn: json['sort_column'],
+        asc: json['asc']
+    );
+
+    Map<String, dynamic> toJson() => {
+        "birthday_from": "${birthdayFrom.year.toString().padLeft(4, '0')}-${birthdayFrom.month.toString().padLeft(2, '0')}-${birthdayFrom.day.toString().padLeft(2, '0')}",
+        "birthday_to": "${birthdayTo.year.toString().padLeft(4, '0')}-${birthdayTo.month.toString().padLeft(2, '0')}-${birthdayTo.day.toString().padLeft(2, '0')}",
+        "hours_per_month_from": hoursPerMonthFrom,
+        "hours_per_month_to": hoursPerMonthTo,
+        "gender": gender,
+        'sort_column': sortColumn,
+        'asc': asc,
+        'roles': roles.join('+')
     };
 }

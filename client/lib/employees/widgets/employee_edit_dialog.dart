@@ -117,10 +117,10 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                     ),
                     ListTile(
                       leading: Checkbox(
-                        value: widget.employee!.isWaiter == 1 ? true : false,
+                        value: widget.employee!.isWaiter,
                         onChanged: (newVal) {
                           setState(() {
-                            widget.employee!.isWaiter = newVal! ? 1 : 0;
+                            widget.employee!.isWaiter = newVal!;
                           });
                         }
                       ),

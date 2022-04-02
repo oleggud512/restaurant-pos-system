@@ -15,6 +15,15 @@ def increase_index():
         file.write(ind+1)
     return ind
 
+
+@app.route('/second', methods=['GET'])
+def bbb():
+    return request.args['a']
+
+@app.route('/first', methods=['GET'])
+def aaa():
+    return str(bbb())
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':

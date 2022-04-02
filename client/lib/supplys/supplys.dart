@@ -75,13 +75,13 @@ class _SupplysPageState extends State<SupplysPage> {
                           supply: bloc.supplys[i],
                           view: View.grid,
                           onTap: () async {
-                            bool reload = await showDialog(
+                            bool? reload = await showDialog(
                               context: context,
                               builder: (context) {
                                 return ShowSupplyDialog(supply: bloc.supplys[i]);
                               }
                             );
-                            if (reload) {
+                            if (reload != null && reload == true) {
                               bloc.inEvent.add(SupplyLoadEvent());
                             }
                           }

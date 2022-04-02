@@ -1,3 +1,4 @@
+import 'package:client/orders/orders.dart';
 import 'package:client/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:client/main.dart';
@@ -40,6 +41,11 @@ class MyRouter {
       //     settings: const RouteSettings(name: '/menu/add-dish'),
       //     builder: (context) => AddDishPage()
       //   );
+      case '/orders':
+        return MaterialPageRoute<void>(
+          settings: const RouteSettings(name: '/orders'),
+          builder: (context) => OrdersPage()
+        );
       default:
         return MaterialPageRoute<void>(
             settings: const RouteSettings(name: '/error'),

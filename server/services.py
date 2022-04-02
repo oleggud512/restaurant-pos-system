@@ -50,3 +50,8 @@ def save_photo(photo, dish_id):
     except FileNotFoundError: ...
     with open(f'static/images/{dish_id}.jpg', 'wb') as file:
         file.write(base64_decode(photo))
+
+
+def tuple_to_str(tp):
+    if len(tp) == 1: return '(' + tp[0] + ')'
+    else: return str(tuple(tp))

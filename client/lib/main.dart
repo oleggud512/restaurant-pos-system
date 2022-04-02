@@ -7,6 +7,7 @@ import 'package:client/router.dart';
 import 'bloc_provider.dart';
 import 'employees/employees.dart';
 import 'main_bloc.dart';
+import 'stats.dart/stats_page.dart';
 import 'widgets/main_button.dart';
 
 import 'services/constants.dart';
@@ -103,11 +104,23 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             MainButton(
-              child: const Text("* * * * * *"),
-              onPressed: () {
-
+              child: const Text("заказы"),
+              onPressed: () async {
+                print(DateTime.now());
+                Navigator.pushNamed(context, '/orders');
+              
               },
             ),
+            MainButton(
+              child: const Text("stats"),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => StatsPage()));
+              },
+            ),
+            BackButton(onPressed: () {
+              print(DateTime.now().toString().substring(0, 19));
+              print(DateTime.parse('2000-01-01T22:22:22.005'));
+            })
           ],
         ),
       ), 

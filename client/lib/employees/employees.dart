@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../services/repo.dart';
+import 'filter_sort_employee/filter_sort_employee.dart';
 
 class Employees extends StatefulWidget {
   Employees({Key? key}) : super(key: key);
@@ -24,8 +25,10 @@ enum EmployeesPage { employees, roles }
 
 class _EmployeesState extends State<Employees> {
 
-   EmployeesPage curPage = EmployeesPage.employees;
-   int curI = 0;
+  EmployeesPage curPage = EmployeesPage.employees;
+  int curI = 0;
+  GlobalKey<ScaffoldState> gc0 = GlobalKey<ScaffoldState>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +49,13 @@ class _EmployeesState extends State<Employees> {
               if (curI == 0) {
                 if (state is EmployeeLoadedState) {
                   return Scaffold(
+                    key: gc0,
+                    endDrawer: FilterSortEmployee(),
                     bottomNavigationBar: buildBNBar(),
                     appBar: buildAppBar(bloc), 
                     body: ListView(
                       children: [
-                        for (int i = 0; i < bloc.employees.length; i++) EmployeeContainer(
+                        for (int i = 0; i < bloc.employees.length; i++) if (bloc.filteredEmployees.contains(bloc.employees[i])) EmployeeContainer(
                           employee: bloc.employees[i],
                           role: bloc.roles.firstWhere((e) => e.roleId == bloc.employees[i].roleId),
                           onTap: () async {
@@ -61,13 +66,6 @@ class _EmployeesState extends State<Employees> {
                                   roles: bloc.roles,
                                   employee: bloc.employees[i],
                                   actions: [
-                                    // ElevatedButton(
-                                    //   child: Text('delete'),
-                                    //   onPressed: () async {
-                                    //     await Provider.of<Repo>(context, listen: false).deleteEmployee(bloc.roles[i].roleId!);
-                                    //     Navigator.pop(context);
-                                    //   },
-                                    // ),
                                     ElevatedButton(
                                       child: Text('save'),
                                       onPressed: () async {
@@ -165,6 +163,7 @@ class _EmployeesState extends State<Employees> {
     Role role = Role.init();
     Employee emp = Employee.init();
     return AppBar(
+      leading: const BackButton(),
       title: Center(child: curI == 0 ? Text("employees") : curI == 1 ? Text("roles") : Text("diary")), 
       actions: [
         IconButton(
@@ -214,6 +213,12 @@ class _EmployeesState extends State<Employees> {
             );
             bloc.inEvent.add(EmployeeLoadEvent());
           }
+        ),
+        if (curI == 0) IconButton(
+          icon: Icon(Icons.filter_alt_outlined),
+          onPressed: () {
+            gc0.currentState?.openEndDrawer();
+          },
         )
       ]
     );

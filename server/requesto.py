@@ -1,6 +1,7 @@
 import json
 import requests
 from requests.models import Request
+from simplejson import dumps, loads
 
 from services import decode_list_of_dict
 
@@ -76,5 +77,8 @@ def get_groc():
 # # print(decode_list_of_dict(t, 'groc_id', 'groc_count'))
 # print(a.text)
 
-a = requests.get(ROOT + 'diary')
+# a = requests.get(ROOT + 'diary')
+# print(a.text)
+
+a = requests.get('http://127.0.0.1:5000/first?a=mambokora')
 print(a.text)

@@ -360,8 +360,8 @@ def delete_inf_ab_del_s():
 def get_menu():
     cur: CMySQLCursor = con.cursor()
 
-    price_from = request.args.get('price_from')
-    price_to = request.args.get('price_to')
+    price_from = request.args.get('price_from', None)
+    price_to = request.args.get('price_to', None)
     sort_column = request.args.get('sort_column')
     asc = request.args.get('asc')
     groceries = srv.decode_array(request.args.get('groceries'), is_tuple=True, is_int=True)
@@ -370,15 +370,15 @@ def get_menu():
     cur.execute(f"""
         SELECT d.dish_id, d.dish_name, d.dish_price, d.dish_gr_id, d.dish_photo_index, d.dish_descr
         FROM dishes d
-        WHERE dish_price >= {price_from} 
-            AND dish_price <= {price_to}
-            {f'AND dish_gr_id IN {groups}' if len(groups) > 0 else ''}
+        WHERE 42 = 42
+            {f" AND dish_price >= {price_from} AND dish_price <= {price_to}" if len(price_from) and len(price_to) else ''}
+            {f' AND dish_gr_id IN {groups}' if len(groups) > 0 else ''}
             {f'''
                AND {groceries} IN (SELECT dc.groc_id
                    FROM dish_consist dc 
                    WHERE dc.dish_id = d.dish_id)
             ''' if len(groceries) > 0 else ''}
-        ORDER BY {sort_column} {asc}
+        ORDER BY {sort_column} {asc.upper()}
     """)
     
     dishes = cur_to_dict(cur)
@@ -740,19 +740,51 @@ def get_employees(serialize=True):
     cur: CMySQLCursor = con.cursor()
 
     cur.execute(f"""
-        SELECT is_waiter, emp_id, role_id, emp_fname, emp_lname, birthday, phone, email, gender, hours_per_month
+        SELECT MIN(hours_per_month) as hours_per_month_from,
+            MAX(hours_per_month) as hours_per_month_to,
+            MIN(birthday) as birthday_from,
+            MAX(birthday) as birthday_to
         FROM employees
     """)
+
+    filter_sort_data = cur_to_dict(cur)[0]
+    filter_sort_data['gender'] = 'fm'
+    filter_sort_data['sort_column'] = 'emp_fname' # | 'emp_lname' | 'birthday' | 'hours_per_month'
+    filter_sort_data['asc'] = 'asc'
+    
+    hours_per_month_from = request.args.get('hours_per_month_from', filter_sort_data['hours_per_month_from'])
+    hours_per_month_to = request.args.get('hours_per_month_to', filter_sort_data['hours_per_month_to'])
+    birthday_from = request.args.get('birthday_from', filter_sort_data['birthday_from'])
+    birthday_to = request.args.get('birthday_to', filter_sort_data['birthday_to'])
+    gender = tuple(filter_sort_data['gender'] if request.args.get('gender') == None or len(request.args.get('gender')) == 0 else request.args.get('gender'))
+    sort_column = request.args.get('sort_column', filter_sort_data['sort_column'])
+    asc = request.args.get('asc', filter_sort_data['asc'])
+    roles = srv.decode_array(request.args.get('roles', '') if request.args.get('roles') and len(request.args.get('roles')) > 0 else '', is_tuple=True, is_int=True)
+
+    # print(f'AND role_id IN {str(roles)[0:-2] + ")"} ' if len(roles) > 0 else '', "gogog")
+
+    cur.execute(f"""
+        SELECT is_waiter, emp_id, role_id, emp_fname, emp_lname, birthday, phone, email, gender, hours_per_month
+        FROM employees
+        WHERE (hours_per_month BETWEEN {hours_per_month_from} AND {hours_per_month_to}) 
+            AND (birthday BETWEEN DATE('{birthday_from}') AND DATE('{birthday_to}')) 
+            AND gender IN {gender}
+            {f'AND role_id IN {srv.tuple_to_str(roles)} ' if len(roles) > 0 else ''}
+        ORDER BY {sort_column} {asc}
+    """)
+    
     employees = cur_to_dict(cur)
 
+    res = {'employees': employees, 'filter_sort_data': filter_sort_data}
+
     cur.close()
-    return dumps(employees, indent=4) if serialize else employees
+    return dumps(res, indent=4) if serialize else res
 
 
 @app.route('/restaurant/v1/roles-employees', methods=['GET'])
 def get_roles_and_employees():
     return dumps({
-        'employees': get_employees(serialize=False),
+        **get_employees(serialize=False),
         'roles': get_roles(serialize=False),
         'diary': get_diary(serialize=False)
     }, indent=4)
@@ -812,6 +844,116 @@ def delete_diary(d_id):
     
     cur.execute(f"""
         DELETE FROM diary WHERE d_id = {d_id}
+    """)
+    con.commit()
+
+    cur.close()
+    return 'success'
+
+
+
+
+@app.route('/restaurant/v1/orders', methods=['POST'])
+def add_order():
+    cur: CMySQLCursor = con.cursor()
+
+    emp_id = request.json.get('emp_id')
+    comm = request.json.get('comm')
+    list_orders = request.json.get('list_orders')
+
+    cur.execute(f"""
+        INSERT INTO orders(emp_id, comm) VALUES ({emp_id}, "{comm}")
+    """)
+    ord_id = cur.lastrowid
+    con.commit()
+
+    for order_node in list_orders:
+        cur.execute(f"""
+            INSERT INTO list_orders(ord_id, dish_id, lord_count, lord_price)
+            VALUES (
+                {ord_id},
+                {order_node['dish_id']},
+                {order_node['count']},
+                {order_node['price']}
+            )
+        """)
+        con.commit()
+
+    cur.close()
+    return 'success'
+
+@app.route('/restaurant/v1/orders/<int:ord_id>', methods=['DELETE'])
+def delete_order(ord_id):
+    cur: CMySQLCursor = con.cursor()
+
+    cur.execute(f"""
+        DELETE FROM orders WHERE ord_id = {ord_id}
+    """)
+    con.commit()
+
+    cur.close()
+    return 'success'
+
+@app.route('/restaurant/v1/orders', methods=['GET'])
+def get_orders():
+    cur: CMySQLCursor = con.cursor()
+
+    cur.execute(f"""
+        SELECT d.dish_id, d.dish_name, d.dish_price, d.dish_gr_id, d.dish_photo_index, d.dish_descr
+        FROM dishes d
+    """)
+    dishes = cur_to_dict(cur)
+
+    cur.execute(f"""
+        SELECT o.ord_id, 
+            o.ord_date, 
+            o.ord_start_time, 
+            o.ord_end_time, 
+            o.money_from_customer, 
+            o.emp_id, 
+            (SELECT CONCAT(emp_fname, ' ', emp_lname)
+             FROM employees e
+             WHERE e.emp_id = o.emp_id) as emp_name,
+            o.comm, 
+            (SELECT SUM(lord_price) 
+             FROM list_orders lo 
+             WHERE lo.ord_id = o.ord_id) as total_price,
+            o.is_end
+        FROM orders o
+    """)
+    orders = cur_to_dict(cur)
+
+    for order in orders:
+        cur.execute(f"""
+            SELECT dish_id, lord_count, lord_price
+            FROM list_orders
+            WHERE ord_id = {order['ord_id']}
+        """)
+
+        list_orders = cur_to_dict(cur)
+
+        for order_node in list_orders:
+            order_node['dish'] = list(filter(lambda x: x['dish_id'] == order_node['dish_id'], dishes))[0]
+            del order_node['dish_id']
+
+        order['list_orders'] = list_orders
+    
+    return dumps(orders, indent=4)
+
+
+@app.route('/restaurant/v1/orders/pay', methods=['PUT'])
+def pay_order():
+    cur: CMySQLCursor = con.cursor()
+
+    money_from_customer = request.args.get('money_from_customer')
+    ord_id = request.args.get('ord_id')
+
+    cur.execute(f"""
+        UPDATE orders
+        SET money_from_customer = {money_from_customer},
+            is_end = 1
+            ord_end_time = NOW()
+        WHERE ord_id = {ord_id}
     """)
     con.commit()
 

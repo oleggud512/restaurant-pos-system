@@ -176,9 +176,14 @@ class Repo {
   }
 
 
-  Future<List<Employee>> getEmployees() async {
-    var responce = await dio.get(ROOT + 'employees');
-    return Future.delayed(const Duration(milliseconds: 500), () => employeeListFromJson(responce.data));
+  Future<Map<String, dynamic>> getEmployees({FilterSortEmployeeData? fsEmp}) async {
+    var responce = await dio.get(ROOT + 'employees', queryParameters: fsEmp?.toJson());
+    print(responce.data);
+    var data = jsonDecode(responce.data);
+    return Future.delayed(const Duration(milliseconds: 500), () => <String, dynamic>{
+      'employees': List<Employee>.from(data['employees'].map((e) => Employee.fromJson(e))),
+      'filter_sort_data': FilterSortEmployeeData.fromJson(data['filter_sort_data'])
+    });
   }
 
   Future<String> addEmployee(Employee emp) async {
@@ -191,12 +196,13 @@ class Repo {
     return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
   }
 
-  Future<Map<String, dynamic>> getRolesEmployees() async {
-    var responce = await dio.get(ROOT + 'roles-employees');
+  Future<Map<String, dynamic>> getRolesEmployees({FilterSortEmployeeData? fsEmp}) async {
+    var responce = await dio.get(ROOT + 'roles-employees', queryParameters: fsEmp?.toJson());
     print(responce.data);
     var data = jsonDecode(responce.data) as Map<String, dynamic>;
     return Future.delayed(const Duration(milliseconds: 500), () => <String, dynamic>{
       'employees': List<Employee>.from(data['employees'].map((e) => Employee.fromJson(e))),
+      'filter_sort_data': FilterSortEmployeeData.fromJson(data['filter_sort_data']),
       'roles': List<Role>.from(data['roles'].map((e) => Role.fromJson(e))),
       'diary': List<Diary>.from(data['diary'].map((e) => Diary.fromJson(e)))
     });
@@ -221,7 +227,31 @@ class Repo {
     var responce = await dio.delete(ROOT + 'diary/' + dId.toString());
     return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
   }
+
+
   
+  Future<List<Order>> getOrders() async {
+    var responce = await dio.get(ROOT + 'orders');
+    return Future.delayed(const Duration(milliseconds: 500), () => orderListFromJson(responce.data));
+  }
+
+  Future<String> addOrder(Order order) async {
+    var responce = await dio.post(ROOT + 'orders', data: order.toJson());
+    return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
+  }
+
+  Future<String> deleteOrder(int ordId) async {
+    var responce = await dio.delete(ROOT + 'orders/' + ordId.toString());
+    return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
+  }
+
+  Future<String> payOrder(Order order) async {
+    var responce = await dio.put(ROOT + 'orders/pay', queryParameters: {
+      'money_from_customer': order.moneyFromCustomer,
+      'ord_id': order.ordId
+    });
+    return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
+  }
 }
 
 /*
