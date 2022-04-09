@@ -9,6 +9,7 @@ import 'package:responsive_grid/responsive_grid.dart';
 import '../bloc_provider.dart';
 import '../services/models.dart';
 import '../services/repo.dart';
+import '../widgets/navigation_drawer.dart';
 import 'filter_sort_drawer/filter_sort_drawer.dart';
 import 'widgets/supply_container.dart';
 
@@ -45,6 +46,7 @@ class _SupplysPageState extends State<SupplysPage> {
               } else if (state is SupplyLoadedState) {
                 return Scaffold(
                   key: scgl,
+                  drawer: NavigationDrawer(),
                   appBar: buildAppBar(),
                   body: Container(
                     padding: const EdgeInsets.all(10),
@@ -105,8 +107,9 @@ class _SupplysPageState extends State<SupplysPage> {
     return AppBar(
       title: const Center(
       child: Text("supplys")), 
-      leading: BackButton(
-        onPressed: () => Navigator.pop(context)
+      leading: IconButton(
+        onPressed: () => scgl.currentState!.openDrawer(),
+        icon: Icon(Icons.menu)
       ),
       actions: [ 
         (view == View.list) ? IconButton(

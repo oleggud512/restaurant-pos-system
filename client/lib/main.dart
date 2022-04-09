@@ -7,12 +7,13 @@ import 'package:client/router.dart';
 import 'bloc_provider.dart';
 import 'employees/employees.dart';
 import 'main_bloc.dart';
-import 'stats.dart/stats_page.dart';
+import 'stats/stats_page.dart';
 import 'widgets/main_button.dart';
 
 import 'services/constants.dart';
 import 'services/repo.dart';
 import 'store/store.dart';
+import 'widgets/navigation_drawer.dart';
 
 void main() {
   runApp(MyApp());
@@ -47,7 +48,13 @@ class MyApp extends StatelessWidget {
                       theme: ThemeData(
                         primarySwatch: Colors.pink,
                         primaryColor: Colors.pink,
-                        brightness: bloc.curBr
+                        brightness: bloc.curBr,
+                        appBarTheme: AppBarTheme(
+                          titleTextStyle: TextStyle(
+                            // fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
                       ),
                       onGenerateRoute: myRouter.onGenerateRoute,
                     );
@@ -63,6 +70,9 @@ class MyApp extends StatelessWidget {
 }
 
 
+
+
+
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
 
@@ -74,6 +84,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavigationDrawer(),
       appBar: AppBar(title: const Text("ресторан")),
       body: Center(
         child: Row(

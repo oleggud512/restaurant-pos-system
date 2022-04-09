@@ -812,3 +812,126 @@ class FilterSortEmployeeData {
         'roles': roles.join('+')
     };
 }
+
+
+/////////////////////////////..///..///......///..//////..//////......../////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////..///..///..///////..//////..//////..////..////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////.......///..../////..//////..//////..////..//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////..///..///..///////..//////..//////..////..////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////..///..///......///......//......//........////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+StatsData statsDataFromMap(Map<String, dynamic> map) => StatsData.fromJson(map);
+
+class StatsData {
+    StatsData({
+        required this.ordPerPeriod,
+        required this.dishPerPeriod,
+        required this.empWorked,
+    });
+
+    List<OrdPerPeriod> ordPerPeriod;
+    List<DishPerPeriod> dishPerPeriod;
+    List<EmpWorked> empWorked;
+
+    factory StatsData.fromJson(Map<String, dynamic> json) => StatsData(
+        ordPerPeriod: List<OrdPerPeriod>.from(json["ord_per_period"].map((x) => OrdPerPeriod.fromJson(x))),
+        dishPerPeriod: List<DishPerPeriod>.from(json["dish_per_period"].map((x) => DishPerPeriod.fromJson(x))),
+        empWorked: List<EmpWorked>.from(json["emp_worked"].map((x) => EmpWorked.fromJson(x))),
+    );
+}
+
+class DishPerPeriod {
+    DishPerPeriod({
+        required this.dishId,
+        required this.dishName,
+        required this.count,
+    });
+
+    int dishId;
+    String dishName;
+    int count;
+
+    factory DishPerPeriod.fromJson(Map<String, dynamic> json) => DishPerPeriod(
+        dishId: json["dish_id"],
+        dishName: json["dish_name"],
+        count: json["count"],
+    );
+}
+
+class EmpWorked {
+    EmpWorked({
+        required this.empId,
+        required this.empName,
+        required this.worked,
+        required this.hoursPerMonth,
+    });
+
+    int empId;
+    String empName;
+    int worked;
+    int hoursPerMonth;
+
+    factory EmpWorked.fromJson(Map<String, dynamic> json) => EmpWorked(
+        empId: json["emp_id"],
+        empName: json["emp_name"],
+        worked: json["worked"],
+        hoursPerMonth: json["hours_per_month"],
+    );
+}
+
+class OrdPerPeriod {
+    OrdPerPeriod({
+        required this.ordStartTime,
+        required this.count,
+    });
+
+    DateTime ordStartTime;
+    int count;
+
+    factory OrdPerPeriod.fromJson(Map<String, dynamic> json) => OrdPerPeriod(
+        ordStartTime: DateTime.parse(json["ord_start_time"]),
+        count: json["count"],
+    );
+}
+
+class FilterSortStats {
+  
+  DateTime fromBase;
+  DateTime toBase;
+  DateTime ordFrom;
+  DateTime ordTo;
+  String group;
+  DateTime dishFrom;
+  DateTime dishTo;
+
+  FilterSortStats({
+    required this.fromBase,
+    required this.toBase,
+    required this.ordFrom,
+    required this.ordTo,
+    required this.group,
+    required this.dishTo,
+    required this.dishFrom
+  });
+
+  factory FilterSortStats.fromJson(Map<String, dynamic> json) => FilterSortStats(
+    fromBase: DateTime.parse(json['from_base']),
+    toBase: DateTime.parse(json['to_base']),
+    ordFrom: DateTime.parse(json['ord_from']),
+    ordTo: DateTime.parse(json['ord_to']),
+    dishFrom: DateTime.parse(json['dish_from']),
+    dishTo: DateTime.parse(json['dish_to']),
+    group: json['group']
+  );
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'ord_from' : ordFrom.  toIso8601String(),
+      'ord_to'   : ordTo.    toIso8601String(),
+      'dish_from': dishFrom. toIso8601String(),
+      'dish_to'  : dishTo.   toIso8601String(),
+      'group': group
+    };
+  }
+}

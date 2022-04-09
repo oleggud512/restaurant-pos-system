@@ -1,3 +1,4 @@
+import 'package:client/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:client/store/widgets/groceries_card.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +28,10 @@ class _StorePageState extends State<StorePage> {
       blocBuilder: () => StoreBloc(Provider.of<Repo>(context)),
       blocDispose: (StoreBloc bloc) => bloc.dispose(),
       child: Scaffold(
-        appBar: AppBar(title: const Center(child: Text("склад || удалять ингредиенты"))),
+        drawer: NavigationDrawer(),
+        appBar: AppBar(
+          title: const Center(child: Text("склад || удалять ингредиенты"))
+        ),
         body: Container(
           padding: const EdgeInsets.all(8),
           child: Row(

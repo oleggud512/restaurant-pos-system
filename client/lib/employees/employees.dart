@@ -8,6 +8,7 @@ import 'package:client/employees/widgets/employee_edit_dialog.dart';
 import 'package:client/employees/widgets/role_edit_dialog.dart';
 import 'package:client/employees/widgets/role_container.dart';
 import 'package:client/services/models.dart';
+import 'package:client/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -50,6 +51,7 @@ class _EmployeesState extends State<Employees> {
                 if (state is EmployeeLoadedState) {
                   return Scaffold(
                     key: gc0,
+                    drawer: NavigationDrawer(),
                     endDrawer: FilterSortEmployee(),
                     bottomNavigationBar: buildBNBar(),
                     appBar: buildAppBar(bloc), 
@@ -163,7 +165,6 @@ class _EmployeesState extends State<Employees> {
     Role role = Role.init();
     Employee emp = Employee.init();
     return AppBar(
-      leading: const BackButton(),
       title: Center(child: curI == 0 ? Text("employees") : curI == 1 ? Text("roles") : Text("diary")), 
       actions: [
         IconButton(

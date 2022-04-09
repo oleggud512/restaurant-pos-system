@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../bloc_provider.dart';
 import '../services/repo.dart';
+import '../widgets/navigation_drawer.dart';
 import 'add_order/add_order_page.dart';
 import 'orders_bloc.dart';
 import 'widgets/pay_order_dialog.dart';
@@ -19,6 +20,7 @@ class OrdersPage extends StatefulWidget {
 }
 
 class _OrdersPageState extends State<OrdersPage> {
+  GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return BlocProvider<OrdersBloc>(
@@ -35,6 +37,8 @@ class _OrdersPageState extends State<OrdersPage> {
                 return Scaffold(appBar: AppBar(), body: const Center(child: CircularProgressIndicator()));
               } else if (state is OrdersLoadedState) {
                 return Scaffold(
+                  key: key,
+                  drawer: NavigationDrawer(),
                   appBar: AppBar(
                     title: Center(child: Text('orders')),
                     actions: [

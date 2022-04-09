@@ -80,5 +80,5 @@ def get_groc():
 # a = requests.get(ROOT + 'diary')
 # print(a.text)
 
-a = requests.get('http://127.0.0.1:5000/first?a=mambokora')
+a = requests.get('http://127.0.0.1:5000/restaurant/v1/employees')
 print(a.text)

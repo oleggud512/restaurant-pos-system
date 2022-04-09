@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 
 import '../bloc_provider.dart';
+import '../services/models.dart';
 import '../services/repo.dart';
 import 'stats_states_events.dart';
 
@@ -16,6 +17,8 @@ class StatsBloc extends Bloc {
   Sink<StatsState> get _inState => _stateCont.sink;
 
   Repo repo;
+  FilterSortStats? fsStats;
+  late StatsData sdata;
 
   StatsBloc(this.repo) {
     _outEvent.listen((event) => _handleEvent(event),);
@@ -24,7 +27,11 @@ class StatsBloc extends Bloc {
 
   _handleEvent(dynamic event) async {
     if (event is StatsLoadEvent) {
-      
+      _inState.add(StatsLoadingState());
+      var data = await repo.getStats(fsStats: fsStats);
+      fsStats ??= data['filter_sort_stats'];
+      sdata = data['stats_data'];
+      _inState.add(StatsLoadedState());
     }
   }
 

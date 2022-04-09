@@ -32,7 +32,11 @@ class OrderContainer extends StatelessWidget {
             children: [
               Expanded(
                 flex: 1,
-                child: Center(child: Text(order.ordId.toString()))
+                child: Container(
+                  color: Provider.of<Constants>(context, listen: false).grey,
+                  alignment: Alignment.center,
+                  child: Text(order.ordId.toString())
+                )
               ),
               Expanded(
                 flex: 15,
@@ -52,12 +56,13 @@ class OrderContainer extends StatelessWidget {
               ),
               Expanded(
                 flex: 1,
-                child: Container(
-                  color: Provider.of<Constants>(context, listen: false).grey,
-                  child: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: onDelete
-                  )
+                child: InkWell(
+                  onTap: onDelete,
+                  child: Container(
+                    alignment: Alignment.center,
+                    color: Provider.of<Constants>(context, listen: false).grey,
+                    child: Icon(Icons.delete, size: 24),
+                  ),
                 )
               )
             ]

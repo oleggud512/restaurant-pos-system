@@ -24,7 +24,6 @@ class AddDishPage extends StatefulWidget {
 
 class _AddDishPageState extends State<AddDishPage> {
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,6 +1,7 @@
 import 'package:client/menu/dish_details/dish_details.dart';
 import 'package:client/menu/menu_states_events.dart';
 import 'package:client/menu/widgets/dish_container.dart';
+import 'package:client/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
@@ -21,6 +22,8 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
+  GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<MenuBloc>(
@@ -36,18 +39,28 @@ class _MenuPageState extends State<MenuPage> {
               var state = snapshot.data;
               if (state is MenuLoadingState) {
                 return Scaffold(
-                  appBar: AppBar(),
+                  appBar: AppBar(automaticallyImplyLeading: false,),
                   body: const Center(child: CircularProgressIndicator())
                 );
               }
               if (state is MenuLoadedState) {
                 return Scaffold(
+                  key: key,
+                  drawer: NavigationDrawer(),
                   appBar: AppBar(
-                    leading: BackButton( // понятия не имею, какого фига эта кнопка не появилась сама...
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
+                    title: Text("menu"),
+                    automaticallyImplyLeading: false,
+                    actions: [
+                      IconButton(
+                        icon: Icon(Icons.menu),
+                        onPressed: () => key.currentState!.openDrawer()
+                      ),
+                      Expanded(child: Center(child: Text('menu', style: Theme.of(context).appBarTheme.titleTextStyle))),
+                      IconButton(
+                        icon: Icon(Icons.filter_alt_outlined),
+                        onPressed: () => key.currentState!.openEndDrawer()
+                      )
+                    ]
                   ),
                   body: Column(
                     // crossAxisAlignment: CrossAxisAlignment.stretch,

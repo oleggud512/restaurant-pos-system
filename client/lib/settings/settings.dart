@@ -1,4 +1,5 @@
 import 'package:client/main_states_events.dart';
+import 'package:client/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +16,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     var repo = Provider.of<Repo>(context);
@@ -23,6 +26,8 @@ class _SettingsPageState extends State<SettingsPage> {
       stream: bloc.outState,
       builder: (context, snapshot) {
         return Scaffold(
+          key: key,
+          drawer: NavigationDrawer(),
           appBar: AppBar(title: const Text("settings")),
           body: ListView(
             children: [

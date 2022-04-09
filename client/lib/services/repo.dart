@@ -252,6 +252,15 @@ class Repo {
     });
     return Future.delayed(const Duration(milliseconds: 500), () => responce.data);
   }
+
+  Future<Map<String, dynamic>> getStats({FilterSortStats? fsStats}) async {
+    var responce = await dio.get(ROOT + 'stats', queryParameters: fsStats?.toJson());
+    var data = jsonDecode(responce.data);
+    return Future.delayed(const Duration(milliseconds: 300), () => <String, dynamic>{
+      'filter_sort_stats': FilterSortStats.fromJson(data['filter_sort_stats']),
+      'stats_data': statsDataFromMap(data['stats_data'])
+    });
+  }
 }
 
 /*

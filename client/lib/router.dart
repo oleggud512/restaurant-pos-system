@@ -1,5 +1,6 @@
 import 'package:client/orders/orders.dart';
 import 'package:client/settings/settings.dart';
+import 'package:client/stats/stats_page.dart';
 import 'package:flutter/material.dart';
 import 'package:client/main.dart';
 import 'package:client/store/store.dart';
@@ -14,7 +15,7 @@ class MyRouter {
       case '/':
         return MaterialPageRoute<void>(
           settings: const RouteSettings(name: '/'),
-          builder: (context) => HomePage()
+          builder: (context) => StatsPage()
         );
       case '/store':
         return MaterialPageRoute<void>(

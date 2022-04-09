@@ -33,6 +33,7 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
     
     return BlocProvider<DishDtBloc>(
       blocBuilder: () => DishDtBloc(Provider.of<Repo>(context), widget.dish, widget.groups),
@@ -45,12 +46,22 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
             builder: (context, snapshot) {
               var state = snapshot.data;
               if (state is DishDtLoadingState) {
-                return Scaffold(appBar: AppBar(), body: Center(child: CircularProgressIndicator()));
+                return Scaffold(appBar: AppBar(automaticallyImplyLeading: false,), body: Center(child: CircularProgressIndicator()));
               } else if (state is DishDtLoadedState) {
                 return Scaffold(
+                  key: key,
                   appBar: AppBar(
-                    title: Text(bloc.groups.firstWhere((e) => e.groupId == bloc.dish.dishGrId).groupName + ": " + bloc.dish.dishName),
+                    automaticallyImplyLeading: false,
                     actions: [
+                      IconButton(
+                        icon: Icon(Icons.menu),
+                        onPressed: () => key.currentState!.openDrawer()
+                      ),
+                      BackButton(),
+                      Expanded(child: Center(child: Text(
+                        bloc.groups.firstWhere((e) => e.groupId == bloc.dish.dishGrId).groupName + ": " + bloc.dish.dishName, 
+                        style: Theme.of(context).appBarTheme.titleTextStyle
+                      ))),
                       IconButton(
                         icon: (!bloc.isEdit) ? const Icon(Icons.mode_edit_outline) : const Icon(Icons.view_compact_rounded),
                         onPressed: () {
