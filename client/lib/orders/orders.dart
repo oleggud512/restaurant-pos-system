@@ -42,15 +42,12 @@ class _OrdersPageState extends State<OrdersPage> {
                   appBar: AppBar(
                     title: Center(child: Text('orders')),
                     actions: [
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: IconButton(
-                          icon: Icon(Icons.add),
-                          onPressed: () async {
-                            await Navigator.push(context, MaterialPageRoute(builder: (context) => AddOrderPage(dishes: bloc.dishes, dishGroups: bloc.groups,)));
-                            bloc.inEvent.add(OrdersLoadEvent());
-                          }
-                        )
+                      IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () async {
+                          await Navigator.push(context, MaterialPageRoute(builder: (context) => AddOrderPage(dishes: bloc.dishes, dishGroups: bloc.groups,)));
+                          bloc.inEvent.add(OrdersLoadEvent());
+                        }
                       )
                     ],
                   ),

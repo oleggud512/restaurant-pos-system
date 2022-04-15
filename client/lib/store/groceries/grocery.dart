@@ -4,6 +4,7 @@ import 'package:client/store/store_bloc.dart';
 import 'package:client/store/store_states_events.dart';
 import 'package:client/store/widgets/my_text_field.dart';
 import 'package:client/widgets/gram_liter_dropdown.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../bloc_provider.dart';
@@ -188,11 +189,15 @@ class _GroceryDialogState extends State<GroceryDialog> {
                     fontSize: 20, 
                   )));
                 } else if (state is GrocEditState) {
-                  return TextField(
+                  return TextFormField(
                     decoration: const InputDecoration(
                       labelText: "кількість",
                       border: OutlineInputBorder()
                     ),
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))
+                    ],
                     controller: TextEditingController(text: state.grocery.avaCount.toString()),
                     onChanged: (newVal) {
                       // сделать отклик на изменение количества

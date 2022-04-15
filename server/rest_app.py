@@ -375,13 +375,13 @@ def get_menu():
             {f" AND dish_price >= {price_from} AND dish_price <= {price_to}" if len(price_from) and len(price_to) else ''}
             {f' AND dish_gr_id IN {groups}' if len(groups) > 0 else ''}
             {f'''
-               AND {groceries} IN (SELECT dc.groc_id
-                   FROM dish_consist dc 
-                   WHERE dc.dish_id = d.dish_id)
+               AND ({" OR ".join(list(map(lambda x: f' {x} IN (SELECT dc.groc_id FROM dish_consists dc WHERE dc.dish_id = d.dish_id) ', groceries)))})
             ''' if len(groceries) > 0 else ''}
         ORDER BY {sort_column} {asc.upper()}
     """)
-    
+    """
+    AND 1 IN (select dc.groc_id ...) OR 2 IN (select dc.groc_id ...) OR 3 IN (select dc.groc_id ...)
+    """
     dishes = cur_to_dict(cur)
 
     cur.execute(f"""

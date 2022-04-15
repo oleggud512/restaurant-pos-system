@@ -23,36 +23,35 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             child: ListView(
               children: [
                 ListTile(
+                  leading: const Icon(Icons.bar_chart_outlined),
                   title: Text('stats'),
                   onTap: () {
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StatsPage()));
                   }
                 ),
                 ListTile(
+                  leading: const Icon(Icons.store_mall_directory),
                   title: Text('store'),
                   onTap: () {
                     Navigator.pushReplacementNamed(context, '/store');
                   },
                 ),
                 ListTile(
+                  leading: Image.asset('assets/tr.png', width: 24, height: 24, color: Colors.grey),
                   title: Text('supplys'),
                   onTap: () {
                     Navigator.pushReplacementNamed(context, '/supplys');
                   },
                 ),
                 ListTile(
-                  title: Text('supplys'),
+                  title: Text('menu'),
+                  leading: Icon(Icons.menu_book_outlined),
                   onTap: () {
                     Navigator.pushReplacementNamed(context, '/menu');
                   },
                 ),
                 ListTile(
-                  title: Text('menu'),
-                  onTap: () {
-                    Navigator.pushReplacementNamed(context, '/supplys');
-                  },
-                ),
-                ListTile(
+                  leading: Icon(Icons.people),
                   title: Text('employees'),
                   onTap: () {
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => Employees()));
@@ -60,6 +59,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                 ),
                 ListTile(
                   title: Text('orders'),
+                  leading: Icon(Icons.shopping_cart),
                   onTap: () {
                     Navigator.pushReplacementNamed(context, '/orders');
                   }
@@ -68,8 +68,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             ),
           ),
           ListTile(
-            title: ElevatedButton(
-              child: Text('settings'),
+            title: ElevatedButton.icon(
+              icon: Icon(Icons.settings),
+              label: Text('settings'),
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/settings');
               },
