@@ -39,11 +39,12 @@ class _MenuPageState extends State<MenuPage> {
               var state = snapshot.data;
               if (state is MenuLoadingState) {
                 return Scaffold(
-                  appBar: AppBar(automaticallyImplyLeading: false,),
+                  appBar: AppBar(leading: const BackButton(), title: const Center(child: Text('menu'))),
                   body: const Center(child: CircularProgressIndicator())
                 );
               }
               if (state is MenuLoadedState) {
+                print("HERE IS MY FSMENU: ${bloc.fsMenu!.toJson()}");
                 return Scaffold(
                   key: key,
                   drawer: NavigationDrawer(),
@@ -72,10 +73,10 @@ class _MenuPageState extends State<MenuPage> {
                           children: [
                             for (var dish in bloc.toShowDishes) DishContainer(
                               dish: dish, 
-                              group: bloc.groups.firstWhere((element) => element.groupId == dish.dishGrId),
+                              group: bloc.groups!.firstWhere((element) => element.groupId == dish.dishGrId),
                               onTap: () async {
                                 await Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => DishDetalsPage(dish: dish, groups: bloc.groups) // чтобы группу можно было менять
+                                  builder: (context) => DishDetalsPage(dish: dish, groups: bloc.groups!) // чтобы группу можно было менять
                                 ));
                                 bloc.inEvent.add(MenuLoadEvent());
                               }
@@ -106,7 +107,7 @@ class _MenuPageState extends State<MenuPage> {
                             TextButton.icon(
                               onPressed: () async {
                                 // await Navigator.pushNamed(context, '/menu/add-dish', arguments: {'groups' : bloc.groups});
-                                await Navigator.push(context, MaterialPageRoute(builder: (context) => AddDishPage(groups: bloc.groups),));
+                                await Navigator.push(context, MaterialPageRoute(builder: (context) => AddDishPage(groups: bloc.groups!),));
                                 bloc.inEvent.add(MenuLoadEvent());
                               }, 
                               icon: Icon(Icons.add), 

@@ -31,7 +31,7 @@ class OrdersBloc extends Bloc {
     if (event is OrdersLoadEvent) {
       _inState.add(OrdersLoadingState());
       orders = await repo.getOrders();
-      var data = await repo.getDishes(FilterSortMenu.init());
+      var data = await repo.getDishes(fsMenu: FilterSortMenu.init());
       dishes = data['dishes'];
       groups = data['groups'];
       _inState.add(OrdersLoadedState());

@@ -30,7 +30,7 @@ class _StorePageState extends State<StorePage> {
       child: Scaffold(
         drawer: NavigationDrawer(),
         appBar: AppBar(
-          title: const Center(child: Text("склад || удалять ингредиенты"))
+          title: const Center(child: Text("склад"))
         ),
         body: Container(
           padding: const EdgeInsets.all(8),

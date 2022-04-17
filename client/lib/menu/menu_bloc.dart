@@ -19,7 +19,7 @@ class MenuBloc extends Bloc {
 
   Repo repo;
   
-  late List<DishGroup> groups;
+  List<DishGroup>? groups;
   late List<Dish> dishes;
   late List<Dish> toShowDishes;
   FilterSortMenu? fsMenu;
@@ -37,10 +37,13 @@ class MenuBloc extends Bloc {
   _handleEvent(dynamic event) async {
     if (event is MenuLoadEvent) {
       _inState.add(MenuLoadingState());
-      groceries = await repo.getGroceries(suppliedOnly: false);
-      fsMenu ??= await repo.getFilterSortMenu();
-      var data = await repo.getDishes(fsMenu!);
-      groups = data['groups'];
+      Map<String, dynamic> data = await repo.getDishes(fsMenu: fsMenu);
+      if (fsMenu == null) {
+        groceries = await repo.getGroceries(suppliedOnly: false);
+        fsMenu = await repo.getFilterSortMenu();
+        // data = await repo.getDishes(fsMenu!);
+      } 
+      groups ??= data['groups'];
       dishes = data['dishes'];
       setShownDishes(fsMenu!.like);
       _inState.add(MenuLoadedState());
@@ -55,11 +58,11 @@ class MenuBloc extends Bloc {
       _inState.add(MenuLoadedState());
 
     } else if (event is MenuFiterGroupsChangedEvent) {
-      groups[event.groupIndex].selected = !groups[event.groupIndex].selected;
-      if (groups[event.groupIndex].selected) {
-        fsMenu!.groups.add(groups[event.groupIndex]);
+      groups![event.groupIndex].selected = !groups![event.groupIndex].selected;
+      if (groups![event.groupIndex].selected) {
+        fsMenu!.groups.add(groups![event.groupIndex]);
       } else {
-        fsMenu!.groups.remove(groups[event.groupIndex]);
+        fsMenu!.groups.remove(groups![event.groupIndex]);
       }
       _inState.add(MenuLoadedState());
 

@@ -1,0 +1,14 @@
+{
+    # settings
+    "ru": "Russian",
+    "en": "English",
+    "uk": "Ukrainian",
+    "delete_inf_ab_sup": "Delete all information about deleted suppliers",
+    "dark_theme": "Dark Theme",
+    "yes": "Yes",
+    "no": "No"
+    # navigation drawer
+    "store": "Store",
+    "stats": "Stats",
+    "settings": "Settings"
+}

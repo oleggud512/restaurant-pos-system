@@ -34,7 +34,7 @@ class _OrdersPageState extends State<OrdersPage> {
             builder: (context, snapshot) {
               var state = snapshot.data;
               if (state is OrdersLoadingState) {
-                return Scaffold(appBar: AppBar(), body: const Center(child: CircularProgressIndicator()));
+                return Scaffold(appBar: AppBar(leading: BackButton()), body: const Center(child: CircularProgressIndicator()));
               } else if (state is OrdersLoadedState) {
                 return Scaffold(
                   key: key,

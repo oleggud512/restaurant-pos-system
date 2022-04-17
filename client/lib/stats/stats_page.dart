@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/services/models.dart';
 import 'package:client/stats/stats_bloc.dart';
 import 'package:client/stats/stats_states_events.dart';
@@ -52,6 +53,7 @@ class _StatsPageState extends State<StatsPage> {
       blocDispose: (StatsBloc bloc) => bloc.dispose(),
       child: Builder(
         builder: (context) {
+          AppLocalizations l = AppLocalizations.of(context)!;
           var bloc = BlocProvider.of<StatsBloc>(context);
           return StreamBuilder(
             stream: bloc.outState,
@@ -67,7 +69,7 @@ class _StatsPageState extends State<StatsPage> {
                   key: key,
                   drawer: NavigationDrawer(),
                   appBar: AppBar(
-                    title: Center(child: Text('stats'))
+                    title: Center(child: Text(l.stats))
                   ),
                   body: Padding(
                     padding: const EdgeInsets.all(8.0),

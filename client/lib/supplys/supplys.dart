@@ -40,7 +40,7 @@ class _SupplysPageState extends State<SupplysPage> {
               var state = snapshot.data;
               if (state is SupplyLoadingState) {
                 return Scaffold(
-                  appBar: AppBar(),
+                  appBar: AppBar(leading: BackButton()),
                   body: const Center(child: CircularProgressIndicator())
                 );
               } else if (state is SupplyLoadedState) {

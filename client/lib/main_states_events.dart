@@ -18,6 +18,11 @@ class MainBrightnessChanged extends MainEvent {
   List<Object?> get props => [brightness];
 }
 
+class MainLanguageChangedEvent extends MainEvent {
+  MainLanguageChangedEvent(this.newLang);
+  String newLang;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 class MainState extends Equatable {

@@ -44,7 +44,7 @@ class _EmployeesState extends State<Employees> {
             builder: (context, snapshot) {
               var state = snapshot.data;
               if (state is EmployeeLoadingState) {
-                return Scaffold(bottomNavigationBar: buildBNBar(),appBar: AppBar(), body: const Center(child: CircularProgressIndicator()));
+                return Scaffold(bottomNavigationBar: buildBNBar(),appBar: AppBar(leading: const BackButton()), body: const Center(child: CircularProgressIndicator()));
               }
               
               if (curI == 0) {

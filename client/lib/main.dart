@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:client/router.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10nn/app_localizations.dart';
+
 import 'bloc_provider.dart';
 import 'employees/employees.dart';
 import 'main_bloc.dart';
@@ -42,8 +45,14 @@ class MyApp extends StatelessWidget {
                 return StreamBuilder<Object>(
                   stream: bloc.outState,
                   builder: (context, snapshot) {
+                    
                     return MaterialApp(
                       debugShowCheckedModeBanner: false,
+                      
+                      localizationsDelegates: AppLocalizations.localizationsDelegates,
+                      supportedLocales: AppLocalizations.supportedLocales,
+                      locale: Locale.fromSubtags(languageCode: bloc.curLang),
+
                       title: 'restaurant',
                       theme: ThemeData(
                         primarySwatch: Colors.pink,

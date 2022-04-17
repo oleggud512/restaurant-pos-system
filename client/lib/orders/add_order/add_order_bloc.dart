@@ -56,7 +56,7 @@ class AddOrderBloc extends Bloc {
         order.listOrders[event.index].decr();
       }
       order.refreshTotalPrice();
-      print(order.listOrders);
+      // print(order.listOrders);
       _inState.add(AddOrderLoadedState());
 
     } else if (event is AddOrderAddDishEvent) {

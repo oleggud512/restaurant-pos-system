@@ -18,6 +18,7 @@ class MainBloc extends Bloc {
 
 
   Brightness curBr = Brightness.light;
+  String curLang = 'en';
   Repo repo;
 
   MainBloc(this.repo) {
@@ -30,6 +31,9 @@ class MainBloc extends Bloc {
       _inState.add(MainLoadedState());
     } else if (event is MainBrightnessChanged) {
       curBr = event.brightness;
+      _inState.add(MainLoadedState());
+    } else if (event is MainLanguageChangedEvent) {
+      curLang = event.newLang;
       _inState.add(MainLoadedState());
     }
   }

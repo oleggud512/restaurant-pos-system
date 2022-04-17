@@ -26,6 +26,10 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
             child: ListView(
               controller: ScrollController(),
               children: [
+                BackButton(onPressed: () {
+                  print(bloc.fsMenu!.toJson());
+                  setState(() {});
+                }),
                 ListTile(title: Text("sorting")),
                 ListTile(  // выбор того по чем сортируем
                   leading: Radio<String>(
@@ -164,10 +168,10 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      for (int i = 0; i < bloc.groups.length; i++) ListTile(
-                        title: Text(bloc.groups[i].groupName),
+                      for (int i = 0; i < bloc.groups!.length; i++) ListTile(
+                        title: Text(bloc.groups![i].groupName),
                         leading: Checkbox(
-                          value: bloc.groups[i].selected,
+                          value: bloc.groups![i].selected,
                           onChanged: (newVal) {
                             bloc.inEvent.add(MenuFiterGroupsChangedEvent(i));
                           }

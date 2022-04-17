@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../bloc_provider.dart';
+import '../l10nn/app_localizations.dart';
 import '../main_bloc.dart';
 import '../services/repo.dart';
 
@@ -20,6 +21,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations l = AppLocalizations.of(context)!;
     var repo = Provider.of<Repo>(context);
     var bloc = BlocProvider.of<MainBloc>(context);
     return StreamBuilder(
@@ -28,11 +30,22 @@ class _SettingsPageState extends State<SettingsPage> {
         return Scaffold(
           key: key,
           drawer: NavigationDrawer(),
-          appBar: AppBar(title: const Text("settings")),
+          appBar: AppBar(
+            title: Center(child: Text(l.settings)),
+            automaticallyImplyLeading: false,
+            leading: Builder(
+              builder: (context) {
+                return IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () => Scaffold.of(context).openDrawer()
+                );
+              }
+            )
+          ),
           body: ListView(
             children: [
               ListTile(
-                title: Text("delete all information about deleted suppliers"),
+                title: Text(l.delete_inf_ab_sup),
                 onTap: () async {
                   bool agree = await showDialog(
                     context: context,
@@ -40,10 +53,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       return AlertDialog(
                         title: Text("All supplys related to deleted suppliers will be deleted. Are you sure?", softWrap: true,),
                         actions: [
-                          ElevatedButton(child: Text("Yes"), onPressed: () {
+                          ElevatedButton(child: Text(l.yes), onPressed: () {
                             Navigator.pop(context, true);
                           }),
-                          ElevatedButton(child: Text("No"), onPressed: () {
+                          ElevatedButton(child: Text(l.no), onPressed: () {
                             Navigator.pop(context, false);
                           }),
                         ]
@@ -58,12 +71,40 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 title: Row(
                   children: [
-                    Text("dark mode: "),
+                    Text(l.dark_theme),
                     Switch(
                       value: (bloc.curBr == Brightness.dark) ? true : false,
                       onChanged: (newVal) {
                         bloc.inEvent.add(MainBrightnessChanged((newVal) ? Brightness.dark : Brightness.light));
                       }, 
+                    )
+                  ]
+                )
+              ),
+              ListTile(
+                title: Row(
+                  children: [
+                    Text('language: '),
+                    DropdownButton<String>(
+                      value: bloc.curLang,
+                      onChanged: (newVal) {
+                        print(newVal);
+                        bloc.inEvent.add(MainLanguageChangedEvent(newVal!));
+                      },
+                      items: [
+                        DropdownMenuItem(
+                          child: Text(l.ru),
+                          value: "ru"
+                        ),
+                        DropdownMenuItem(
+                          child: Text(l.en),
+                          value: "en"
+                        ),
+                        DropdownMenuItem(
+                          child: Text(l.uk),
+                          value: "uk"
+                        )
+                      ]
                     )
                   ]
                 )
