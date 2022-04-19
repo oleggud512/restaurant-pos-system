@@ -84,7 +84,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 title: Row(
                   children: [
-                    Text('language: '),
+                    Text(l.language + ": "),
                     DropdownButton<String>(
                       value: bloc.curLang,
                       onChanged: (newVal) {

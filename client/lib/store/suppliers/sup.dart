@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/widgets/yes_no_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:client/bloc_provider.dart';
@@ -21,8 +22,12 @@ class SupplierDetailsDialog extends StatefulWidget {
 }
 
 class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
+  late AppLocalizations l;
+
+
   @override
   Widget build(BuildContext context) {
+    l = AppLocalizations.of(context)!;
     return BlocProvider(
       blocBuilder: () => SupBloc(Provider.of<Repo>(context), widget.id, widget.groceries), 
       blocDispose: (SupBloc bloc) => bloc.dispose(), 
@@ -68,12 +73,12 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
             child: ListView(
               children: [
                 Row(
-                  children: const [
+                  children: [
                     Expanded(
-                      child: Center(child: Text("grocery")),
+                      child: Center(child: Text(l.grocery(2))),
                     ),
                     Expanded(
-                      child: Center(child: Text("price")),
+                      child: Center(child: Text(l.price)),
                     )
                   ],
                 ),

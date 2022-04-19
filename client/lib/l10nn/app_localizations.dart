@@ -96,18 +96,6 @@ abstract class AppLocalizations {
     Locale('uk')
   ];
 
-  /// No description provided for @store.
-  ///
-  /// In en, this message translates to:
-  /// **'Store'**
-  String get store;
-
-  /// No description provided for @stats.
-  ///
-  /// In en, this message translates to:
-  /// **'Stats'**
-  String get stats;
-
   /// No description provided for @ru.
   ///
   /// In en, this message translates to:
@@ -126,6 +114,12 @@ abstract class AppLocalizations {
   /// **'Ukrainian'**
   String get uk;
 
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
   /// No description provided for @delete_inf_ab_sup.
   ///
   /// In en, this message translates to:
@@ -138,12 +132,6 @@ abstract class AppLocalizations {
   /// **'Dark Theme'**
   String get dark_theme;
 
-  /// No description provided for @settings.
-  ///
-  /// In en, this message translates to:
-  /// **'Settings'**
-  String get settings;
-
   /// No description provided for @yes.
   ///
   /// In en, this message translates to:
@@ -155,6 +143,420 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No'**
   String get no;
+
+  /// No description provided for @store.
+  ///
+  /// In en, this message translates to:
+  /// **'Store'**
+  String get store;
+
+  /// No description provided for @stats.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get stats;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @supply.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, select, 1{Supply} 2{Supplies}}'**
+  String supply(Object count);
+
+  /// No description provided for @menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get menu;
+
+  /// No description provided for @employees.
+  ///
+  /// In en, this message translates to:
+  /// **'Employees'**
+  String get employees;
+
+  /// No description provided for @orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get orders;
+
+  /// No description provided for @date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date;
+
+  /// No description provided for @group.
+  ///
+  /// In en, this message translates to:
+  /// **'Group'**
+  String get group;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'day'**
+  String get day;
+
+  /// No description provided for @hour.
+  ///
+  /// In en, this message translates to:
+  /// **'hour'**
+  String get hour;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'month'**
+  String get month;
+
+  /// No description provided for @year.
+  ///
+  /// In en, this message translates to:
+  /// **'year'**
+  String get year;
+
+  /// No description provided for @grouping.
+  ///
+  /// In en, this message translates to:
+  /// **'{gr, select, day{day} month{month} hour{hour} year{year} other{...}}'**
+  String grouping(String gr);
+
+  /// No description provided for @grocery.
+  ///
+  /// In en, this message translates to:
+  /// **'{count,plural, one{Grocery} other{Groceries}'**
+  String grocery(num count);
+
+  /// No description provided for @price.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get price;
+
+  /// No description provided for @supplier.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, select, 1{Supplier} 2{Suppliers}}'**
+  String supplier(Object count);
+
+  /// No description provided for @enter_groc.
+  ///
+  /// In en, this message translates to:
+  /// **'enter grocery name...'**
+  String get enter_groc;
+
+  /// No description provided for @measure.
+  ///
+  /// In en, this message translates to:
+  /// **'{measure,select, gram{kilogram} liter{liter} other{wrong measure}}'**
+  String measure(String measure);
+
+  /// No description provided for @measure_short.
+  ///
+  /// In en, this message translates to:
+  /// **'{measure,select, gram{kg} liter{l} other{xxx}}'**
+  String measure_short(String measure);
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @left.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get left;
+
+  /// No description provided for @count.
+  ///
+  /// In en, this message translates to:
+  /// **'Count'**
+  String get count;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @add_supplier.
+  ///
+  /// In en, this message translates to:
+  /// **'Add supplier'**
+  String get add_supplier;
+
+  /// No description provided for @contacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Contacts'**
+  String get contacts;
+
+  /// No description provided for @number.
+  ///
+  /// In en, this message translates to:
+  /// **'Number'**
+  String get number;
+
+  /// No description provided for @sorting.
+  ///
+  /// In en, this message translates to:
+  /// **'Sorting'**
+  String get sorting;
+
+  /// No description provided for @filtering.
+  ///
+  /// In en, this message translates to:
+  /// **'Filtering'**
+  String get filtering;
+
+  /// No description provided for @by.
+  ///
+  /// In en, this message translates to:
+  /// **'By'**
+  String get by;
+
+  /// No description provided for @find.
+  ///
+  /// In en, this message translates to:
+  /// **'Find'**
+  String get find;
+
+  /// No description provided for @asc.
+  ///
+  /// In en, this message translates to:
+  /// **'{a,select, asc{ascedenting} desc{descedenting}}'**
+  String asc(String a);
+
+  /// No description provided for @dish.
+  ///
+  /// In en, this message translates to:
+  /// **'Dish'**
+  String get dish;
+
+  /// No description provided for @dish_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Dish name'**
+  String get dish_name;
+
+  /// No description provided for @groups.
+  ///
+  /// In en, this message translates to:
+  /// **'Groups'**
+  String get groups;
+
+  /// No description provided for @prime_cost.
+  ///
+  /// In en, this message translates to:
+  /// **'Prime cost'**
+  String get prime_cost;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @add_group.
+  ///
+  /// In en, this message translates to:
+  /// **'Add group'**
+  String get add_group;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @total1.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total1;
+
+  /// No description provided for @choose_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose image'**
+  String get choose_image;
+
+  /// No description provided for @enter_descr.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter description...'**
+  String get enter_descr;
+
+  /// No description provided for @no_descr.
+  ///
+  /// In en, this message translates to:
+  /// **'No description...'**
+  String get no_descr;
+
+  /// No description provided for @update_role.
+  ///
+  /// In en, this message translates to:
+  /// **'Update role'**
+  String get update_role;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @roles.
+  ///
+  /// In en, this message translates to:
+  /// **'Roles'**
+  String get roles;
+
+  /// No description provided for @diary.
+  ///
+  /// In en, this message translates to:
+  /// **'Diary'**
+  String get diary;
+
+  /// No description provided for @add_role.
+  ///
+  /// In en, this message translates to:
+  /// **'Add role'**
+  String get add_role;
+
+  /// No description provided for @namee.
+  ///
+  /// In en, this message translates to:
+  /// **'First Name'**
+  String get namee;
+
+  /// No description provided for @surname.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name'**
+  String get surname;
+
+  /// No description provided for @birthday.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday'**
+  String get birthday;
+
+  /// No description provided for @hours_per_month.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours per month'**
+  String get hours_per_month;
+
+  /// No description provided for @gen.
+  ///
+  /// In en, this message translates to:
+  /// **'{g,select, m{Mans} f{Womans}}'**
+  String gen(String g);
+
+  /// No description provided for @hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get hours;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// No description provided for @has_come.
+  ///
+  /// In en, this message translates to:
+  /// **'Has come'**
+  String get has_come;
+
+  /// No description provided for @from.
+  ///
+  /// In en, this message translates to:
+  /// **'from'**
+  String get from;
+
+  /// No description provided for @to.
+  ///
+  /// In en, this message translates to:
+  /// **'to'**
+  String get to;
+
+  /// No description provided for @has_gone.
+  ///
+  /// In en, this message translates to:
+  /// **'Has gone'**
+  String get has_gone;
+
+  /// No description provided for @waiter.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiter'**
+  String get waiter;
+
+  /// No description provided for @salary_per_hour.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary per hour'**
+  String get salary_per_hour;
+
+  /// No description provided for @comment.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get comment;
+
+  /// No description provided for @summ.
+  ///
+  /// In en, this message translates to:
+  /// **'Summ'**
+  String get summ;
+
+  /// No description provided for @pay.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay'**
+  String get pay;
+
+  /// No description provided for @rest.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest'**
+  String get rest;
+
+  /// No description provided for @order.
+  ///
+  /// In en, this message translates to:
+  /// **'Order'**
+  String get order;
+
+  /// No description provided for @or_rec.
+  ///
+  /// In en, this message translates to:
+  /// **'order received in'**
+  String get or_rec;
+
+  /// No description provided for @or_paid.
+  ///
+  /// In en, this message translates to:
+  /// **'order paid at'**
+  String get or_paid;
+
+  /// No description provided for @or_list.
+  ///
+  /// In en, this message translates to:
+  /// **'order list'**
+  String get or_list;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

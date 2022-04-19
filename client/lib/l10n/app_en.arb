@@ -1,14 +1,150 @@
 {
-    # settings
     "ru": "Russian",
     "en": "English",
     "uk": "Ukrainian",
+    "language": "Language",
     "delete_inf_ab_sup": "Delete all information about deleted suppliers",
     "dark_theme": "Dark Theme",
     "yes": "Yes",
-    "no": "No"
-    # navigation drawer
+    "no": "No",
+
     "store": "Store",
     "stats": "Stats",
-    "settings": "Settings"
+    "settings": "Settings",
+    "supply": "{count, select, 1{Supply} 2{Supplies}}",
+    "@supply": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+
+    "menu": "Menu",
+    "employees": "Employees",
+    "orders": "Orders",
+
+    "date": "Date",
+    "group": "Group",
+    "day": "day",
+    "hour": "hour",
+    "month": "month",
+    "year": "year",
+
+    "grouping": "{gr, select, day{day} month{month} hour{hour} year{year} other{...}}",
+    "@grouping": {
+        "placeholders": {
+            "gr": {
+                "type": "String",
+                "example": "day"
+            }
+        }
+    },
+
+    "grocery": "{count,plural, one{Grocery} other{Groceries}",
+    "@grocery": {
+        "placeholders": {
+            "count": { }
+        }
+    },
+
+    "price": "Price",
+
+    "supplier": "{count, select, 1{Supplier} 2{Suppliers}}",
+    "@supplier": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+
+    "enter_groc": "enter grocery name...",
+
+    "measure": "{measure,select, gram{kilogram} liter{liter} other{wrong measure}}",
+    "@measure": {
+        "placeholders": {
+            "measure": {
+                "type": "String",
+                "example": "gram"
+            }
+        }
+    },
+
+    "measure_short": "{measure,select, gram{kg} liter{l} other{xxx}}",
+    "@measure_short": {
+        "placeholders": {
+            "measure": {
+                "type": "String",
+                "example": "gram"
+            }
+        }
+    },
+
+    "name": "Name",
+    "left": "Left",
+    "count": "Count",
+    "add": "Add",
+    "add_supplier": "Add supplier",
+    "contacts": "Contacts",
+
+    "number": "Number",
+    "sorting": "Sorting",
+    "filtering": "Filtering",
+    "by": "By",
+    "find": "Find",
+    "asc": "{a,select, asc{ascedenting} desc{descedenting}}",
+    "@asc": {
+        "placeholders": {
+            "a": {
+                "type": "String",
+                "example": "asc"
+            }
+        }
+    },
+
+    "dish": "Dish",
+    "dish_name": "Dish name",
+    "groups": "Groups",
+    "prime_cost": "Prime cost",
+    "save": "Save",
+    "add_group": "Add group",
+    "total": "Total",
+    "total1": "Total",
+    "choose_image": "Choose image",
+    "enter_descr": "Enter description...",
+    "no_descr": "No description...",
+    "update_role": "Update role",
+    "delete": "Delete",
+    "roles": "Roles",
+    "diary": "Diary",
+    "add_role": "Add role",
+    "namee": "First Name",
+    "surname": "Last Name",
+    "birthday": "Birthday",
+    "hours_per_month": "Hours per month",
+    "gen": "{g,select, m{Mans} f{Womans}}",
+    "@gen": {
+        "placeholders": {
+            "g": {
+                "type": "String",
+                "example": "m"
+            }
+        }
+    },
+
+    "hours": "Hours",
+    "clear": "Clear",
+    "has_come": "Has come",
+    "from": "from",
+    "to": "to",
+    "has_gone": "Has gone",
+    "waiter": "Waiter",
+    "salary_per_hour": "Salary per hour",
+    "comment": "Comment",
+    "summ": "Summ",
+    "pay": "Pay",
+    "rest": "Rest",
+    "order": "Order",
+    "or_rec": "order received in",
+    "or_paid": "order paid at",
+    "or_list": "order list"
+
+
 }

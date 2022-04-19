@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 
@@ -14,12 +15,13 @@ class GenderPickerDropdown extends StatefulWidget {
 class _GenderPickerDropdownState extends State<GenderPickerDropdown> {
   @override
   Widget build(BuildContext context) {
+    var l = AppLocalizations.of(context)!;
     return DropdownButton<String>(
       isExpanded: true,
       value: widget.value,
       items: [
-        DropdownMenuItem(child: Text("male"), value: 'm'),
-        DropdownMenuItem(child: Text("female"), value: 'f')
+        DropdownMenuItem(child: Text(l.gen('m')), value: 'm'),
+        DropdownMenuItem(child: Text(l.gen('f')), value: 'f')
       ], 
       onChanged: widget.onChanged
     );

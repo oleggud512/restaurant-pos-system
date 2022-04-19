@@ -10,6 +10,7 @@ import 'l10nn/app_localizations.dart';
 import 'bloc_provider.dart';
 import 'employees/employees.dart';
 import 'main_bloc.dart';
+import 'main_states_events.dart';
 import 'stats/stats_page.dart';
 import 'widgets/main_button.dart';
 
@@ -45,28 +46,31 @@ class MyApp extends StatelessWidget {
                 return StreamBuilder<Object>(
                   stream: bloc.outState,
                   builder: (context, snapshot) {
-                    
-                    return MaterialApp(
-                      debugShowCheckedModeBanner: false,
-                      
-                      localizationsDelegates: AppLocalizations.localizationsDelegates,
-                      supportedLocales: AppLocalizations.supportedLocales,
-                      locale: Locale.fromSubtags(languageCode: bloc.curLang),
+                    var state = snapshot.data;
+                    if (state is MainLoadedState) {
+                      return MaterialApp(
+                        debugShowCheckedModeBanner: false,
+                        
+                        localizationsDelegates: AppLocalizations.localizationsDelegates,
+                        supportedLocales: AppLocalizations.supportedLocales,
+                        locale: Locale.fromSubtags(languageCode: bloc.curLang),
 
-                      title: 'restaurant',
-                      theme: ThemeData(
-                        primarySwatch: Colors.pink,
-                        primaryColor: Colors.pink,
-                        brightness: bloc.curBr,
-                        appBarTheme: AppBarTheme(
-                          titleTextStyle: TextStyle(
-                            // fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                        title: 'restaurant',
+                        theme: ThemeData(
+                          primarySwatch: Colors.pink,
+                          primaryColor: Colors.pink,
+                          brightness: bloc.curBr,
+                          appBarTheme: AppBarTheme(
+                            titleTextStyle: TextStyle(
+                              // fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
                           ),
                         ),
-                      ),
-                      onGenerateRoute: myRouter.onGenerateRoute,
-                    );
+                        onGenerateRoute: myRouter.onGenerateRoute,
+                      );
+                    }
+                    return Container(color: Colors.white);
                   }
                 );
               }

@@ -114,7 +114,7 @@ class _StatsPageState extends State<StatsPage> {
                                 ),
                               ),
                               Text(
-                                'date: ${bloc.fsStats!.dishFrom.toIso8601String().substring(0, 10)} - ${bloc.fsStats!.dishTo.toIso8601String().substring(0, 10)}, group: ${bloc.fsStats!.group}',
+                                '${l.date}: ${bloc.fsStats!.dishFrom.toIso8601String().substring(0, 10)} - ${bloc.fsStats!.dishTo.toIso8601String().substring(0, 10)}, ${l.group}: ${l.grouping(bloc.fsStats!.group.toLowerCase())}',
                                 style: TextStyle(color: Colors.grey[600])
                               )
                             ],
@@ -157,7 +157,7 @@ class _StatsPageState extends State<StatsPage> {
                                   ]
                                 )
                               ),
-                              Text('date: ${bloc.fsStats!.dishFrom.toIso8601String().substring(0, 10)} - ${bloc.fsStats!.dishTo.toIso8601String().substring(0, 10)}', style: TextStyle(color: Colors.grey[600])),
+                              Text('${l.date}: ${bloc.fsStats!.dishFrom.toIso8601String().substring(0, 10)} - ${bloc.fsStats!.dishTo.toIso8601String().substring(0, 10)}', style: TextStyle(color: Colors.grey[600])),
                               Expanded(
                                 child: SingleChildScrollView(
                                   child: Column(

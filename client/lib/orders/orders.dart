@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/orders/orders_states_events.dart';
 import 'package:client/orders/widgets/order_container.dart';
 import 'package:client/orders/widgets/show_order_dialog.dart';
@@ -23,6 +24,7 @@ class _OrdersPageState extends State<OrdersPage> {
   GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    var l = AppLocalizations.of(context)!;
     return BlocProvider<OrdersBloc>(
       blocBuilder: () => OrdersBloc(Provider.of<Repo>(context, listen: false)),
       blocDispose: (OrdersBloc bloc) => bloc.dispose(),
@@ -34,16 +36,16 @@ class _OrdersPageState extends State<OrdersPage> {
             builder: (context, snapshot) {
               var state = snapshot.data;
               if (state is OrdersLoadingState) {
-                return Scaffold(appBar: AppBar(leading: BackButton()), body: const Center(child: CircularProgressIndicator()));
+                return Scaffold(appBar: AppBar(leading: const BackButton()), body: const Center(child: CircularProgressIndicator()));
               } else if (state is OrdersLoadedState) {
                 return Scaffold(
                   key: key,
                   drawer: NavigationDrawer(),
                   appBar: AppBar(
-                    title: Center(child: Text('orders')),
+                    title: Center(child: Text(l.orders)),
                     actions: [
                       IconButton(
-                        icon: Icon(Icons.add),
+                        icon: const Icon(Icons.add),
                         onPressed: () async {
                           await Navigator.push(context, MaterialPageRoute(builder: (context) => AddOrderPage(dishes: bloc.dishes, dishGroups: bloc.groups,)));
                           bloc.inEvent.add(OrdersLoadEvent());
@@ -81,7 +83,7 @@ class _OrdersPageState extends State<OrdersPage> {
                         )
                       ],
                     )
-                  : Center(child: Text("empty", style: TextStyle(height: 100)))
+                  : const Center(child: Text("empty", style: TextStyle(height: 100)))
                 );
               } 
               return Container();

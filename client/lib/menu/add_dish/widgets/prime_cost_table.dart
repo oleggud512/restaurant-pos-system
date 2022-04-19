@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,13 +17,14 @@ class PrimeCostTable extends StatefulWidget {
 class _PrimeCostTableState extends State<PrimeCostTable> {
   @override
   Widget build(BuildContext context) {
+    var l = AppLocalizations.of(context)!;
     return DataTable(
       columns: [
-        DataColumn(label: Text("supplier", style: Provider.of<Constants>(context).boldText)),
-        DataColumn(label: Text("groc name", style: Provider.of<Constants>(context).boldText)),
-        DataColumn(label: Text("groc count", style: Provider.of<Constants>(context).boldText)),
-        DataColumn(label: Text("price/kg", style: Provider.of<Constants>(context).boldText)),
-        DataColumn(label: Text("total price", style: Provider.of<Constants>(context).boldText)),
+        DataColumn(label: Text(l.supplier(1), style: Provider.of<Constants>(context).boldText)),
+        DataColumn(label: Text(l.grocery(1), style: Provider.of<Constants>(context).boldText)),
+        DataColumn(label: Text(l.count, style: Provider.of<Constants>(context).boldText)),
+        DataColumn(label: Text(l.price + "/" + l.measure_short('gram'), style: Provider.of<Constants>(context).boldText)),
+        DataColumn(label: Text(l.total + " " + l.price, style: Provider.of<Constants>(context).boldText)),
       ],
       rows: [
         for (dynamic consist in widget.data['consist']) DataRow(cells: [

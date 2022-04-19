@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dart:async';
 
+import '../../../l10nn/app_localizations.dart';
 import '../../../services/constants.dart';
 import '../../../services/models.dart';
 import '../../../services/repo.dart';
@@ -45,7 +46,7 @@ class _PrimeCostDetailsDialogState extends State<PrimeCostDetailsDialog> {
 
   @override
   Widget build(BuildContext context) {
-
+    var l = AppLocalizations.of(context)!;
     return Dialog(
       child: Container(
         padding: const EdgeInsets.all(10),
@@ -58,7 +59,7 @@ class _PrimeCostDetailsDialogState extends State<PrimeCostDetailsDialog> {
               Map<String, dynamic>? data = snapshot.data as Map<String, dynamic>;
               return Column(
                 children: [
-                  Center(child: Text("Prime Cost", style: Theme.of(context).textTheme.headline6)),
+                  Center(child: Text(l.prime_cost, style: Theme.of(context).textTheme.headline6)),
                   Expanded(
                     child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,
@@ -69,9 +70,9 @@ class _PrimeCostDetailsDialogState extends State<PrimeCostDetailsDialog> {
                   Row(
                     children: [
                       const Spacer(),
-                      const Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text("Total: ", style: TextStyle(fontWeight: FontWeight.bold))
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(l.total1 + ": ", style: const TextStyle(fontWeight: FontWeight.bold))
                       ),
                       Text('${data["total"]}')
                     ]

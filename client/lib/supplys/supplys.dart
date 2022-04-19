@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/supplys/add_supply/add_supply.dart';
 import 'package:client/supplys/show_supply/show_supply.dart';
 import 'package:flutter/material.dart';
@@ -22,12 +23,13 @@ class SupplysPage extends StatefulWidget {
 }
 
 class _SupplysPageState extends State<SupplysPage> {
-
+  late AppLocalizations l;
   View view = View.grid;
 
   GlobalKey<ScaffoldState> scgl = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    l = AppLocalizations.of(context)!;
     return BlocProvider<SupplysBloc>(
       blocBuilder: () => SupplysBloc(Provider.of<Repo>(context)),
       blocDispose: (SupplysBloc bloc) => bloc.dispose(),
@@ -105,8 +107,7 @@ class _SupplysPageState extends State<SupplysPage> {
 
   AppBar buildAppBar() {
     return AppBar(
-      title: const Center(
-      child: Text("supplys")), 
+      title: Center(child: Text(l.supply(2))), 
       leading: IconButton(
         onPressed: () => scgl.currentState!.openDrawer(),
         icon: Icon(Icons.menu)

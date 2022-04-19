@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:client/store/widgets/groceries_card.dart';
@@ -30,7 +31,7 @@ class _StorePageState extends State<StorePage> {
       child: Scaffold(
         drawer: NavigationDrawer(),
         appBar: AppBar(
-          title: const Center(child: Text("склад"))
+          title: Center(child: Text(AppLocalizations.of(context)!.store))
         ),
         body: Container(
           padding: const EdgeInsets.all(8),

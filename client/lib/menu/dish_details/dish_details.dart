@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../bloc_provider.dart';
+import '../../l10nn/app_localizations.dart';
 import '../../services/constants.dart';
 import '../../services/models.dart';
 import '../../services/repo.dart';
@@ -29,12 +30,12 @@ class DishDetalsPage extends StatefulWidget {
 }
 
 class _DishDetalsPageState extends State<DishDetalsPage> {
-  
+  late AppLocalizations l;
 
   @override
   Widget build(BuildContext context) {
     GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
-    
+    l = AppLocalizations.of(context)!;
     return BlocProvider<DishDtBloc>(
       blocBuilder: () => DishDtBloc(Provider.of<Repo>(context), widget.dish, widget.groups),
       blocDispose: (DishDtBloc bloc) => bloc.dispose(),
@@ -46,7 +47,7 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
             builder: (context, snapshot) {
               var state = snapshot.data;
               if (state is DishDtLoadingState) {
-                return Scaffold(appBar: AppBar(automaticallyImplyLeading: false,), body: Center(child: CircularProgressIndicator()));
+                return Scaffold(appBar: AppBar(automaticallyImplyLeading: false,), body: const Center(child: CircularProgressIndicator()));
               } else if (state is DishDtLoadedState) {
                 return Scaffold(
                   key: key,
@@ -57,7 +58,7 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
                         icon: Icon(Icons.menu),
                         onPressed: () => key.currentState!.openDrawer()
                       ),
-                      BackButton(),
+                      const BackButton(),
                       Expanded(child: Center(child: Text(
                         bloc.groups.firstWhere((e) => e.groupId == bloc.dish.dishGrId).groupName + ": " + bloc.dish.dishName, 
                         style: Theme.of(context).appBarTheme.titleTextStyle
@@ -114,8 +115,8 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
     return SingleChildScrollView(
       child: DataTable(
         columns: [
-          DataColumn(label: Text("grocery", style: Provider.of<Constants>(context, listen: false).boldText)),
-          DataColumn(numeric: true, label: Text("count", style: Provider.of<Constants>(context, listen: false).boldText))
+          DataColumn(label: Text(l.grocery(1), style: Provider.of<Constants>(context, listen: false).boldText)),
+          DataColumn(numeric: true, label: Text(l.count, style: Provider.of<Constants>(context, listen: false).boldText))
         ], 
         rows: [
           for (var groc in bloc.dish.dishGrocs) DataRow(
@@ -168,7 +169,7 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
                 bloc.dish.dishName = newVal;
               },
               decoration: InputDecoration(
-                labelText: "Name"
+                labelText: l.name
               ),
             ),
             Row(
@@ -181,14 +182,14 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
                       bloc.dish.dishPrice = double.parse(newVal.isEmpty ? '0.0' : newVal);
                     },
                     decoration: InputDecoration(
-                      labelText: "Price"
+                      labelText: l.price
                     )
                   ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: ElevatedButton(
-                    child: Text("prime cost", overflow: TextOverflow.ellipsis),
+                    child: Text(l.prime_cost, overflow: TextOverflow.ellipsis),
                     onPressed: () async {
                       await showDialog(
                         context: context,
@@ -213,7 +214,7 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
             ),
             const Spacer(),
             if (bloc.isEdit) ElevatedButton(
-              child: Text('save'),
+              child: Text(l.save),
               onPressed: () async {
                 if (bloc.dish.isSaveable) {
                   await Provider.of<Repo>(context, listen: false).updateDish(bloc.dish);

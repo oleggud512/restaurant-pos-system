@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class _RoleEditDialogState extends State<RoleEditDialog> {
 
   @override
   Widget build(BuildContext context) {
+    var l = AppLocalizations.of(context)!;
     return AlertDialog(
       title: widget.title,
       content: Column(
@@ -29,7 +31,7 @@ class _RoleEditDialogState extends State<RoleEditDialog> {
           ListTile(
             title: TextFormField(
               decoration: InputDecoration(
-                labelText: 'name'
+                labelText: l.name
               ),
               controller: TextEditingController(text: widget.role.roleName),
               onChanged: (newVal) {
@@ -41,7 +43,7 @@ class _RoleEditDialogState extends State<RoleEditDialog> {
           ListTile(
             title: TextFormField(
               decoration: InputDecoration(
-                labelText: 'salary per hour'
+                labelText: l.salary_per_hour
               ),
               controller: TextEditingController(text: widget.role.salaryPerHour.toString()),
               onChanged: (newVal) {

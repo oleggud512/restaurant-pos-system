@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10nn/app_localizations.dart';
 import '../../services/repo.dart';
 
 class AddSupplierDialog extends StatefulWidget {
@@ -18,6 +19,7 @@ class _AddSupplierDialogState extends State<AddSupplierDialog> {
 
   @override
   Widget build(BuildContext context) {
+    var l = AppLocalizations.of(context)!;
     return Dialog(
       child: SizedBox(
         width: 250, 
@@ -28,22 +30,22 @@ class _AddSupplierDialogState extends State<AddSupplierDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Center(
-                child: Text("Додати постачальника", style: Theme.of(context).textTheme.headline6)
+                child: Text(l.add_supplier, style: Theme.of(context).textTheme.headline6)
               ),
               const SizedBox(height: 10),
               TextFormField(
                 controller: nameCont,
-                decoration: const InputDecoration(
-                  labelText: "ім'я/назва",
-                  border: OutlineInputBorder()
+                decoration: InputDecoration(
+                  labelText: l.name,
+                  border: const OutlineInputBorder()
                 ),
               ),
               const SizedBox(height: 15),
               TextFormField(
                 controller: contactsCont,
-                decoration: const InputDecoration(
-                  labelText: "контакти",
-                  border: OutlineInputBorder()
+                decoration: InputDecoration(
+                  labelText: l.contacts,
+                  border: const OutlineInputBorder()
                 ),
               ),
               const Spacer(),
@@ -52,7 +54,7 @@ class _AddSupplierDialogState extends State<AddSupplierDialog> {
                   await widget.repo.addSupplier(nameCont.text, contactsCont.text);
                   Navigator.pop(context);
                 }, 
-                child: const Text("додати", style: TextStyle(
+                child: Text(l.add, style: const TextStyle(
                   color: Colors.white,
                   fontSize: 15
                 ))

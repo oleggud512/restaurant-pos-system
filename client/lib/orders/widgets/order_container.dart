@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/services/constants.dart';
 import 'package:client/services/repo.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class OrderContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(order.isEnd);
+    var l = AppLocalizations.of(context)!;
     return Card(
       child: InkWell(
         onTap: onTap,
@@ -50,7 +51,7 @@ class OrderContainer extends StatelessWidget {
               if (!order.isEnd) Expanded(
                 flex: 2,
                 child: Padding(padding: const EdgeInsets.all(3), child: ElevatedButton(
-                  child: const Text("pay"),
+                  child: Text(l.pay),
                   onPressed: onPay,
                 ))
               ),
@@ -61,7 +62,7 @@ class OrderContainer extends StatelessWidget {
                   child: Container(
                     alignment: Alignment.center,
                     color: Provider.of<Constants>(context, listen: false).grey,
-                    child: Icon(Icons.delete, size: 24),
+                    child: const Icon(Icons.delete, size: 24),
                   ),
                 )
               )

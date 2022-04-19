@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:client/store/widgets/my_text_field.dart';
 
@@ -21,6 +22,7 @@ class AddGroceryDialog extends StatefulWidget {
 class _AddGroceryDialogState extends State<AddGroceryDialog> {
   @override
   Widget build(BuildContext context) {
+    var l = AppLocalizations.of(context)!;
     return Dialog(
       child: Container(
         width: 300,
@@ -32,12 +34,12 @@ class _AddGroceryDialogState extends State<AddGroceryDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 10,),
-              Center(child: Text("додати інгрідієнт", style: Theme.of(context).textTheme.headline6)),
+              Center(child: Text("${l.add} ${l.grocery(1).toLowerCase()}", style: Theme.of(context).textTheme.headline6)),
               const SizedBox(height: 10,),
               TextFormField(
-                decoration: const InputDecoration(
-                  labelText: "назва",
-                  border: OutlineInputBorder()
+                decoration: InputDecoration(
+                  labelText: l.name,
+                  border: const OutlineInputBorder()
                 ),
                 onChanged: (newVal) {
                   widget.groc.grocName = newVal;
@@ -54,9 +56,9 @@ class _AddGroceryDialogState extends State<AddGroceryDialog> {
               ),
               const SizedBox(height: 10,),
               TextFormField(
-                decoration: const InputDecoration(
-                  labelText: "кількість",
-                  border: OutlineInputBorder()
+                decoration: InputDecoration(
+                  labelText: l.count,
+                  border: const OutlineInputBorder()
                 ),
                 onChanged: (newVal) {
                   widget.groc.avaCount = int.parse(newVal);
@@ -64,7 +66,7 @@ class _AddGroceryDialogState extends State<AddGroceryDialog> {
               ),
               const Spacer(),
               ElevatedButton(
-                child: Text("додати", style: TextStyle(fontSize: 15)),
+                child: Text(l.add, style: TextStyle(fontSize: 15)),
                 onPressed: () async {
                   await widget.repo.addGrocery(widget.groc);
                   Navigator.pop(context);

@@ -1,4 +1,5 @@
 import 'package:client/employees/widgets/gender_picker.dart';
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/models.dart';
@@ -25,6 +26,7 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
 
   @override
   Widget build(BuildContext context) {
+    var l = AppLocalizations.of(context)!;
     return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -40,7 +42,7 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                       title: TextFormField(
                         controller: TextEditingController(text: widget.employee!.empFname),
                         decoration: InputDecoration(
-                          labelText: "first name"
+                          labelText: l.namee
                         ),
                         onChanged: (newVal) {
                           widget.employee!.empFname = newVal;
@@ -51,7 +53,7 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                       title: TextFormField(
                         controller: TextEditingController(text: widget.employee!.empLname),
                         decoration: InputDecoration(
-                          labelText: "last name"
+                          labelText: l.surname
                         ),
                         onChanged: (newVal) {
                           widget.employee!.empLname = newVal;
@@ -107,7 +109,7 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                     ListTile(
                       title: TextFormField(
                         decoration: InputDecoration(
-                          labelText: "hours per month"
+                          labelText: l.hours_per_month
                         ),
                         controller: TextEditingController(text: widget.employee!.hoursPerMonth.toString()),
                         onChanged: (newVal) {
@@ -124,7 +126,7 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                           });
                         }
                       ),
-                      title: Text("официант")
+                      title: Text(l.waiter)
                     )
                   ]
                 ),

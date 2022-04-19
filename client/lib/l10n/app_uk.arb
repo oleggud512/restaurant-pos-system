@@ -1,14 +1,150 @@
 {
-    # settings
     "ru": "Російська",
     "en": "Англійська",
     "uk": "Українска",
+    "language": "Мова",
     "delete_inf_ab_sup": "Видалити всю інформацію про видалених постачальників",
     "dark_theme": "Темна тема",
     "yes": "Так",
     "no": "Ні",
-    # navigation drawer
+    
     "store": "Склад",
     "stats": "Статистика",
-    "settings": "Налаштування"
+    "settings": "Налаштування",
+    "supply": "{count, select, 1{Поставка} 2{Поставки}}",
+    "@supply": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+    "menu": "Меню",
+    "employees": "Робітники",
+    "orders": "Замовлення",
+
+    "date": "Дата",
+    "group": "Групування",
+    "day": "День",
+    "hour": "Година",
+    "month": "Місяць",
+    "year": "Рік",
+
+    "grouping": "{gr, select, day{день} month{місяць} hour{година} year{рік} other{...}}",
+    "@grouping": {
+        "placeholders": {
+            "gr": {
+                "type": "String",
+                "example": "day"
+            }
+        }
+    },
+
+    "grocery": "{count,plural, one{Інгредієнт} other{Інгредієнтіи}",
+    "@grocery": {
+        "placeholders": {
+            "count": { }
+        }
+    },
+
+    "price": "Ціна",
+    "supplier": "{count, select, 1{Постачальник} 2{Постачальники}}",
+    "@supplier": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+
+    "kg": "кілограм",
+    "l": "літр",
+    "enter_groc": "введіть назву інгредієнту...",
+
+    "measure": "{measure,select, gram{кілограм} liter{літр} other{неправильна міра}}",
+    "@measure": {
+        "placeholders": {
+            "measure": {
+                "type": "String",
+                "example": "gram"
+            }
+        }
+    },
+
+    "measure_short": "{measure,select, gram{кг} liter{л} other{xxx}}",
+    "@measure_short": {
+        "placeholders": {
+            "measure": {
+                "type": "String",
+                "example": "gram"
+            }
+        }
+    },
+
+    "name": "Назва",
+    "left": "Залишилося",
+    "count": "Кількість",
+    "add": "Додати",
+    "add_supplier": "Додати постачальника",
+    "contacts": "Контакти",
+
+    "number": "Номер",
+    "sorting": "Сортування",
+    "filtering": "Фільтр",
+    "by": "По",
+    "find": "Знайти",
+    "asc": "{a,select, asc{за збільшенням} desc{за зменшенням}}",
+    "@asc": {
+        "placeholders": {
+            "a": {
+                "type": "String",
+                "example": "asc"
+            }
+        }
+    },
+
+    "dish": "Страва",
+    "dish_name": "Назва страви",
+    "groups": "Групы",
+    "prime_cost": "Собівартість",
+    "save": "Зберегти",
+    "add_group": "Додати групу",
+    "total": "Загальна",
+    "total1": "Отже",
+    "choose_image": "Оберіть зображення",
+    "enter_descr": "Введіть опис",
+    "no_descr": "Опису немає...",
+    "update_role": "Змінити посаду",
+    "delete": "Видалити",
+    "roles": "Посади",
+    "diary": "Щоденник",
+    "add_role": "Додати посаду",
+    "namee": "Ім'я",
+    "surname": "Фамілія",
+    "birthday": "День народження",
+    "hours_per_month": "Годин на місяць",
+    "gen": "{g,select, m{Чоловіки} f{Жінки}}",
+    "@gen": {
+        "placeholders": {
+            "g": {
+                "type": "String",
+                "example": "m"
+            }
+        }
+    },
+
+    "hours": "Години",
+    "clear": "Очистити",
+    "has_come": "Прийшов",
+    "from": "Від",
+    "to": "до",
+    "has_gone": "Пішов",
+    "waiter": "Офіціант",
+    "salary_per_hour": "зп/година",
+    "comment": "Коментар",
+    "summ": "Сума",
+    "pay": "Сплатити",
+    "rest": "Решта",
+    "order": "Замовлення",
+    "or_rec": "Замовлення прийнято в",
+    "or_paid": "Замовлення сплачено в",
+    "or_list": "Склад замовлення"
+
+
 }

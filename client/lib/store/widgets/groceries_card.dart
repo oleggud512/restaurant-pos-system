@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../bloc_provider.dart';
 import 'package:client/store/store_bloc.dart';
+import '../../l10nn/app_localizations.dart';
 import 'my_text_field.dart';
 
 class GroceriesCard extends StatefulWidget {
@@ -21,6 +22,7 @@ class _GroceriesCardState extends State<GroceriesCard> {
 
   @override
   Widget build(BuildContext context) {
+    var l = AppLocalizations.of(context)!;
     StoreBloc bloc = BlocProvider.of<StoreBloc>(context);
     return Card(
       elevation: 3.0,
@@ -69,8 +71,7 @@ class _GroceriesCardState extends State<GroceriesCard> {
                       return ListTile(
                         title: Text(state.groceries[index].grocName),
                         subtitle: Text(state.groceries[index].avaCount.toString() + 
-                          ((state.groceries[index].grocMeasure == 'gram') ? 
-                            '  (kg)' : '  (l)')),
+                          ' (${l.measure_short(state.groceries[index].grocMeasure)})'),
                         onTap: () async {
                           // диалог из которого мы можем изменить имя, грам/литр и количество
                           await showDialog(

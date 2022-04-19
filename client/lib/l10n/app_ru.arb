@@ -1,14 +1,148 @@
 {
-    # settings
     "ru": "Русский",
     "en": "Английский",
     "uk": "Украинский",
+    "language": "Язык",
     "delete_inf_ab_sup": "Удалить всю информацию про удаленных поставщиков",
     "dark_theme": "Темная тема",
     "yes": "Да",
     "no": "Нет",
-    # navigation drawer
+    
     "store": "Склад",
     "stats": "Статистика",
-    "settings": "Настройки"
+    "settings": "Настройки",
+    "supply": "{count, select, 1{Поставка} 2{Поставки}}",
+    "@supply": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+    "menu": "Меню",
+    "employees": "Работники",
+    "orders": "Заказы",
+
+    "date": "Дата",
+    "group": "Группировка",
+    "day": "День",
+    "hour": "Час",
+    "month": "Месяц",
+    "year": "Год",
+
+    "grouping": "{gr, select, day{день} month{месяц} hour{час} year{год} other{...}}",
+    "@grouping": {
+        "placeholders": {
+            "gr": {
+                "type": "String",
+                "example": "day"
+            }
+        }
+    },
+
+    "grocery": "{count,plural, one{Ингридиент} other{Ингридиенты}",
+    "@grocery": {
+        "placeholders": {
+            "count": { }
+        }
+    },
+
+    "price": "Цена",
+    
+    "supplier": "{count, select, 1{Поставщик} 2{Поставщики}}",
+    "@supplier": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+    
+    "enter_groc": "введите название ингредиента...",
+
+    "measure": "{measure,select, gram{килограмм} liter{литр} other{неправильная мера}}",
+    "@measure": {
+        "placeholders": {
+            "measure": {
+                "type": "String",
+                "example": "gram"
+            }
+        }
+    },
+
+    "measure_short": "{measure,select, gram{кг} liter{л} other{xxx}}",
+    "@measure_short": {
+        "placeholders": {
+            "measure": {
+                "type": "String",
+                "example": "gram"
+            }
+        }
+    },
+
+    "name": "Название",
+    "left": "Осталось",
+    "count": "Количество",
+    "add": "Добавить",
+    "add_supplier": "Добавить поставщика",
+    "contacts": "Контакты",
+
+    "number": "Номер",
+    "sorting": "Сортировка",
+    "filtering": "Фильтр",
+    "by": "По",
+    "find": "Найти",
+    "asc": "{a,select, asc{по возрастанию} desc{по убыванию}}",
+    "@asc": {
+        "placeholders": {
+            "a": {
+                "type": "String",
+                "example": "asc"
+            }
+        }
+    },
+
+    "dish": "Блюдо",
+    "dish_name": "Название блюда",
+    "groups": "Группы",
+    "prime_cost": "Себестоимость",
+    "save": "Сохранить",
+    "add_group": "Добавить группу",
+    "total": "Общая",
+    "total1": "Итого",
+    "choose_image": "Выберите изображение",
+    "enter_descr": "Введите описание",
+    "no_descr": "Описание отсутствует...",
+    "update_role": "Изменить должность",
+    "delete": "Удалить",
+    "roles": "Должности",
+    "diary": "Дневник",
+    "add_role": "Добавить должность",
+    "namee": "Имя",
+    "surname": "Фимилия",
+    "birthday": "Дань рождения",
+    "hours_per_month": "Часов в месяц",
+    "gen": "{g,select, m{Мужчины} f{Женщины}}",
+    "@gen": {
+        "placeholders": {
+            "g": {
+                "type": "String",
+                "example": "m"
+            }
+        }
+    },
+
+    "hours": "Часы",
+    "clear": "Очистить",
+    "has_come": "Пришел",
+    "from": "от",
+    "to": "до",
+    "has_gone": "Ушел",
+    "waiter": "Официант",
+    "salary_per_hour": "зп/час",
+    "comment": "Комментарий",
+    "summ": "Сумма",
+    "pay": "Оплатить",
+    "rest": "Сдача",
+    "order": "Заказ",
+    "or_rec": "Заказ принято в",
+    "or_paid": "Заказ оплачено в",
+    "or_list": "Состав заказа"
+
 }

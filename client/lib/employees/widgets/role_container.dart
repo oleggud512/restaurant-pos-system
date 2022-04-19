@@ -6,10 +6,10 @@ import '../../services/models.dart';
 
 
 class RoleContainer extends StatefulWidget {
-  RoleContainer(this.role, {Key? key, this.onTap}) : super(key: key);
+  const RoleContainer(this.role, {Key? key, this.onTap}) : super(key: key);
 
-  Role role;
-  void Function()? onTap;
+  final Role role;
+  final void Function()? onTap;
 
   @override
   State<RoleContainer> createState() => _RoleContainerState();

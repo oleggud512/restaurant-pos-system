@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:client/store/groceries/grocery_states_events.dart';
 import 'package:client/store/store_bloc.dart';
@@ -23,9 +24,12 @@ class GroceryDialog extends StatefulWidget {
 }
 
 class _GroceryDialogState extends State<GroceryDialog> {
-  
+  late AppLocalizations l;
+
+
   @override
   Widget build(BuildContext context) {
+    l = AppLocalizations.of(context)!;
     return BlocProvider(
       // bloc: GroceryBloc(Provider.of<Repo>(context),widget.id),
       blocBuilder: () => GroceryBloc(Provider.of<Repo>(context),widget.id),
@@ -84,7 +88,7 @@ class _GroceryDialogState extends State<GroceryDialog> {
           const SizedBox(width: 10),
           Expanded(
             child: Center(
-              child: Text((state.grocery.grocMeasure == 'gram')? "кг": "литр", style: Theme.of(context).textTheme.headline6)
+              child: Text(l.measure(state.grocery.grocMeasure), style: Theme.of(context).textTheme.headline6)
             ),
           )
         ],
@@ -95,8 +99,8 @@ class _GroceryDialogState extends State<GroceryDialog> {
           Expanded(
             flex: 3,
             child: TextField(
-              decoration: const InputDecoration(
-                labelText: "назва",
+              decoration: InputDecoration(
+                labelText: l.name,
                 border: OutlineInputBorder()
               ),
               controller: TextEditingController(text: state.grocery.grocName),
@@ -127,7 +131,7 @@ class _GroceryDialogState extends State<GroceryDialog> {
         sortAscending: ascending,
         columns: [
           DataColumn(
-            label: Text("постачальник", 
+            label: Text(l.supplier(1), 
               style: TextStyle(
                 fontWeight: FontWeight.bold
               )
@@ -149,10 +153,8 @@ class _GroceryDialogState extends State<GroceryDialog> {
                 ascending = !ascending;
               });
             }),
-            label: Text("ціна", 
-              style: TextStyle(
-                fontWeight: FontWeight.bold
-              )
+            label: Text(l.price, 
+              style: const TextStyle(fontWeight: FontWeight.bold)
             ), 
             numeric: true)
         ],
@@ -172,12 +174,10 @@ class _GroceryDialogState extends State<GroceryDialog> {
     return Center(
       child: Row(
         children: [
-          const Expanded(
+          Expanded(
             child: Center(
-              child: Text("Залишилося: ", 
-                style: TextStyle(
-                  fontSize: 20,       
-                )
+              child: Text(l.left + ": ", 
+                style: const TextStyle(fontSize: 20)
               )
             )
           ),
@@ -190,9 +190,9 @@ class _GroceryDialogState extends State<GroceryDialog> {
                   )));
                 } else if (state is GrocEditState) {
                   return TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: "кількість",
-                      border: OutlineInputBorder()
+                    decoration: InputDecoration(
+                      labelText: l.count,
+                      border: const OutlineInputBorder()
                     ),
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [

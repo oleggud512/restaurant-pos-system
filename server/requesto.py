@@ -80,5 +80,9 @@ def get_groc():
 # a = requests.get(ROOT + 'diary')
 # print(a.text)
 
-a = requests.get('http://127.0.0.1:5000/restaurant/v1/employees')
-print(a.text)
+# a = requests.get('http://127.0.0.1:5000/restaurant/v1/employees')
+# print(a.text)
+
+import services
+
+print(services.powerset((1, 2, 3)))

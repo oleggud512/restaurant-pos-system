@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,7 @@ class DiaryContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var l = AppLocalizations.of(context)!;
     return Card(
       child: SizedBox(
         height: 25,
@@ -39,7 +41,7 @@ class DiaryContainer extends StatelessWidget {
             ),
             Expanded(
               flex: 0,
-              child: Center(child: Text(' from '))
+              child: Center(child: Text(' ${l.from} '))
             ),
             Expanded(
               flex: 0,
@@ -47,7 +49,7 @@ class DiaryContainer extends StatelessWidget {
             ),
             Expanded(
               flex: 0,
-              child: Center(child: Text(' to '))
+              child: Center(child: Text(' ${l.to} '))
             ),
             Expanded(
               flex: 0,
@@ -63,7 +65,7 @@ class DiaryContainer extends StatelessWidget {
                 onTap: onGone,
                 child: Container(
                   color: Provider.of<Constants>(context, listen: false).grey,
-                  child: Center(child: Text("gone"))
+                  child: Center(child: Text(l.has_gone))
                 )
               )
             ),
@@ -71,7 +73,7 @@ class DiaryContainer extends StatelessWidget {
               flex: 1,
               child: InkWell(
                 child: Container(
-                  child: Center(child: Text('X')),
+                  child: const Center(child: Icon(Icons.close)),
                   color: Provider.of<Constants>(context, listen: false).grey
                 ),
                 onTap: onDelete,

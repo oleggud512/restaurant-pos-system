@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/orders/add_order/add_order_states_events.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,9 +22,11 @@ class AddOrderPage extends StatefulWidget {
 }
 
 class _AddOrderPageState extends State<AddOrderPage> {
+  late AppLocalizations l;
 
   @override
   Widget build(BuildContext context) {
+    l = AppLocalizations.of(context)!;
     return BlocProvider<AddOrderBloc>(
       blocBuilder: () => AddOrderBloc(Provider.of<Repo>(context, listen: false), widget.dishes, widget.dishGroups),
       blocDispose: (AddOrderBloc bloc) => bloc.dispose(),
@@ -71,7 +74,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
             isExpanded: true,
             value: bloc.order.empId,
             items: [
-              DropdownMenuItem(child: Text("не выбрано"), value: 0),
+              const DropdownMenuItem(child: Text("NULL"), value: 0),
               for (var emp in bloc.emps.where((e) => e.isWaiter)) DropdownMenuItem(
                 child: Text(emp.empLname + ' ' + emp.empFname),
                 value: emp.empId
@@ -86,7 +89,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
           padding: const EdgeInsets.all(5),
           margin: const EdgeInsets.symmetric(horizontal: 5),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(15)),
+            borderRadius: const BorderRadius.all(Radius.circular(15)),
             color: Colors.grey[100]
           ),
           height: 200,
@@ -121,8 +124,8 @@ class _AddOrderPageState extends State<AddOrderPage> {
                 bloc.inEvent.add(AddOrderCommentEvent(newVal));
               },
               decoration: InputDecoration(
-                labelText: "comment",
-                border: OutlineInputBorder()
+                labelText: l.comment,
+                border: const OutlineInputBorder()
               )
             ),
           ),
@@ -130,7 +133,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
         Row(
           children: [
             ElevatedButton(
-              child: Text("add"),
+              child: Text(l.add),
               onPressed: () async {
                 if (bloc.order.addable) {
                   // print(jsonEncode(bloc.order.toJson()));
@@ -141,7 +144,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
               },
             ),
             const Spacer(),
-            Text('сумма: ' + bloc.order.totalPrice.toString())
+            Text(l.summ + ': ' + bloc.order.totalPrice.toString())
           ]
         )
       ]
@@ -177,8 +180,8 @@ class _AddOrderPageState extends State<AddOrderPage> {
               flex: 4,
               child: TextFormField(
                 decoration: InputDecoration(
-                  labelText: "dish name",
-                  border: OutlineInputBorder()
+                  labelText: l.dish_name,
+                  border: const OutlineInputBorder()
                 ),
                 onChanged: (newVal) {
                   bloc.inEvent.add(AddOrderFilterNameEvent(newVal));

@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class YesNoDialog extends StatelessWidget {
@@ -13,11 +14,11 @@ class YesNoDialog extends StatelessWidget {
       title: title,
       actions: [
         ElevatedButton(
-          child: Text("No"),
+          child: Text(AppLocalizations.of(context)!.no),
           onPressed: onNo,
         ),
         ElevatedButton(
-          child: Text("Yes"),
+          child: Text(AppLocalizations.of(context)!.yes),
           onPressed: onYes,
         )
       ]

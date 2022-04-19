@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 
@@ -16,9 +17,9 @@ class _TextEditorState extends State<TextEditor> {
   @override
   Widget build(BuildContext context) {
     return widget.isEdit ? TextFormField(
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        hintText: "введите описание",
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(),
+        hintText: AppLocalizations.of(context)!.enter_descr,
       ),
       controller: TextEditingController(text: widget.text),
       textAlignVertical: TextAlignVertical.top,
@@ -29,7 +30,7 @@ class _TextEditorState extends State<TextEditor> {
     ) : Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.text.isNotEmpty ? widget.text : "описание...", textAlign: TextAlign.start,),
+        Text(widget.text.isNotEmpty ? widget.text : AppLocalizations.of(context)!.no_descr, textAlign: TextAlign.start),
         const Spacer()
       ],
     );

@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,10 +8,12 @@ import '../../services/repo.dart';
 class ShowSupplyDialog extends StatelessWidget {
   ShowSupplyDialog({Key? key, required this.supply}) : super(key: key);
 
+  late AppLocalizations l;
   Supply supply;
 
   @override
   Widget build(BuildContext context) {
+    l = AppLocalizations.of(context)!;
     return Dialog(
       child: Container(
         padding: const EdgeInsets.all(10),
@@ -20,7 +23,7 @@ class ShowSupplyDialog extends StatelessWidget {
           children: [
             SizedBox(
               child: Center(
-                child: Text("supply №" + supply.supplyId.toString(), 
+                child: Text(l.supply(1) + " №" + supply.supplyId.toString(), 
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20
@@ -29,9 +32,9 @@ class ShowSupplyDialog extends StatelessWidget {
               )
             ),
             DataTable(
-              columns: const [
-                DataColumn(label: Text("grocery")),
-                DataColumn(label: Text("count"))
+              columns: [
+                DataColumn(label: Text(l.grocery(1))),
+                DataColumn(label: Text(l.count))
               ],
               rows: [
                 for (int i = 0; i < supply.groceries.length; i++) DataRow(

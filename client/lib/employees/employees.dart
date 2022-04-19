@@ -7,6 +7,7 @@ import 'package:client/employees/widgets/employee_container.dart';
 import 'package:client/employees/widgets/employee_edit_dialog.dart';
 import 'package:client/employees/widgets/role_edit_dialog.dart';
 import 'package:client/employees/widgets/role_container.dart';
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/services/models.dart';
 import 'package:client/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +30,11 @@ class _EmployeesState extends State<Employees> {
   EmployeesPage curPage = EmployeesPage.employees;
   int curI = 0;
   GlobalKey<ScaffoldState> gc0 = GlobalKey<ScaffoldState>();
-
+  late AppLocalizations l;
 
   @override
   Widget build(BuildContext context) {
+    l = AppLocalizations.of(context)!;
     return BlocProvider<EmployeeBloc>(
       blocBuilder: () => EmployeeBloc(Provider.of<Repo>(context, listen: false)),
       blocDispose: (EmployeeBloc bloc) => bloc.dispose(),
@@ -69,7 +71,7 @@ class _EmployeesState extends State<Employees> {
                                   employee: bloc.employees[i],
                                   actions: [
                                     ElevatedButton(
-                                      child: Text('save'),
+                                      child: Text(l.save),
                                       onPressed: () async {
                                         if (bloc.roles[i].saveable) {
                                           await Provider.of<Repo>(context, listen: false).updateEmployee(bloc.employees[i]);
@@ -102,18 +104,18 @@ class _EmployeesState extends State<Employees> {
                             await showDialog(
                               context: context, 
                               builder: (_) => RoleEditDialog(
-                                title: Center(child: Text('update role')),
+                                title: Center(child: Text(l.update_role)),
                                 role: bloc.roles[i],
                                 actions: [
                                   ElevatedButton(
-                                    child: Text('delete'),
+                                    child: Text(l.delete),
                                     onPressed: () async {
                                       await Provider.of<Repo>(context, listen: false).deleteRole(bloc.roles[i].roleId!);
                                       Navigator.pop(context);
                                     },
                                   ),
                                   ElevatedButton(
-                                    child: Text('save'),
+                                    child: Text(l.save),
                                     onPressed: () async {
                                       if (bloc.roles[i].saveable) {
                                         await Provider.of<Repo>(context, listen: false).updateRole(bloc.roles[i]);
@@ -165,10 +167,10 @@ class _EmployeesState extends State<Employees> {
     Role role = Role.init();
     Employee emp = Employee.init();
     return AppBar(
-      title: Center(child: curI == 0 ? Text("employees") : curI == 1 ? Text("roles") : Text("diary")), 
+      title: Center(child: curI == 0 ? Text(l.employees) : curI == 1 ? Text(l.roles) : Text(l.diary)), 
       actions: [
         IconButton(
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
           onPressed: () async {
             await showDialog(
               context: context, 
@@ -179,9 +181,8 @@ class _EmployeesState extends State<Employees> {
                     employee: emp,
                     actions: [
                       ElevatedButton(
-                        child: Text("save"),
+                        child: Text(l.save),
                         onPressed: () async {
-                          print(emp.toJson());
                           if (emp.saveable) {
                             await Provider.of<Repo>(context, listen: false).addEmployee(emp);
                             Navigator.pop(context); 
@@ -192,11 +193,11 @@ class _EmployeesState extends State<Employees> {
                   );
                 } else if (curI == 1) {
                   return RoleEditDialog(
-                    title: Center(child: Text('add role')),
+                    title: Center(child: Text(l.add_role)),
                     role: role,
                     actions: [
                       ElevatedButton(
-                        child: Text('add'),
+                        child: Text(l.add),
                         onPressed: () async {
                           if (role.saveable) {
                             await Provider.of<Repo>(context, listen: false).addRole(role);
@@ -209,14 +210,14 @@ class _EmployeesState extends State<Employees> {
                 } else if (curI == 2) {
                   return DiaryAddDialog(employees: bloc.employees);
                 }
-                return Dialog(child: Center(child: Text("priiivet")));
+                return const Dialog(child: Center(child: Text("something went wrong")));
               }
             );
             bloc.inEvent.add(EmployeeLoadEvent());
           }
         ),
         if (curI == 0) IconButton(
-          icon: Icon(Icons.filter_alt_outlined),
+          icon: const Icon(Icons.filter_alt_outlined),
           onPressed: () {
             gc0.currentState?.openEndDrawer();
           },
@@ -229,9 +230,9 @@ class _EmployeesState extends State<Employees> {
     return BottomNavigationBar(
       currentIndex: curI,
       items: [
-        BottomNavigationBarItem(icon: Icon(Icons.people_alt_rounded), label: "employees", tooltip: ''),
-        BottomNavigationBarItem(icon: Icon(Icons.content_paste_search_rounded), label: 'roles', tooltip: ''),
-        BottomNavigationBarItem(icon: Icon(Icons.note_rounded), label: "diary", tooltip: '')
+        BottomNavigationBarItem(icon: const Icon(Icons.people_alt_rounded), label: l.employees, tooltip: ''),
+        BottomNavigationBarItem(icon: const Icon(Icons.content_paste_search_rounded), label: l.roles, tooltip: ''),
+        BottomNavigationBarItem(icon: const Icon(Icons.note_rounded), label: l.diary, tooltip: '')
       ],
       onTap: (i) {
         setState(() {

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/services/models.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -64,7 +65,7 @@ class _PhotoState extends State<Photo> {
           children: [
             Expanded(
               child: ElevatedButton(
-                child: Text('choose image', overflow: TextOverflow.ellipsis,),
+                child: Text(AppLocalizations.of(context)!.choose_image, overflow: TextOverflow.ellipsis,),
                 onPressed: () async {
                   setPhoto();
                 },

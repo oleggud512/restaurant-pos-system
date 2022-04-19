@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,7 @@ class PayOrderDialog extends StatefulWidget {
 class _PayOrderDialogState extends State<PayOrderDialog> {
   @override
   Widget build(BuildContext context) {
+    var l = AppLocalizations.of(context)!;
     return Dialog(
       child: SizedBox(
         width: 250,
@@ -32,9 +34,9 @@ class _PayOrderDialogState extends State<PayOrderDialog> {
                   });
                 }
               ),
-              Text('сдача: ' + widget.order.change.toString()),
+              Text(l.rest + ': ' + widget.order.change.toString()),
               ElevatedButton(
-                child: Text('pay'),
+                child: Text(l.pay),
                 onPressed: () async {
                   if (widget.order.payable) {
                     await Provider.of<Repo>(context, listen: false).payOrder(widget.order);

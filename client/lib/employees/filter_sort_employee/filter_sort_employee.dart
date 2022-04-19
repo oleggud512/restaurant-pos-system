@@ -1,5 +1,6 @@
 import 'package:client/employees/employees_bloc.dart';
 import 'package:client/employees/employees_states_events.dart';
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../bloc_provider.dart';
@@ -8,7 +9,7 @@ import '../../supplys/filter_sort_drawer/filter_sort_drawer.dart';
 
 
 class FilterSortEmployee extends StatefulWidget {
-  FilterSortEmployee({Key? key}) : super(key: key);
+  const FilterSortEmployee({Key? key}) : super(key: key);
 
   @override
   State<FilterSortEmployee> createState() => _FilterSortEmployeeState();
@@ -32,6 +33,7 @@ class _FilterSortEmployeeState extends State<FilterSortEmployee> {
   @override
   Widget build(BuildContext context) {
     // var bloc = BlocProvider.of<EmployeeBloc>(context);
+    var l = AppLocalizations.of(context)!;
     return Drawer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -41,7 +43,7 @@ class _FilterSortEmployeeState extends State<FilterSortEmployee> {
               controller: ScrollController(),
               children: [
                 ListTile(
-                  title: Text('sorting')
+                  title: Text(l.sorting)
                 ),
                 ListTile(
                   leading: Radio<String>(
@@ -53,7 +55,7 @@ class _FilterSortEmployeeState extends State<FilterSortEmployee> {
                       });
                     },
                   ),
-                  title: Text('имя')
+                  title: Text(l.namee)
                 ),
                 ListTile(
                   leading: Radio<String>(
@@ -65,7 +67,7 @@ class _FilterSortEmployeeState extends State<FilterSortEmployee> {
                       });
                     },
                   ),
-                  title: Text('фамилия')
+                  title: Text(l.surname)
                 ),
                 ListTile(
                   leading: Radio<String>(
@@ -77,7 +79,7 @@ class _FilterSortEmployeeState extends State<FilterSortEmployee> {
                       });
                     },
                   ),
-                  title: Text('день рождения')
+                  title: Text(l.birthday)
                 ),
                 ListTile(
                   leading: Radio<String>(
@@ -89,7 +91,7 @@ class _FilterSortEmployeeState extends State<FilterSortEmployee> {
                       });
                     },
                   ),
-                  title: Text('часов в месяц')
+                  title: Text(l.hours_per_month)
                 ),
                 ListTile(title: AscDescDropdown(  // выбор направления
                   value: bloc.fsEmp!.asc,
@@ -100,14 +102,14 @@ class _FilterSortEmployeeState extends State<FilterSortEmployee> {
                   }
                 )),
                 ListTile(
-                  title: Text('filtering')
+                  title: Text(l.filtering)
                 ),
                 ListTile(
                   title: TextFormField(
                     controller: likeCont,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'filtering',
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: l.filtering,
                     ),
                     onChanged: (newVal) {
                       bloc.inEvent.add(EmployeeLikeChangedEvent(newVal));
@@ -121,7 +123,7 @@ class _FilterSortEmployeeState extends State<FilterSortEmployee> {
                       bloc.inEvent.add(EmployeeFilterGenderEvent(newVal!, 'm'));
                     }
                   ),
-                  title: Text('чоловіки')
+                  title: Text(l.gen('m'))
                 ),
                 ListTile(
                   leading: Checkbox(
@@ -130,11 +132,11 @@ class _FilterSortEmployeeState extends State<FilterSortEmployee> {
                       bloc.inEvent.add(EmployeeFilterGenderEvent(newVal!, 'f'));
                     }
                   ),
-                  title: Text('жінки')
+                  title: Text(l.gen('f'))
                 ),
                 ListTile(title: Row( // дата от до
                   children: [
-                    Text("birthday: "),
+                    Text(l.birthday + ": "),
                     Expanded(child: TextButton(
                       child: Text(bloc.fsEmp!.birthdayFrom.toString().substring(0, 10)),
                       onPressed: () async {
@@ -178,8 +180,8 @@ class _FilterSortEmployeeState extends State<FilterSortEmployee> {
                 )),
                 ListTile(title: Row(              // цена от до
                   children: [
-                    Text("hours: "),
-                    Expanded(child: TextFormField( // вынести в отдельный класс с стилями нужными
+                    Text(l.hours + ": "),
+                    Expanded(child: TextFormField( 
                       textAlign: TextAlign.center,
                       controller: TextEditingController(text: bloc.fsEmp!.hoursPerMonthFrom.toString()),
                       onChanged: (newVal) {
@@ -215,14 +217,13 @@ class _FilterSortEmployeeState extends State<FilterSortEmployee> {
             child: Row(
               children: [
                 ElevatedButton(
-                  child: const Text('find'),
+                  child: Text(l.find),
                   onPressed: () {
-                    print(bloc.fsEmp!.toJson());
                     bloc.inEvent.add(EmployeeLoadEvent());
                   }
                 ),
                 ElevatedButton(
-                  child: const Text('clear'),
+                  child: Text(l.clear),
                   onPressed: () {
                     bloc.fsEmp = null;
                     bloc.like = '';

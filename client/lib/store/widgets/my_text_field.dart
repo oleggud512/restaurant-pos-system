@@ -1,5 +1,16 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 
+
+class AAA {
+  int a;
+  int b;
+  AAA(this.a, this.b);
+  @override
+  String toString() {
+    return "AAA($a, $b)";
+  }
+}
 
 class MyTextField extends StatelessWidget {
   MyTextField({
@@ -28,9 +39,9 @@ class MyTextField extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(10.0))
         ),
         child: TextFormField(
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: 'введіть назву інгредієнту',
+            hintText: AppLocalizations.of(context)!.enter_groc,
           ),
           onChanged: onChanged,
           controller: controller,

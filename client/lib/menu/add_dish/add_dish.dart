@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/menu/add_dish/prime_cost_details/prime_cost_details_dialog.dart';
 import 'package:client/menu/widgets/text_editor.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +24,10 @@ class AddDishPage extends StatefulWidget {
 }
 
 class _AddDishPageState extends State<AddDishPage> {
-
+  late AppLocalizations l;
   @override
   Widget build(BuildContext context) {
+    l = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(),
       body: BlocProvider<AddDishBloc>(
@@ -82,8 +84,8 @@ class _AddDishPageState extends State<AddDishPage> {
       children: [
         Photo(dish: bloc.dish, edit: true),
         TextFormField(
-          decoration: const InputDecoration(
-            labelText: "dish name",
+          decoration: InputDecoration(
+            labelText: l.dish_name,
           ),
           onChanged: (String newVal) {
             bloc.inEvent.add(AddDishNameChangedEvent(newVal));
@@ -94,8 +96,8 @@ class _AddDishPageState extends State<AddDishPage> {
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))
           ],
-          decoration: const InputDecoration(
-            labelText: "dish price",
+          decoration: InputDecoration(
+            labelText: l.price,
           ),
           onChanged: (String newVal) {
             bloc.inEvent.add(AddDishPriceChangedEvent(newVal));
@@ -103,7 +105,7 @@ class _AddDishPageState extends State<AddDishPage> {
         ),
         Row(
           children: [
-            Expanded(child: Text("PRIME COST: ")),
+            Expanded(child: Text(l.prime_cost + ": ")),
             Expanded(
               child: StreamBuilder(
                 stream: bloc.outPrimeCost,
@@ -173,8 +175,8 @@ class _AddDishPageState extends State<AddDishPage> {
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,3}'))
                   ],
-                  decoration: const InputDecoration(
-                    labelText: "kg",
+                  decoration: InputDecoration(
+                    labelText: l.measure_short('gram'),
                   ),
                   onChanged: (newVal) {
                     bloc.inEvent.add(AddDishDishGrocCountChangedEvent(bloc.dish.dishGrocs[i].grocId, newVal));
@@ -194,9 +196,9 @@ class _AddDishPageState extends State<AddDishPage> {
         Padding(
           padding: const EdgeInsets.all(8),
           child: TextFormField(
-            decoration: const InputDecoration(
-              labelText: "name",
-              border: OutlineInputBorder()
+            decoration: InputDecoration(
+              labelText: l.name,
+              border: const OutlineInputBorder()
             ),
             onChanged: (newVal) {
               bloc.inEvent.add(AddDishFindGrocEvent(newVal)); // поиск / фильтрация
@@ -231,7 +233,7 @@ class _AddDishPageState extends State<AddDishPage> {
                 Navigator.pop(context);
               }
             }, 
-            child: const Text("add")
+            child: Text(l.add)
           ),
         ), 
         Expanded(child: TextEditor(

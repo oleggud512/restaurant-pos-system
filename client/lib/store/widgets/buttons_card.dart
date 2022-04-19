@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:client/bloc_provider.dart';
 import 'package:client/store/add_grocery/add_grocery.dart';
@@ -13,13 +14,14 @@ class ButtonsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations l = AppLocalizations.of(context)!;
     StoreBloc bloc = BlocProvider.of<StoreBloc>(context);
     return Column(
       children: [
         Container(
           alignment: Alignment.center,
           child: Tooltip(
-            message: "+ постачальник",
+            message: "+ ${l.supplier(1)}",
             child: InkWell(
               child: Container(
                 child: const Icon(Icons.delivery_dining, size: 32), 
@@ -41,7 +43,7 @@ class ButtonsCard extends StatelessWidget {
         Container(
           alignment: Alignment.center,
           child: Tooltip(
-            message: "+ інгредієнт",
+            message: "+ ${l.grocery(1)}",
             child: InkWell(
               child: Container(
                 child: const Icon(Icons.local_grocery_store_outlined, size: 32), 

@@ -1,22 +1,26 @@
 import 'package:client/menu/menu_states_events.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_treeview/flutter_treeview.dart';
+// import 'package:flutter_treeview/flutter_treeview.dart';
 
 import '../../bloc_provider.dart';
+import '../../l10nn/app_localizations.dart';
 import '../../supplys/filter_sort_drawer/filter_sort_drawer.dart';
 import '../menu_bloc.dart';
 
 
 class FilterSortMenuDrawer extends StatefulWidget {
-  FilterSortMenuDrawer({Key? key}) : super(key: key);
+  const FilterSortMenuDrawer({Key? key}) : super(key: key);
 
   @override
   State<FilterSortMenuDrawer> createState() => _FilterSortMenuDrawerState();
 }
 
 class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with TickerProviderStateMixin {
+  late AppLocalizations l;
+  
   @override
   Widget build(BuildContext context) {
+    l = AppLocalizations.of(context)!;
     var bloc = BlocProvider.of<MenuBloc>(context);
     return Drawer(
       child: Column(
@@ -26,11 +30,7 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
             child: ListView(
               controller: ScrollController(),
               children: [
-                BackButton(onPressed: () {
-                  print(bloc.fsMenu!.toJson());
-                  setState(() {});
-                }),
-                ListTile(title: Text("sorting")),
+                ListTile(title: Text(l.sorting)),
                 ListTile(  // выбор того по чем сортируем
                   leading: Radio<String>(
                     value: 'dish_name',
@@ -41,7 +41,7 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
                       });
                     }
                   ),
-                  title: Text("по назві")
+                  title: Text('${l.by} ${l.name}')
                 ),
                 ListTile(  // выбор того по чем сортируем
                   leading: Radio<String>(
@@ -53,7 +53,7 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
                       });
                     }
                   ),
-                  title: Text("по ціні")
+                  title: Text(l.by + " " + l.price.toLowerCase())
                 ),
                 ListTile(title: AscDescDropdown(  // выбор направления
                   value: bloc.fsMenu!.asc,
@@ -63,13 +63,13 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
                     });
                   }
                 )),
-                ListTile(title: Text("filtering")), 
+                ListTile(title: Text(l.filtering)), 
                 ListTile(           // поиск по названию (работает сразу)
                   title: TextFormField(
                     // controller: TextEditingController(text: bloc.fsMenu!.like),
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "назва страви"
+                      border: const OutlineInputBorder(),
+                      labelText: l.dish_name
                     ),
                     onChanged: (newVal) {
                       bloc.inEvent.add(MenuFilterDishNameEvent(newVal));
@@ -78,7 +78,7 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
                 ),
                 ListTile(title: Row(              // цена от до
                   children: [
-                    Text("price: "),
+                    Text(l.price + ": "),
                     Expanded(child: TextFormField( // вынести в отдельный класс с стилями нужными
                       textAlign: TextAlign.center,
                       controller: TextEditingController(text: bloc.fsMenu!.priceFrom.toString()),
@@ -107,12 +107,12 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
                     },
                     child: Row(
                       children: [
-                        Text('Groceries'),
+                        Text(l.grocery(2)),
                         const Spacer(),
                         Padding(
                           padding: const EdgeInsets.all(10), 
                           child: Center(
-                            child: (!bloc.showGrocList) ? Icon(Icons.arrow_drop_down) : RotatedBox(
+                            child: (!bloc.showGrocList) ? const Icon(Icons.arrow_drop_down) : const RotatedBox(
                               quarterTurns: 2,
                               child: Icon(Icons.arrow_drop_down)
                             )
@@ -148,12 +148,12 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
                     },
                     child: Row(
                       children: [
-                        Text('Groups'),
+                        Text(l.groups),
                         const Spacer(),
                         Padding(
                           padding: const EdgeInsets.all(10), 
                           child: Center(
-                            child: (!bloc.showGroupList) ? Icon(Icons.arrow_drop_down) : RotatedBox(
+                            child: (!bloc.showGroupList) ? const Icon(Icons.arrow_drop_down) : const RotatedBox(
                               quarterTurns: 2, 
                               child: Icon(Icons.arrow_drop_down)
                             )
@@ -187,7 +187,7 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
           Expanded(
             flex: 0,
             child: ElevatedButton(
-              child: Text("find"),
+              child: Text(l.find),
               style: ButtonStyle(
                 elevation: MaterialStateProperty.all(0),
               ),

@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,6 +11,7 @@ class AddDishGroupDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var l = AppLocalizations.of(context)!;
     return Dialog(
       child: Container(
         width: 250, 
@@ -19,17 +21,17 @@ class AddDishGroupDialog extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text("добавить группу", style: Theme.of(context).textTheme.headline6),
+            Text(l.add_group, style: Theme.of(context).textTheme.headline6),
             TextFormField(
               decoration: InputDecoration(
-                labelText: "назва"
+                labelText: l.name
               ),
               onChanged: (newVal) {
                 text = newVal;
               },
             ),
             ElevatedButton(
-              child: Text("add group"),
+              child: Text(l.add_group),
               onPressed: () async {
                 if (text.isNotEmpty) {
                   await Provider.of<Repo>(context, listen: false).addDishGroup(text);

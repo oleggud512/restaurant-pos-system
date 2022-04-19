@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 import '../../services/models.dart';
 import '../add_supply/add_supply.dart';
@@ -9,6 +10,7 @@ import '../supplys_states_events.dart';
 class SupplyContainer extends StatelessWidget {
   SupplyContainer({Key? key, required this.supply, required this.view, required this.onTap}) : super(key: key);
 
+  late AppLocalizations l;
   Supply supply;
   View view;
   void Function()? onTap;
@@ -19,6 +21,7 @@ class SupplyContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    l = AppLocalizations.of(context)!;
     return Card(
       elevation: 3.0,
       child: InkWell(
@@ -31,13 +34,13 @@ class SupplyContainer extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text("номер: "),
+                  Text(l.number + ": "),
                   Text(supply.supplyId.toString(), style: style)
                 ],
               ),
               Row(
                 children: [
-                  Text("постачальник: "),
+                  Text(l.supplier(1) + ": "),
                   Flexible(
                     child: Text("#" + supply.supplierId.toString() + " " + supply.supplierName, 
                       style: style, 

@@ -22,7 +22,7 @@ def cur_to_dict(cur: CMySQLCursor):
             # col_value: datetime.datetime = col_value
             # a: str = 'hell.lll'
             # a[0:a.index('.')]
-            print(col_value)
+            # print(col_value)
             if type(col_value) == datetime.date: 
                 row_dict[col_name] = col_value.isoformat()
             # elif type(col_value) == datetime.timedelta:

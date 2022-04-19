@@ -366,19 +366,26 @@ def get_menu():
     sort_column = request.args.get('sort_column')
     asc = request.args.get('asc')
     groceries = srv.decode_array(request.args.get('groceries'), is_tuple=True, is_int=True)
+    # groceries = request.args.get('groceries')
     groups = srv.decode_array(request.args.get('groups'), is_tuple=True, is_int=True)
-    
+    if len(groups) == 1:
+        groups = f'({groups[0]})'
+
+    # cur.execute(f"""SELECT groc_id FROM groceries""")
+    # all_groc = srv.powerset(tuple(i[0] for i in cur.fetchall()))
+
     cur.execute(f"""
-        SELECT d.dish_id, d.dish_name, d.dish_price, d.dish_gr_id, d.dish_photo_index, d.dish_descr
-        FROM dishes d
+        SELECT DISTINCT d.dish_id, d.dish_name, d.dish_price, d.dish_gr_id, d.dish_photo_index, d.dish_descr
+        FROM dishes d {'JOIN dish_consists dc USING(dish_id)' if len(groceries) > 0 else ''}
         WHERE 42 = 42
-            {f" AND dish_price >= {price_from} AND dish_price <= {price_to}" if len(price_from) and len(price_to) else ''}
-            {f' AND dish_gr_id IN {groups}' if len(groups) > 0 else ''}
-            {f'''
+            {f" AND d.dish_price >= {price_from} AND d.dish_price <= {price_to}" if len(price_from) and len(price_to) else ''}
+            {f' AND d.dish_gr_id IN {groups}' if len(groups) > 0 else ''}
+            {f'AND dc.groc_id IN {groceries}' if len(groceries) > 0 else ''}
+        ORDER BY d.{sort_column} {asc.upper()}
+    """)
+    {f'''
                AND ({" OR ".join(list(map(lambda x: f' {x} IN (SELECT dc.groc_id FROM dish_consists dc WHERE dc.dish_id = d.dish_id) ', groceries)))})
             ''' if len(groceries) > 0 else ''}
-        ORDER BY {sort_column} {asc.upper()}
-    """)
     """
     AND 1 IN (select dc.groc_id ...) OR 2 IN (select dc.groc_id ...) OR 3 IN (select dc.groc_id ...)
     """
@@ -406,14 +413,14 @@ def get_menu():
     """)
 
     filter_sort_data = cur_to_dict(cur)[0]      # УБРАТЬ ЭТО НУЖНО потом
-    print(dumps(
-        {
-            'dishes' : dishes, 
-            'groups' : groups, 
-            'filter_sort_data': filter_sort_data
-        }, 
-        indent=4
-    ))
+    # print(dumps(
+    #     {
+    #         'dishes' : dishes, 
+    #         'groups' : groups, 
+    #         'filter_sort_data': filter_sort_data
+    #     }, 
+    #     indent=4
+    # ))
     cur.close()
     return dumps(
         {
@@ -497,7 +504,7 @@ def update_dish():
 
     if photo != None:
         srv.save_photo(photo, dish_id)
-    print(str(dish_descr) + "MAMBA")
+    # print(str(dish_descr) + "MAMBA")
     cur.execute(f"""
         UPDATE dishes
         SET dish_name = "{dish_name}",
@@ -563,7 +570,7 @@ def get_prime_cost(groc_ids):
     prime_cost = {'consist' : [], 'total': 0}
 
     for groc in groc_id_count:
-        print(groc)
+        # print(groc)
         # CALL get_min_groc_price({groc_id}) # ---> не работает...
         cur.execute(f"""SELECT 
                 s.supplier_id, 
@@ -594,7 +601,7 @@ def get_prime_cost(groc_ids):
         prime_cost['total'] += grocery['groc_total']
         prime_cost['consist'].append(grocery)
 
-    print(dumps(prime_cost, indent=2))
+    # print(dumps(prime_cost, indent=2))
     cur.close()
     return dumps(prime_cost, indent=2)
 
@@ -627,7 +634,7 @@ def update_role():
     role_name = request.json['role_name']
     salary_per_hour = request.json['salary_per_hour']
 
-    print(request.json)
+    # print(request.json)
 
     cur.execute(f"""
         UPDATE roles 

@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/services/models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +59,7 @@ class _DiaryAddDialogState extends State<DiaryAddDialog> {
             ),
             ListTile(
               title: ElevatedButton(
-                child: Text('пришел'),
+                child: Text(AppLocalizations.of(context)!.has_come),
                 onPressed: () async {
                   await Provider.of<Repo>(context, listen: false).diaryStart(value!);
                   Navigator.pop(context);

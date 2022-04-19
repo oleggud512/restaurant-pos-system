@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/menu/dish_details/dish_details.dart';
 import 'package:client/menu/menu_states_events.dart';
 import 'package:client/menu/widgets/dish_container.dart';
@@ -26,6 +27,7 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
+    var l = AppLocalizations.of(context)!;
     return BlocProvider<MenuBloc>(
       blocBuilder: () => MenuBloc(Provider.of<Repo>(context)),
       blocDispose: (MenuBloc bloc) => bloc.dispose(),
@@ -49,16 +51,16 @@ class _MenuPageState extends State<MenuPage> {
                   key: key,
                   drawer: NavigationDrawer(),
                   appBar: AppBar(
-                    title: Text("menu"),
+                    title: Text(l.menu),
                     automaticallyImplyLeading: false,
                     actions: [
                       IconButton(
                         icon: Icon(Icons.menu),
                         onPressed: () => key.currentState!.openDrawer()
                       ),
-                      Expanded(child: Center(child: Text('menu', style: Theme.of(context).appBarTheme.titleTextStyle))),
+                      Expanded(child: Center(child: Text(l.menu, style: Theme.of(context).appBarTheme.titleTextStyle))),
                       IconButton(
-                        icon: Icon(Icons.filter_alt_outlined),
+                        icon: const Icon(Icons.filter_alt_outlined),
                         onPressed: () => key.currentState!.openEndDrawer()
                       )
                     ]
@@ -111,7 +113,7 @@ class _MenuPageState extends State<MenuPage> {
                                 bloc.inEvent.add(MenuLoadEvent());
                               }, 
                               icon: Icon(Icons.add), 
-                              label: Text("dish")
+                              label: Text(l.dish)
                             ),
                             const SizedBox(width: 8),
                             TextButton.icon(
@@ -126,7 +128,7 @@ class _MenuPageState extends State<MenuPage> {
                                 bloc.inEvent.add(MenuLoadEvent());
                               }, 
                               icon: Icon(Icons.add), 
-                              label: Text("group")
+                              label: Text(l.group.toLowerCase())
                             ),
                             const SizedBox(width: 8),
                           ],

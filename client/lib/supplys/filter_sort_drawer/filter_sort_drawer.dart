@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/supplys/supplys_states_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +16,7 @@ class SortFilterDrawer extends StatefulWidget {
 }
 
 class _SortFilterDrawerState extends State<SortFilterDrawer> {
+  late AppLocalizations l;
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +24,12 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
 
     var fromCont = TextEditingController(text: bloc.fsd?.fPriceFrom.toString());
     var toCont = TextEditingController(text: bloc.fsd?.fPriceTo.toString());
-    
+    l = AppLocalizations.of(context)!;
     return Drawer(
       child: ListView(
         controller: ScrollController(), // ScrollController is currently attached to more than one ScrollPosition.
         children: [
-          ListTile(title: Text("sorting")),
+          ListTile(title: Text(l.sorting)),
           ListTile(  // выбор того по чем сортируем
             leading: Radio<String>(
               value: "summ",
@@ -36,7 +38,7 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
                 bloc.inEvent.add(SupplySortCollumnChangedEvent(newVal!));
               }
             ),
-            title: Text("по цене")
+            title: Text(l.by + " " + l.price.toLowerCase())
           ),
           ListTile(  // выбор того по чем сортируем
             leading: Radio<String>(
@@ -46,7 +48,7 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
                 bloc.inEvent.add(SupplySortCollumnChangedEvent(newVal!));
               }
             ),
-            title: Text("по дате")
+            title: Text("${l.by} ${l.date.toLowerCase()}")
           ),
           ListTile(title: AscDescDropdown(
             value: bloc.fsd?.sortDirection,
@@ -54,10 +56,10 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
               bloc.inEvent.add(SupplySortDirectionChangedEvent(newVal!));
             },
           )), // выбор направления
-          ListTile(title: Text("filtering")), 
+          ListTile(title: Text(l.filtering)), 
           ListTile(title: Row( // цена от до
             children: [
-              Text("price: "),
+              Text(l.price + ": "),
               Expanded(child: TextFormField( // вынести в отдельный класс с стилями нужными
                 controller: fromCont,
                 textAlign: TextAlign.center,
@@ -77,7 +79,7 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
           )),
           ListTile(title: Row( // дата от до
             children: [
-              Text("date: "),
+              Text(l.date + ": "),
               Expanded(child: TextButton(
                 child: Text(bloc.fsd!.fDateFrom.toString().substring(0, 10)),
                 onPressed: () async {
@@ -114,8 +116,8 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
             ],
           )),
           DataTable( // какие поставщики
-            columns: const [
-              DataColumn(label: Text('постачальники', style: TextStyle(fontWeight: FontWeight.bold)))
+            columns: [
+              DataColumn(label: Text(l.supplier(2), style: const TextStyle(fontWeight: FontWeight.bold)))
             ],
             rows: [
               for (int i = 0; i < bloc.fsd!.suppliers.length; i++) DataRow(
@@ -137,7 +139,7 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
                 Navigator.pop(context);
                 bloc.inEvent.add(SupplyLoadEvent());
               }, 
-              child: const Text("find")
+              child: Text(l.find)
             ),
           ),
         ]
@@ -163,9 +165,9 @@ class _AscDescDropdownState extends State<AscDescDropdown> {
     return DropdownButton<String>(
       value: widget.value,
       isExpanded: true,
-      items: const [
-        DropdownMenuItem(child: Text("по возрастанию"), value: "asc"),
-        DropdownMenuItem(child: Text("по убыванию"), value: "desc")
+      items: [
+        DropdownMenuItem(child: Text(AppLocalizations.of(context)!.asc('asc')), value: "asc"),
+        DropdownMenuItem(child: Text(AppLocalizations.of(context)!.asc('desc')), value: "desc")
       ],
       onChanged: widget.onChanged
     );

@@ -1,3 +1,4 @@
+import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/models.dart';
@@ -10,6 +11,7 @@ class OrderDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var l = AppLocalizations.of(context)!;
     return Dialog(
       child: SizedBox(
         width: 400, 
@@ -20,19 +22,19 @@ class OrderDialog extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('заказ №' + order.ordId.toString() + ' ' + 
+                Text(l.order + ' №' + order.ordId.toString() + ' ' + 
                   order.ordDate.toString().substring(0, 10) + '   ' + order.totalPrice.toString() + ' грн.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20
                   )
                 ),
-                Text('официант: ' + order.empName! + ' (${order.empId}) '),
-                Text('заказано в: ${order.ordStartTime}'),
-                Text("оплачено в: ${order.ordEndTime}, ${order.moneyFromCustomer} грн."),
-                Text('сдача: ${order.change} ${order.isEnd ? "" : "(не оплачено)"}'),
-                Text('состав: '),
+                Text(l.waiter + ': ' + order.empName! + ' (${order.empId}) '),
+                Text('${l.or_rec}: ${order.ordStartTime}'),
+                Text("${l.or_paid}: ${order.ordEndTime}, ${order.moneyFromCustomer} грн."),
+                Text('${l.rest}: ${order.change} ${order.isEnd ? "" : "(не оплачено)"}'),
+                Text(l.or_list + ': '),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                   child: Column(
@@ -42,7 +44,7 @@ class OrderDialog extends StatelessWidget {
                     ],
                   )
                 ),
-                Text('комментарий: '),
+                Text(l.comment + ': '),
                 Text(order.comm)
               ],
             ),

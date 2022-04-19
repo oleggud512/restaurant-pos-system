@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../l10nn/app_localizations.dart';
 import '../../services/models.dart';
 import '../../services/repo.dart';
 
@@ -67,8 +68,8 @@ class _GrocPickerState extends State<GrocPicker> {
                       padding: const EdgeInsets.all(10.0),
                       child: TextFormField(
                         controller: TextEditingController(text: picked[i].grocCount.toString()),
-                        decoration: const InputDecoration(
-                          labelText: "count",
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.count,
 
                         ),
                         onChanged: (newVal) {
@@ -88,9 +89,9 @@ class _GrocPickerState extends State<GrocPicker> {
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: "name",
-                    border: OutlineInputBorder()
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.count,
+                    border: const OutlineInputBorder()
                   ),
                   controller: grocNameCont,
                   onChanged: (newVal) {
