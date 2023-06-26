@@ -1,5 +1,4 @@
 import 'package:client/l10nn/app_localizations.dart';
-import 'package:client/supplys/add_supply/add_supply.dart';
 import 'package:client/supplys/show_supply/show_supply.dart';
 import 'package:flutter/material.dart';
 import 'package:client/supplys/supplys_bloc.dart';
@@ -16,7 +15,7 @@ import 'widgets/supply_container.dart';
 
 
 class SupplysPage extends StatefulWidget {
-  SupplysPage({Key? key}) : super(key: key);
+  const SupplysPage({Key? key}) : super(key: key);
 
   @override
   State<SupplysPage> createState() => _SupplysPageState();
@@ -24,7 +23,7 @@ class SupplysPage extends StatefulWidget {
 
 class _SupplysPageState extends State<SupplysPage> {
   late AppLocalizations l;
-  View view = View.grid;
+  DataView view = DataView.grid;
 
   GlobalKey<ScaffoldState> scgl = GlobalKey<ScaffoldState>();
   @override
@@ -42,21 +41,21 @@ class _SupplysPageState extends State<SupplysPage> {
               var state = snapshot.data;
               if (state is SupplyLoadingState) {
                 return Scaffold(
-                  appBar: AppBar(leading: BackButton()),
+                  appBar: AppBar(leading: const BackButton()),
                   body: const Center(child: CircularProgressIndicator())
                 );
               } else if (state is SupplyLoadedState) {
                 return Scaffold(
                   key: scgl,
-                  drawer: NavigationDrawer(),
+                  drawer: const MyNavigationDrawer(),
                   appBar: buildAppBar(),
                   body: Container(
                     padding: const EdgeInsets.all(10),
-                    child: (view == View.list) ? ListView(
+                    child: (view == DataView.list) ? ListView(
                       children: [
                         for (int i = 0; i < bloc.supplys.length; i++) SupplyContainer(
                           supply: bloc.supplys[i], 
-                          view: View.list,
+                          view: DataView.list,
                           onTap: () async {
                             bool reload = await showDialog(
                               context: context,
@@ -70,14 +69,14 @@ class _SupplysPageState extends State<SupplysPage> {
                           }
                           
                         ),
-                        AddSupplyContainer(bloc: bloc, view: View.list)
+                        AddSupplyContainer(bloc: bloc, view: DataView.list)
                       ],
                     ) : ResponsiveGridList(
                       desiredItemWidth: 250,
                       children: [
                         for (int i = 0; i < bloc.supplys.length; i++) SupplyContainer(
                           supply: bloc.supplys[i],
-                          view: View.grid,
+                          view: DataView.grid,
                           onTap: () async {
                             bool? reload = await showDialog(
                               context: context,
@@ -90,11 +89,11 @@ class _SupplysPageState extends State<SupplysPage> {
                             }
                           }
                         ),
-                        AddSupplyContainer(bloc: bloc, view: View.grid)
+                        AddSupplyContainer(bloc: bloc, view: DataView.grid)
                       ],
                     ),
                   ),
-                  endDrawer: SortFilterDrawer(), 
+                  endDrawer: const SortFilterDrawer(), 
                 );
               } return Container();
             }
@@ -107,24 +106,24 @@ class _SupplysPageState extends State<SupplysPage> {
 
   AppBar buildAppBar() {
     return AppBar(
-      title: Center(child: Text(l.supply(2))), 
+      title: Center(child: Text(l.supply('2'))), 
       leading: IconButton(
         onPressed: () => scgl.currentState!.openDrawer(),
-        icon: Icon(Icons.menu)
+        icon: const Icon(Icons.menu)
       ),
       actions: [ 
-        (view == View.list) ? IconButton(
+        (view == DataView.list) ? IconButton(
           icon: const Icon(Icons.view_module_rounded),
           onPressed: () {
             setState(() {
-              view = View.grid;
+              view = DataView.grid;
             });
           }
         ) : IconButton(
           icon: const Icon(Icons.view_headline_rounded),
           onPressed: () {
             setState(() {
-              view = View.list;
+              view = DataView.list;
             });
           }
         ),

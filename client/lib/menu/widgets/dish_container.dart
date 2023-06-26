@@ -1,6 +1,5 @@
 import 'package:client/menu/widgets/photo.dart';
 import 'package:flutter/material.dart';
-import 'package:responsive_grid/responsive_grid.dart';
 
 import '../../services/models.dart';
 

@@ -30,7 +30,7 @@ class _AddSupplierDialogState extends State<AddSupplierDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Center(
-                child: Text(l.add_supplier, style: Theme.of(context).textTheme.headline6)
+                child: Text(l.add_supplier, style: Theme.of(context).textTheme.titleLarge)
               ),
               const SizedBox(height: 10),
               TextFormField(

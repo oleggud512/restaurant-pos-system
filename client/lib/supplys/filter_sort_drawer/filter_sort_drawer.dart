@@ -1,13 +1,12 @@
 import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/supplys/supplys_states_events.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../bloc_provider.dart';
 import '../supplys_bloc.dart';
 
 class SortFilterDrawer extends StatefulWidget {
-  SortFilterDrawer({Key? key}) : super(key: key);
+  const SortFilterDrawer({Key? key}) : super(key: key);
 
 
 
@@ -117,7 +116,7 @@ class _SortFilterDrawerState extends State<SortFilterDrawer> {
           )),
           DataTable( // какие поставщики
             columns: [
-              DataColumn(label: Text(l.supplier(2), style: const TextStyle(fontWeight: FontWeight.bold)))
+              DataColumn(label: Text(l.supplier('2'), style: const TextStyle(fontWeight: FontWeight.bold)))
             ],
             rows: [
               for (int i = 0; i < bloc.fsd!.suppliers.length; i++) DataRow(

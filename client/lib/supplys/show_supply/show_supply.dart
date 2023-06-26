@@ -23,7 +23,7 @@ class ShowSupplyDialog extends StatelessWidget {
           children: [
             SizedBox(
               child: Center(
-                child: Text(l.supply(1) + " №" + supply.supplyId.toString(), 
+                child: Text(l.supply('1') + " №" + supply.supplyId.toString(), 
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20

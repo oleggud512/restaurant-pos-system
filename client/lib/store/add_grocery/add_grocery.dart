@@ -1,6 +1,5 @@
 import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:client/store/widgets/my_text_field.dart';
 
 import '../../services/models.dart';
 import '../../services/repo.dart';
@@ -34,7 +33,7 @@ class _AddGroceryDialogState extends State<AddGroceryDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 10,),
-              Center(child: Text("${l.add} ${l.grocery(1).toLowerCase()}", style: Theme.of(context).textTheme.headline6)),
+              Center(child: Text("${l.add} ${l.grocery(1).toLowerCase()}", style: Theme.of(context).textTheme.titleLarge)),
               const SizedBox(height: 10,),
               TextFormField(
                 decoration: InputDecoration(
@@ -66,7 +65,7 @@ class _AddGroceryDialogState extends State<AddGroceryDialog> {
               ),
               const Spacer(),
               ElevatedButton(
-                child: Text(l.add, style: TextStyle(fontSize: 15)),
+                child: Text(l.add, style: const TextStyle(fontSize: 15)),
                 onPressed: () async {
                   await widget.repo.addGrocery(widget.groc);
                   Navigator.pop(context);

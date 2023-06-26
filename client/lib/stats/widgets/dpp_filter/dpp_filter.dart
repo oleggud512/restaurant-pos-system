@@ -28,7 +28,7 @@ class _DishPerPeriodFilterDialogState extends State<DishPerPeriodFilterDialog> {
                   // crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('date: '),
+                    const Text('date: '),
                     TextButton(
                       child: Text(widget.fs.dishFrom.toIso8601String().substring(0, 10)),
                       onPressed: () async {
@@ -72,7 +72,7 @@ class _DishPerPeriodFilterDialogState extends State<DishPerPeriodFilterDialog> {
             ),
             ListTile(
               title: TextButton(
-                child: Text('find'),
+                child: const Text('find'),
                 onPressed: () {
                   Navigator.pop(context, true);
                 },

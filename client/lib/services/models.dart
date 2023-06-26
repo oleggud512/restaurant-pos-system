@@ -2,10 +2,8 @@ import 'dart:convert';
 
 import 'dart:io';
 
-import 'package:client/employees/filter_sort_employee/filter_sort_employee.dart';
-import 'package:flutter/material.dart';
 
-enum View { list, grid }
+enum DataView { list, grid }
 enum Sorting { asc, desc }
 
 class Supplier {

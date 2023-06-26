@@ -16,7 +16,7 @@ import 'menu_filter_sort/filter_sort_menu.dart';
 
 
 class MenuPage extends StatefulWidget {
-  MenuPage({Key? key}) : super(key: key);
+  const MenuPage({Key? key}) : super(key: key);
 
   @override
   State<MenuPage> createState() => _MenuPageState();
@@ -49,13 +49,13 @@ class _MenuPageState extends State<MenuPage> {
                 print("HERE IS MY FSMENU: ${bloc.fsMenu!.toJson()}");
                 return Scaffold(
                   key: key,
-                  drawer: NavigationDrawer(),
+                  drawer: const MyNavigationDrawer(),
                   appBar: AppBar(
                     title: Text(l.menu),
                     automaticallyImplyLeading: false,
                     actions: [
                       IconButton(
-                        icon: Icon(Icons.menu),
+                        icon: const Icon(Icons.menu),
                         onPressed: () => key.currentState!.openDrawer()
                       ),
                       Expanded(child: Center(child: Text(l.menu, style: Theme.of(context).appBarTheme.titleTextStyle))),
@@ -112,7 +112,7 @@ class _MenuPageState extends State<MenuPage> {
                                 await Navigator.push(context, MaterialPageRoute(builder: (context) => AddDishPage(groups: bloc.groups!),));
                                 bloc.inEvent.add(MenuLoadEvent());
                               }, 
-                              icon: Icon(Icons.add), 
+                              icon: const Icon(Icons.add), 
                               label: Text(l.dish)
                             ),
                             const SizedBox(width: 8),
@@ -127,7 +127,7 @@ class _MenuPageState extends State<MenuPage> {
                                 );
                                 bloc.inEvent.add(MenuLoadEvent());
                               }, 
-                              icon: Icon(Icons.add), 
+                              icon: const Icon(Icons.add), 
                               label: Text(l.group.toLowerCase())
                             ),
                             const SizedBox(width: 8),
@@ -146,7 +146,7 @@ class _MenuPageState extends State<MenuPage> {
                   //     print(i);
                   //   },
                   // )
-                  endDrawer: FilterSortMenuDrawer(),
+                  endDrawer: const FilterSortMenuDrawer(),
                 );
               } return Container(color: Colors.green);
             }

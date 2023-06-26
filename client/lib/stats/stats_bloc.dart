@@ -8,11 +8,11 @@ import 'stats_states_events.dart';
 
 class StatsBloc extends Bloc {
 
-  StreamController<StatsEvent> _eventCont = BehaviorSubject<StatsEvent>();
+  final StreamController<StatsEvent> _eventCont = BehaviorSubject<StatsEvent>();
   Stream<StatsEvent> get _outEvent => _eventCont.stream;
   Sink<StatsEvent> get inEvent => _eventCont.sink;
 
-  StreamController<StatsState> _stateCont = BehaviorSubject<StatsState>();
+  final StreamController<StatsState> _stateCont = BehaviorSubject<StatsState>();
   Stream<StatsState> get outState => _stateCont.stream;
   Sink<StatsState> get _inState => _stateCont.sink;
 

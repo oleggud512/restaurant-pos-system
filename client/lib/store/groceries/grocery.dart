@@ -1,16 +1,12 @@
 import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:client/store/groceries/grocery_states_events.dart';
-import 'package:client/store/store_bloc.dart';
-import 'package:client/store/store_states_events.dart';
-import 'package:client/store/widgets/my_text_field.dart';
 import 'package:client/widgets/gram_liter_dropdown.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../bloc_provider.dart';
 import '../../services/constants.dart';
-import '../../services/models.dart';
 import '../../services/repo.dart';
 import 'grocery_bloc.dart';
 
@@ -82,13 +78,13 @@ class _GroceryDialogState extends State<GroceryDialog> {
           Expanded(
             flex: 3,
             child: Center(
-              child: Text(state.grocery.grocName, style: Theme.of(context).textTheme.headline6)
+              child: Text(state.grocery.grocName, style: Theme.of(context).textTheme.titleLarge)
             ),
           ),
           const SizedBox(width: 10),
           Expanded(
             child: Center(
-              child: Text(l.measure(state.grocery.grocMeasure), style: Theme.of(context).textTheme.headline6)
+              child: Text(l.measure(state.grocery.grocMeasure), style: Theme.of(context).textTheme.titleLarge)
             ),
           )
         ],
@@ -101,7 +97,7 @@ class _GroceryDialogState extends State<GroceryDialog> {
             child: TextField(
               decoration: InputDecoration(
                 labelText: l.name,
-                border: OutlineInputBorder()
+                border: const OutlineInputBorder()
               ),
               controller: TextEditingController(text: state.grocery.grocName),
               onChanged: (newVal) {
@@ -131,8 +127,8 @@ class _GroceryDialogState extends State<GroceryDialog> {
         sortAscending: ascending,
         columns: [
           DataColumn(
-            label: Text(l.supplier(1), 
-              style: TextStyle(
+            label: Text(l.supplier('1'), 
+              style: const TextStyle(
                 fontWeight: FontWeight.bold
               )
             )

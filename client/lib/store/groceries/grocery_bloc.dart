@@ -10,11 +10,11 @@ import 'grocery_states_events.dart';
 
 class GroceryBloc extends Bloc {
 
-  StreamController<GroceryEvent> _eventCont = BehaviorSubject<GroceryEvent>();
+  final StreamController<GroceryEvent> _eventCont = BehaviorSubject<GroceryEvent>();
   Stream<GroceryEvent> get _outEvent => _eventCont.stream;
   Sink<GroceryEvent> get inEvent => _eventCont.sink;
 
-  StreamController<GroceryState> _stateCont = BehaviorSubject<GroceryState>();
+  final StreamController<GroceryState> _stateCont = BehaviorSubject<GroceryState>();
   Stream<GroceryState> get outState => _stateCont.stream;
   Sink<GroceryState> get _inState => _stateCont.sink;
 

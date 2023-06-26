@@ -19,7 +19,7 @@ import 'widgets/opp_filter/opp_filter.dart';
 
 
 class StatsPage extends StatefulWidget {
-  StatsPage({Key? key}) : super(key: key);
+  const StatsPage({Key? key}) : super(key: key);
 
   @override
   State<StatsPage> createState() => _StatsPageState();
@@ -67,7 +67,7 @@ class _StatsPageState extends State<StatsPage> {
               } else if (state is StatsLoadedState) {
                 return Scaffold(
                   key: key,
-                  drawer: NavigationDrawer(),
+                  drawer: const MyNavigationDrawer(),
                   appBar: AppBar(
                     title: Center(child: Text(l.stats))
                   ),

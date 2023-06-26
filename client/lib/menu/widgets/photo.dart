@@ -1,16 +1,13 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:client/l10nn/app_localizations.dart';
 import 'package:client/services/models.dart';
-import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/repo.dart';
-import '../dish_details/dish_details_bloc.dart';
 
 class Photo extends StatefulWidget {
   Photo({Key? key, required this.dish, this.edit=true, this.height=200}) : super(key: key);
@@ -73,7 +70,7 @@ class _PhotoState extends State<Photo> {
             ),
             const SizedBox(width: 10,),
             ElevatedButton(
-              child: Icon(Icons.close),
+              child: const Icon(Icons.close),
               onPressed: () async {
                 widget.dish.dishPhotoIndex = 0;
                 url = Provider.of<Repo>(context, listen: false).getImagePath(imageId: 0);

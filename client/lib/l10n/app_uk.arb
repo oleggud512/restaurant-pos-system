@@ -11,7 +11,7 @@
     "store": "Склад",
     "stats": "Статистика",
     "settings": "Налаштування",
-    "supply": "{count, select, 1{Поставка} 2{Поставки}}",
+    "supply": "{count, select, 1{Поставка} 2{Поставки} other{Поставка}}",
     "@supply": {
         "placeholders": {
             "count": {}
@@ -38,7 +38,7 @@
         }
     },
 
-    "grocery": "{count,plural, one{Інгредієнт} other{Інгредієнтіи}",
+    "grocery": "{count,plural, one{Інгредієнт} other{Інгредієнтіи}}",
     "@grocery": {
         "placeholders": {
             "count": { }
@@ -46,7 +46,7 @@
     },
 
     "price": "Ціна",
-    "supplier": "{count, select, 1{Постачальник} 2{Постачальники}}",
+    "supplier": "{count, select, 1{Постачальник} 2{Постачальники} other{Постачальник}}",
     "@supplier": {
         "placeholders": {
             "count": {}
@@ -89,7 +89,7 @@
     "filtering": "Фільтр",
     "by": "По",
     "find": "Знайти",
-    "asc": "{a,select, asc{за збільшенням} desc{за зменшенням}}",
+    "asc": "{a,select, asc{за збільшенням} desc{за зменшенням} other{no}}",
     "@asc": {
         "placeholders": {
             "a": {
@@ -119,7 +119,7 @@
     "surname": "Фамілія",
     "birthday": "День народження",
     "hours_per_month": "Годин на місяць",
-    "gen": "{g,select, m{Чоловіки} f{Жінки}}",
+    "gen": "{g,select, m{Чоловіки} f{Жінки} other{no}}",
     "@gen": {
         "placeholders": {
             "g": {

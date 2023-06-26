@@ -1,10 +1,7 @@
-import 'package:client/services/models.dart';
-import 'package:client/supplys/supplys.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:client/router.dart';
 
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10nn/app_localizations.dart';
 
 import 'bloc_provider.dart';
@@ -16,7 +13,6 @@ import 'widgets/main_button.dart';
 
 import 'services/constants.dart';
 import 'services/repo.dart';
-import 'store/store.dart';
 import 'widgets/navigation_drawer.dart';
 
 void main() {
@@ -30,6 +26,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('build my app');
     return MultiProvider(
       providers: [
         Provider<Repo>(create: (context) => Repo()),
@@ -60,7 +57,7 @@ class MyApp extends StatelessWidget {
                           primarySwatch: Colors.pink,
                           primaryColor: Colors.pink,
                           brightness: bloc.curBr,
-                          appBarTheme: AppBarTheme(
+                          appBarTheme: const AppBarTheme(
                             titleTextStyle: TextStyle(
                               // fontWeight: FontWeight.bold,
                               fontSize: 20,
@@ -87,7 +84,7 @@ class MyApp extends StatelessWidget {
 
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -97,7 +94,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavigationDrawer(),
+      drawer: const MyNavigationDrawer(),
       appBar: AppBar(title: const Text("ресторан")),
       body: Center(
         child: Row(
@@ -124,7 +121,7 @@ class _HomePageState extends State<HomePage> {
             MainButton(
               child: const Text("работники"),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => Employees()));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const Employees()));
               },
             ),
             MainButton(
@@ -138,7 +135,7 @@ class _HomePageState extends State<HomePage> {
             MainButton(
               child: const Text("stats"),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => StatsPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const StatsPage()));
               },
             ),
             BackButton(onPressed: () {

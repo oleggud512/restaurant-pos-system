@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -10,14 +9,14 @@ import 'app_localizations_en.dart';
 import 'app_localizations_ru.dart';
 import 'app_localizations_uk.dart';
 
-/// Callers can lookup localized strings with an instance of AppLocalizations returned
-/// by `AppLocalizations.of(context)`.
+/// Callers can lookup localized strings with an instance of AppLocalizations
+/// returned by `AppLocalizations.of(context)`.
 ///
 /// Applications need to include `AppLocalizations.delegate()` in their app's
-/// localizationDelegates list, and the locales they support in the app's
-/// supportedLocales list. For example:
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
 ///
-/// ```
+/// ```dart
 /// import 'l10nn/app_localizations.dart';
 ///
 /// return MaterialApp(
@@ -32,14 +31,14 @@ import 'app_localizations_uk.dart';
 /// Please make sure to update your pubspec.yaml to include the following
 /// packages:
 ///
-/// ```
+/// ```yaml
 /// dependencies:
 ///   # Internationalization support.
 ///   flutter_localizations:
 ///     sdk: flutter
 ///   intl: any # Use the pinned version from flutter_localizations
 ///
-///   # rest of dependencies
+///   # Rest of dependencies
 /// ```
 ///
 /// ## iOS Applications
@@ -165,8 +164,8 @@ abstract class AppLocalizations {
   /// No description provided for @supply.
   ///
   /// In en, this message translates to:
-  /// **'{count, select, 1{Supply} 2{Supplies}}'**
-  String supply(Object count);
+  /// **'{count, select, 1{Supply} 2{Supplies} other{Supply}}'**
+  String supply(String count);
 
   /// No description provided for @menu.
   ///
@@ -231,7 +230,7 @@ abstract class AppLocalizations {
   /// No description provided for @grocery.
   ///
   /// In en, this message translates to:
-  /// **'{count,plural, one{Grocery} other{Groceries}'**
+  /// **'{count,plural, one{Grocery} other{Groceries}}'**
   String grocery(num count);
 
   /// No description provided for @price.
@@ -243,8 +242,8 @@ abstract class AppLocalizations {
   /// No description provided for @supplier.
   ///
   /// In en, this message translates to:
-  /// **'{count, select, 1{Supplier} 2{Suppliers}}'**
-  String supplier(Object count);
+  /// **'{count, select, 1{Supplier} 2{Suppliers} other{err}}'**
+  String supplier(String count);
 
   /// No description provided for @enter_groc.
   ///
@@ -333,7 +332,7 @@ abstract class AppLocalizations {
   /// No description provided for @asc.
   ///
   /// In en, this message translates to:
-  /// **'{a,select, asc{ascedenting} desc{descedenting}}'**
+  /// **'{a,select, asc{ascedenting} desc{descedenting} other{no}}'**
   String asc(String a);
 
   /// No description provided for @dish.
@@ -459,7 +458,7 @@ abstract class AppLocalizations {
   /// No description provided for @gen.
   ///
   /// In en, this message translates to:
-  /// **'{g,select, m{Mans} f{Womans}}'**
+  /// **'{g,select, m{Mans} f{Womans} other{no}}'**
   String gen(String g);
 
   /// No description provided for @hours.

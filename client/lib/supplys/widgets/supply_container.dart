@@ -1,8 +1,7 @@
 import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
-import '../../services/models.dart';
+import '../../services/models.dart' as m;
 import '../add_supply/add_supply.dart';
-import '../show_supply/show_supply.dart';
 import '../supplys_bloc.dart';
 import '../supplys_states_events.dart';
 
@@ -11,8 +10,8 @@ class SupplyContainer extends StatelessWidget {
   SupplyContainer({Key? key, required this.supply, required this.view, required this.onTap}) : super(key: key);
 
   late AppLocalizations l;
-  Supply supply;
-  View view;
+  m.Supply supply;
+  m.DataView view;
   void Function()? onTap;
 
   TextStyle style = const TextStyle(
@@ -29,7 +28,7 @@ class SupplyContainer extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(10),
           width: 300, 
-          height: (view == View.grid) ? 100 : 80,
+          height: (view == m.DataView.grid) ? 100 : 80,
           child: Column(
             children: [
               Row(
@@ -40,7 +39,7 @@ class SupplyContainer extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Text(l.supplier(1) + ": "),
+                  Text(l.supplier('1') + ": "),
                   Flexible(
                     child: Text("#" + supply.supplierId.toString() + " " + supply.supplierName, 
                       style: style, 
@@ -51,7 +50,7 @@ class SupplyContainer extends StatelessWidget {
               const Spacer(),
               Row(
                 children: [
-                  Text(dateToString(supply.supplyDate), style: style),
+                  Text(m.dateToString(supply.supplyDate), style: style),
                   const Spacer(),
                   Text(supply.summ.toString() + " \$", style: style)
                 ]
@@ -65,10 +64,14 @@ class SupplyContainer extends StatelessWidget {
 }
 
 class AddSupplyContainer extends StatelessWidget {
-  AddSupplyContainer({Key? key, required this.bloc, required this.view}) : super(key: key);
+  const AddSupplyContainer({
+    Key? key, 
+    required this.bloc, 
+    required this.view
+  }) : super(key: key);
 
-  SupplysBloc bloc;
-  final View view;
+  final SupplysBloc bloc;
+  final m.DataView view;
 
   @override
   Widget build(BuildContext context) {
@@ -78,13 +81,13 @@ class AddSupplyContainer extends StatelessWidget {
         onTap: () async {
           await showDialog(
             context: context,
-            builder: (context) => AddSupplyDialog()
+            builder: (context) => const AddSupplyDialog()
           );
           bloc.inEvent.add(SupplyLoadEvent());
         },
         child: SizedBox(
           width: 300,
-          height: (view == View.grid) ? 100 : 80,
+          height: (view == m.DataView.grid) ? 100 : 80,
           child: const Center(
             child: Icon(Icons.add, size: 50, color: Colors.grey)
           )

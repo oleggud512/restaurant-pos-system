@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../../services/constants.dart';
 import '../../services/models.dart';
-import '../../services/repo.dart';
 
 class DiaryContainer extends StatelessWidget {
   DiaryContainer({Key? key, required this.diary, required this.onDelete, required this.onGone}) : super(key: key);

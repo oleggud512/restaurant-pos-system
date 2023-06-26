@@ -2,10 +2,8 @@ import 'package:client/orders/orders.dart';
 import 'package:client/settings/settings.dart';
 import 'package:client/stats/stats_page.dart';
 import 'package:flutter/material.dart';
-import 'package:client/main.dart';
 import 'package:client/store/store.dart';
 import 'package:client/supplys/supplys.dart';
-import 'package:client/menu/add_dish/add_dish.dart';
 import 'package:client/menu/menu.dart';
 
 class MyRouter {
@@ -15,27 +13,27 @@ class MyRouter {
       case '/':
         return MaterialPageRoute<void>(
           settings: const RouteSettings(name: '/'),
-          builder: (context) => StatsPage()
+          builder: (context) => const StatsPage()
         );
       case '/store':
         return MaterialPageRoute<void>(
           settings: const RouteSettings(name: '/store'),
-          builder: (context) => StorePage()
+          builder: (context) => const StorePage()
         );
       case '/supplys':
         return MaterialPageRoute<void>(
           settings: const RouteSettings(name: '/supplys'),
-          builder: (context) => SupplysPage()
+          builder: (context) => const SupplysPage()
         );
       case '/settings':
         return MaterialPageRoute<void>(
           settings: const RouteSettings(name: '/settings'),
-          builder: (context) =>SettingsPage()
+          builder: (context) =>const SettingsPage()
         );
       case '/menu':
         return MaterialPageRoute<void>(
           settings: const RouteSettings(name: '/menu'),
-          builder: (context) => MenuPage()
+          builder: (context) => const MenuPage()
         );
       // case '/menu/add-dish':
       //   return MaterialPageRoute<void>(
@@ -45,7 +43,7 @@ class MyRouter {
       case '/orders':
         return MaterialPageRoute<void>(
           settings: const RouteSettings(name: '/orders'),
-          builder: (context) => OrdersPage()
+          builder: (context) => const OrdersPage()
         );
       default:
         return MaterialPageRoute<void>(

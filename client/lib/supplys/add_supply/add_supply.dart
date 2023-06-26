@@ -10,7 +10,7 @@ import 'add_supply_bloc.dart';
 
 
 class AddSupplyDialog extends StatefulWidget {
-  AddSupplyDialog({Key? key}) : super(key: key);
+  const AddSupplyDialog({Key? key}) : super(key: key);
 
   @override
   State<AddSupplyDialog> createState() => _AddSupplyDialogState();
@@ -42,7 +42,7 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Center(
-                            child: Text("supply", style: Theme.of(context).textTheme.headline6)
+                            child: Text("supply", style: Theme.of(context).textTheme.titleLarge)
                           ),
                           buildDropdownSumm(bloc, state),
                           Expanded(
@@ -57,7 +57,7 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
                             ),
                           ),
                           ElevatedButton(
-                            child: Text("supply"),
+                            child: const Text("supply"),
                             onPressed: () async {
                               if (bloc.supply.supplierId != null && bloc.supply.groceries.isNotEmpty &&
                                 bloc.supply.groceries.where(
@@ -114,7 +114,7 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
             tooltip: '',
             itemBuilder: (context) => [
               PopupMenuItem(
-                child: Text("delete"), 
+                child: const Text("delete"), 
                 onTap: () {
                   bloc.inEvent.add(AddSupplyRemoveGrocFromSupply(bloc.supply.groceries[i].grocId!));
                 },

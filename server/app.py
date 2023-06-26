@@ -33,9 +33,9 @@ def index():
         action = request.json['action']
         con: MySQLConnection = connect(host='localhost', 
                                     port=3306, 
-                                    user='root', 
-                                    password='3542', 
-                                    database='publisher')
+                                    user='restaurant_user', 
+                                    password='rstrpass', 
+                                    database='restaurant')
         cur:CMySQLCursor = con.cursor()
         # из строки (которая пришла к нам в base64) в байты
         # image_in_base64 = str.encode(request.json['image'])

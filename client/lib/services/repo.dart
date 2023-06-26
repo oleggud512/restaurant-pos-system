@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 
 import 'models.dart';
 
@@ -95,8 +94,8 @@ class Repo {
     return Future.delayed(const Duration(seconds: 1), () => responce.data);
   }
 
-  Future<String> deleteSupply(int supply_id) async {
-    var responce = await dio.delete(ROOT + 'supplys/' + supply_id.toString());
+  Future<String> deleteSupply(int supplyId) async {
+    var responce = await dio.delete(ROOT + 'supplys/' + supplyId.toString());
     return Future.delayed(const Duration(seconds: 1), () => responce.data);
   }
 

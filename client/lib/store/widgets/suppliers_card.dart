@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:client/bloc_provider.dart';
 import 'package:client/store/store_bloc.dart';
 import 'package:client/store/store_states_events.dart';
-import 'package:provider/provider.dart';
 
 import '../suppliers/sup.dart';
 
 class SuppliersCard extends StatefulWidget {
-  SuppliersCard({Key? key}) : super(key: key);
+  const SuppliersCard({Key? key}) : super(key: key);
 
   @override
   State<SuppliersCard> createState() => _SuppliersCardState();

@@ -7,11 +7,11 @@ from flask import jsonify
 from json import dumps, loads
 
 
-con: MySQLConnection = connect(host='localhost', 
-                                    port=3306, 
-                                    user='root', 
-                                    password='3542', 
-                                    database='publisher')
+# con: MySQLConnection = connect(host='localhost', 
+#                                     port=3306, 
+#                                     user='restaurant_user', 
+#                                     password='rstrpass', 
+#                                     database='restaurant')
 
 def cur_to_dict(cur: CMySQLCursor):
     result = []
@@ -35,8 +35,4 @@ def cur_to_dict(cur: CMySQLCursor):
         result.append(row_dict)
     return result
 
-
-cur: CMySQLCursor = con.cursor()
-
-cur.execute("SELECT b_name, b_circul, b_id FROM books")
 

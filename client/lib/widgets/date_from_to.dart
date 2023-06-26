@@ -19,8 +19,8 @@ class _DateFromToState extends State<DateFromTo> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text('date: '),
-        TextButton(onPressed: () {}, child: Text(''))
+        const Text('date: '),
+        TextButton(onPressed: () {}, child: const Text(''))
       ],
     );
   }

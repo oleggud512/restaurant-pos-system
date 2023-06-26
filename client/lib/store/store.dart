@@ -5,17 +5,15 @@ import 'package:client/store/widgets/groceries_card.dart';
 import 'package:provider/provider.dart';
 
 import '../bloc_provider.dart';
-import '../main_bloc.dart';
 import '../services/repo.dart';
 
 import 'store_bloc.dart';
-import 'store_states_events.dart';
 
 import 'widgets/suppliers_card.dart';
 import 'widgets/buttons_card.dart';
 
 class StorePage extends StatefulWidget {
-  StorePage({Key? key}) : super(key: key);
+  const StorePage({Key? key}) : super(key: key);
 
   @override
   State<StorePage> createState() => _StorePageState();
@@ -29,18 +27,18 @@ class _StorePageState extends State<StorePage> {
       blocBuilder: () => StoreBloc(Provider.of<Repo>(context)),
       blocDispose: (StoreBloc bloc) => bloc.dispose(),
       child: Scaffold(
-        drawer: NavigationDrawer(),
+        drawer: const MyNavigationDrawer(),
         appBar: AppBar(
           title: Center(child: Text(AppLocalizations.of(context)!.store))
         ),
         body: Container(
           padding: const EdgeInsets.all(8),
-          child: Row(
+          child: const Row(
             children: [
               Expanded(child: SuppliersCard()),
-              const SizedBox(width: 3),
-              const ButtonsCard(),
-              const SizedBox(width: 3,),
+              SizedBox(width: 3),
+              ButtonsCard(),
+              SizedBox(width: 3,),
               Expanded(child: GroceriesCard())
             ],
           )

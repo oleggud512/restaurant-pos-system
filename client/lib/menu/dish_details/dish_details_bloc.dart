@@ -8,11 +8,11 @@ import 'dish_details_states_events.dart';
 
 class DishDtBloc extends Bloc {
 
-  StreamController<DishDtEvent> _eventCont = BehaviorSubject<DishDtEvent>();
+  final StreamController<DishDtEvent> _eventCont = BehaviorSubject<DishDtEvent>();
   Stream<DishDtEvent> get _outEvent => _eventCont.stream;
   Sink<DishDtEvent> get inEvent => _eventCont.sink;
 
-  StreamController<DishDtState> _stateCont = BehaviorSubject<DishDtState>();
+  final StreamController<DishDtState> _stateCont = BehaviorSubject<DishDtState>();
   Stream<DishDtState> get outState => _stateCont.stream;
   Sink<DishDtState> get _inState => _stateCont.sink;
 

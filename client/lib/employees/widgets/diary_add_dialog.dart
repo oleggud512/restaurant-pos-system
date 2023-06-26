@@ -67,7 +67,7 @@ class _DiaryAddDialogState extends State<DiaryAddDialog> {
               )
             )
           ] : [
-            Center(child: Text("employee list is empty"))
+            const Center(child: Text("employee list is empty"))
           ]
         ),
       ),

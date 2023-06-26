@@ -8,15 +8,15 @@ import 'add_dish_states_events.dart';
 
 class AddDishBloc extends Bloc {
 
-  StreamController<AddDishEvent> _eventCont = BehaviorSubject<AddDishEvent>();
+  final StreamController<AddDishEvent> _eventCont = BehaviorSubject<AddDishEvent>();
   Stream<AddDishEvent> get _outEvent => _eventCont.stream;
   Sink<AddDishEvent> get inEvent => _eventCont.sink;
 
-  StreamController<AddDishState> _stateCont = BehaviorSubject<AddDishState>();
+  final StreamController<AddDishState> _stateCont = BehaviorSubject<AddDishState>();
   Stream<AddDishState> get outState => _stateCont.stream;
   Sink<AddDishState> get _inState => _stateCont.sink;
 
-  StreamController<AddDishState> _primeCostCont = BehaviorSubject<AddDishState>(); // something like state too
+  final StreamController<AddDishState> _primeCostCont = BehaviorSubject<AddDishState>(); // something like state too
   Stream<AddDishState> get outPrimeCost => _primeCostCont.stream;
   Sink<AddDishState> get _inPrimeCost => _primeCostCont.sink;
 

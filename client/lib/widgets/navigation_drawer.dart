@@ -2,18 +2,18 @@ import 'package:client/l10nn/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../employees/employees.dart';
-import '../stats./stats_page.dart';
+import '../stats/stats_page.dart';
 
 
 
-class NavigationDrawer extends StatefulWidget {
-  NavigationDrawer({Key? key}) : super(key: key);
+class MyNavigationDrawer extends StatefulWidget {
+  const MyNavigationDrawer({Key? key}) : super(key: key);
 
   @override
-  State<NavigationDrawer> createState() => _NavigationDrawerState();
+  State<MyNavigationDrawer> createState() => _MyNavigationDrawerState();
 }
 
-class _NavigationDrawerState extends State<NavigationDrawer> {
+class _MyNavigationDrawerState extends State<MyNavigationDrawer> {
   @override
   Widget build(BuildContext context) {
     AppLocalizations l = AppLocalizations.of(context)!;
@@ -28,7 +28,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                   leading: const Icon(Icons.bar_chart_outlined),
                   title: Text(l.stats),
                   onTap: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StatsPage()));
+                  Navigator.pushReplacement(
+                    context, 
+                    MaterialPageRoute(builder: (context) => const StatsPage())
+                  );
                   }
                 ),
                 ListTile(
@@ -39,29 +42,36 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                   },
                 ),
                 ListTile(
-                  leading: Image.asset('assets/tr.png', width: 24, height: 24, color: Colors.grey),
-                  title: Text(l.supply(2)),
+                  leading: Image.asset('assets/tr.png', 
+                    width: 24, 
+                    height: 24, 
+                    color: Colors.grey
+                  ),
+                  title: Text(l.supply('2')),
                   onTap: () {
                     Navigator.pushReplacementNamed(context, '/supplys');
                   },
                 ),
                 ListTile(
                   title: Text(l.menu),
-                  leading: Icon(Icons.menu_book_outlined),
+                  leading: const Icon(Icons.menu_book_outlined),
                   onTap: () {
                     Navigator.pushReplacementNamed(context, '/menu');
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.people),
+                  leading: const Icon(Icons.people),
                   title: Text(l.employees),
                   onTap: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => Employees()));
+                    Navigator.pushReplacement(
+                      context, 
+                      MaterialPageRoute(builder: (_) => const Employees())
+                    );
                   }
                 ),
                 ListTile(
                   title: Text(l.orders),
-                  leading: Icon(Icons.shopping_cart),
+                  leading: const Icon(Icons.shopping_cart),
                   onTap: () {
                     Navigator.pushReplacementNamed(context, '/orders');
                   }
@@ -71,7 +81,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           ),
           ListTile(
             title: ElevatedButton.icon(
-              icon: Icon(Icons.settings),
+              icon: const Icon(Icons.settings),
               label: Text(l.settings),
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/settings');

@@ -1,6 +1,5 @@
-
-
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 /// The translations for Russian (`ru`).
@@ -41,15 +40,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settings => 'Настройки';
 
   @override
-  String supply(Object count) {
-    return intl.Intl.select(
+  String supply(String count) {
+    String _temp0 = intl.Intl.selectLogic(
       count,
       {
         '1': 'Поставка',
-        '2': 'Поставки'
+        '2': 'Поставки',
+        'other': 'Поставка',
       },
-      desc: 'No description provided in @supply'
     );
+    return '$_temp0';
   }
 
   @override
@@ -81,41 +81,44 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String grouping(String gr) {
-    return intl.Intl.select(
+    String _temp0 = intl.Intl.selectLogic(
       gr,
       {
         'day': 'день',
         'month': 'месяц',
         'hour': 'час',
         'year': 'год',
-        'other': '...'
+        'other': '...',
       },
-      desc: 'No description provided in @grouping'
     );
+    return '$_temp0';
   }
 
   @override
   String grocery(num count) {
-    return intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
       other: 'Ингридиенты',
+      one: 'Ингридиент',
     );
+    return '$_temp0';
   }
 
   @override
   String get price => 'Цена';
 
   @override
-  String supplier(Object count) {
-    return intl.Intl.select(
+  String supplier(String count) {
+    String _temp0 = intl.Intl.selectLogic(
       count,
       {
         '1': 'Поставщик',
-        '2': 'Поставщики'
+        '2': 'Поставщики',
+        'other': 'Поставщик',
       },
-      desc: 'No description provided in @supplier'
     );
+    return '$_temp0';
   }
 
   @override
@@ -123,28 +126,28 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String measure(String measure) {
-    return intl.Intl.select(
+    String _temp0 = intl.Intl.selectLogic(
       measure,
       {
         'gram': 'килограмм',
         'liter': 'литр',
-        'other': 'неправильная мера'
+        'other': 'неправильная мера',
       },
-      desc: 'No description provided in @measure'
     );
+    return '$_temp0';
   }
 
   @override
   String measure_short(String measure) {
-    return intl.Intl.select(
+    String _temp0 = intl.Intl.selectLogic(
       measure,
       {
         'gram': 'кг',
         'liter': 'л',
-        'other': 'xxx'
+        'other': 'xxx',
       },
-      desc: 'No description provided in @measure_short'
     );
+    return '$_temp0';
   }
 
   @override
@@ -182,14 +185,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String asc(String a) {
-    return intl.Intl.select(
+    String _temp0 = intl.Intl.selectLogic(
       a,
       {
         'asc': 'по возрастанию',
-        'desc': 'по убыванию'
+        'desc': 'по убыванию',
+        'other': 'no',
       },
-      desc: 'No description provided in @asc'
     );
+    return '$_temp0';
   }
 
   @override
@@ -254,14 +258,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String gen(String g) {
-    return intl.Intl.select(
+    String _temp0 = intl.Intl.selectLogic(
       g,
       {
         'm': 'Мужчины',
-        'f': 'Женщины'
+        'f': 'Женщины',
+        'other': 'no',
       },
-      desc: 'No description provided in @gen'
     );
+    return '$_temp0';
   }
 
   @override

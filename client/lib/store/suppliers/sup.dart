@@ -5,10 +5,8 @@ import 'package:client/bloc_provider.dart';
 import 'package:client/store/suppliers/sup_states_events.dart';
 import 'package:provider/provider.dart';
 
-import '../../main_bloc.dart';
 import '../../services/models.dart';
 import '../../services/repo.dart';
-import '../store_bloc.dart';
 import 'sup_bloc.dart';
 
 
@@ -171,7 +169,7 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
             bool? save = await showDialog(
               context: context,
               builder: (contex) => YesNoDialog(
-                title: Text("Delete supplier?"),
+                title: const Text("Delete supplier?"),
                 onNo: () {
                   Navigator.pop(contex, false);
                 }, 

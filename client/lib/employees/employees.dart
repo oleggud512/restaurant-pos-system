@@ -17,7 +17,7 @@ import '../services/repo.dart';
 import 'filter_sort_employee/filter_sort_employee.dart';
 
 class Employees extends StatefulWidget {
-  Employees({Key? key}) : super(key: key);
+  const Employees({Key? key}) : super(key: key);
 
   @override
   State<Employees> createState() => _EmployeesState();
@@ -53,8 +53,8 @@ class _EmployeesState extends State<Employees> {
                 if (state is EmployeeLoadedState) {
                   return Scaffold(
                     key: gc0,
-                    drawer: NavigationDrawer(),
-                    endDrawer: FilterSortEmployee(),
+                    drawer: const MyNavigationDrawer(),
+                    endDrawer: const FilterSortEmployee(),
                     bottomNavigationBar: buildBNBar(),
                     appBar: buildAppBar(bloc), 
                     body: ListView(

@@ -28,7 +28,7 @@ CREATE TABLE groceries (
     ava_count INT DEFAULT(0)
 ) ENGINE=InnoDB CHARACTER SET utf8;
 
-# склад страв (зв'язок між стравою та інгридиєнтом)
+-- склад страв (зв'язок між стравою та інгридиєнтом)
 CREATE TABLE dish_consists (
 	dc_id INT PRIMARY KEY AUTO_INCREMENT,
     dish_id INT NOT NULL,

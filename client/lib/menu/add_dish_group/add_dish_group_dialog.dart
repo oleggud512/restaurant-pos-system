@@ -21,7 +21,7 @@ class AddDishGroupDialog extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(l.add_group, style: Theme.of(context).textTheme.headline6),
+            Text(l.add_group, style: Theme.of(context).textTheme.titleLarge),
             TextFormField(
               decoration: InputDecoration(
                 labelText: l.name

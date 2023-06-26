@@ -20,7 +20,7 @@ class _PrimeCostTableState extends State<PrimeCostTable> {
     var l = AppLocalizations.of(context)!;
     return DataTable(
       columns: [
-        DataColumn(label: Text(l.supplier(1), style: Provider.of<Constants>(context).boldText)),
+        DataColumn(label: Text(l.supplier('1'), style: Provider.of<Constants>(context).boldText)),
         DataColumn(label: Text(l.grocery(1), style: Provider.of<Constants>(context).boldText)),
         DataColumn(label: Text(l.count, style: Provider.of<Constants>(context).boldText)),
         DataColumn(label: Text(l.price + "/" + l.measure_short('gram'), style: Provider.of<Constants>(context).boldText)),

@@ -8,11 +8,11 @@ import 'supplys_states_events.dart';
 
 class SupplysBloc extends Bloc {
 
-  StreamController<SupplyEvent> _eventCont = BehaviorSubject<SupplyEvent>();
+  final StreamController<SupplyEvent> _eventCont = BehaviorSubject<SupplyEvent>();
   Stream<SupplyEvent> get _outEvent => _eventCont.stream;
   Sink<SupplyEvent> get inEvent => _eventCont.sink;
 
-  StreamController<SupplyState> _stateCont = BehaviorSubject<SupplyState>();
+  final StreamController<SupplyState> _stateCont = BehaviorSubject<SupplyState>();
   Stream<SupplyState> get outState => _stateCont.stream;
   Sink<SupplyState> get _inState => _stateCont.sink;
 

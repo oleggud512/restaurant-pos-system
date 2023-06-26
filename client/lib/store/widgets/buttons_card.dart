@@ -21,7 +21,7 @@ class ButtonsCard extends StatelessWidget {
         Container(
           alignment: Alignment.center,
           child: Tooltip(
-            message: "+ ${l.supplier(1)}",
+            message: "+ ${l.supplier('1')}",
             child: InkWell(
               child: Container(
                 child: const Icon(Icons.delivery_dining, size: 32), 

@@ -25,7 +25,7 @@ class _OrdPerPeriodFilterDialogState extends State<OrdPerPeriodFilterDialog> {
                 // crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('date: '),
+                  const Text('date: '),
                   TextButton(
                     child: Text(widget.fs.ordFrom.toIso8601String().substring(0, 10)),
                     onPressed: () async {
@@ -73,7 +73,7 @@ class _OrdPerPeriodFilterDialogState extends State<OrdPerPeriodFilterDialog> {
                 onChanged: (newVal) => setState(() {
                   widget.fs.group = newVal!;
                 }),
-                items: [
+                items: const [
                   DropdownMenuItem(child: Text('hour'), value: 'HOUR'),
                   DropdownMenuItem(child: Text('day'), value: 'DAY'),
                   DropdownMenuItem(child: Text('month'), value: 'MONTH'),
@@ -83,7 +83,7 @@ class _OrdPerPeriodFilterDialogState extends State<OrdPerPeriodFilterDialog> {
             ),
             ListTile(
               title: TextButton(
-                child: Text('find'),
+                child: const Text('find'),
                 onPressed: () {
                   Navigator.pop(context, true);
                 },

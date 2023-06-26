@@ -8,11 +8,11 @@ import 'dart:async';
 
 class SupBloc extends Bloc {
 
-  StreamController<SupEvent> _eventCont = BehaviorSubject<SupEvent>();
+  final StreamController<SupEvent> _eventCont = BehaviorSubject<SupEvent>();
   Stream<SupEvent> get _outEvent => _eventCont.stream;
   Sink<SupEvent> get inEvent => _eventCont.sink;
 
-  StreamController<SupState> _stateCont = BehaviorSubject<SupState>();
+  final StreamController<SupState> _stateCont = BehaviorSubject<SupState>();
   Stream<SupState> get outState => _stateCont.stream;
   Sink<SupState> get _inState => _stateCont.sink;
 

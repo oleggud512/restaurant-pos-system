@@ -1,6 +1,5 @@
-
-
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 /// The translations for English (`en`).
@@ -41,15 +40,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
-  String supply(Object count) {
-    return intl.Intl.select(
+  String supply(String count) {
+    String _temp0 = intl.Intl.selectLogic(
       count,
       {
         '1': 'Supply',
-        '2': 'Supplies'
+        '2': 'Supplies',
+        'other': 'Supply',
       },
-      desc: 'No description provided in @supply'
     );
+    return '$_temp0';
   }
 
   @override
@@ -81,41 +81,44 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String grouping(String gr) {
-    return intl.Intl.select(
+    String _temp0 = intl.Intl.selectLogic(
       gr,
       {
         'day': 'day',
         'month': 'month',
         'hour': 'hour',
         'year': 'year',
-        'other': '...'
+        'other': '...',
       },
-      desc: 'No description provided in @grouping'
     );
+    return '$_temp0';
   }
 
   @override
   String grocery(num count) {
-    return intl.Intl.pluralLogic(
+    String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
       other: 'Groceries',
+      one: 'Grocery',
     );
+    return '$_temp0';
   }
 
   @override
   String get price => 'Price';
 
   @override
-  String supplier(Object count) {
-    return intl.Intl.select(
+  String supplier(String count) {
+    String _temp0 = intl.Intl.selectLogic(
       count,
       {
         '1': 'Supplier',
-        '2': 'Suppliers'
+        '2': 'Suppliers',
+        'other': 'err',
       },
-      desc: 'No description provided in @supplier'
     );
+    return '$_temp0';
   }
 
   @override
@@ -123,28 +126,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String measure(String measure) {
-    return intl.Intl.select(
+    String _temp0 = intl.Intl.selectLogic(
       measure,
       {
         'gram': 'kilogram',
         'liter': 'liter',
-        'other': 'wrong measure'
+        'other': 'wrong measure',
       },
-      desc: 'No description provided in @measure'
     );
+    return '$_temp0';
   }
 
   @override
   String measure_short(String measure) {
-    return intl.Intl.select(
+    String _temp0 = intl.Intl.selectLogic(
       measure,
       {
         'gram': 'kg',
         'liter': 'l',
-        'other': 'xxx'
+        'other': 'xxx',
       },
-      desc: 'No description provided in @measure_short'
     );
+    return '$_temp0';
   }
 
   @override
@@ -182,14 +185,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String asc(String a) {
-    return intl.Intl.select(
+    String _temp0 = intl.Intl.selectLogic(
       a,
       {
         'asc': 'ascedenting',
-        'desc': 'descedenting'
+        'desc': 'descedenting',
+        'other': 'no',
       },
-      desc: 'No description provided in @asc'
     );
+    return '$_temp0';
   }
 
   @override
@@ -254,14 +258,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String gen(String g) {
-    return intl.Intl.select(
+    String _temp0 = intl.Intl.selectLogic(
       g,
       {
         'm': 'Mans',
-        'f': 'Womans'
+        'f': 'Womans',
+        'other': 'no',
       },
-      desc: 'No description provided in @gen'
     );
+    return '$_temp0';
   }
 
   @override

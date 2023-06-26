@@ -15,10 +15,10 @@ import collections
 from database import cur_to_dict
 
 con: MySQLConnection = connect(host='localhost', 
-                                    port=3306, 
-                                    user='root', 
-                                    password='3542', 
-                                    database='restaurant')
+                            port=3306, 
+                            user='restaurant_user', 
+                            password='rstrpass', 
+                            database='restaurant')
 
 
 app = Flask(__name__)

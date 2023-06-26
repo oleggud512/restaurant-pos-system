@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rxdart/rxdart.dart';
-import 'dart:async';
 
 import '../../../l10nn/app_localizations.dart';
-import '../../../services/constants.dart';
 import '../../../services/models.dart';
 import '../../../services/repo.dart';
 import '../widgets/prime_cost_table.dart';
@@ -59,7 +56,7 @@ class _PrimeCostDetailsDialogState extends State<PrimeCostDetailsDialog> {
               Map<String, dynamic>? data = snapshot.data as Map<String, dynamic>;
               return Column(
                 children: [
-                  Center(child: Text(l.prime_cost, style: Theme.of(context).textTheme.headline6)),
+                  Center(child: Text(l.prime_cost, style: Theme.of(context).textTheme.titleLarge)),
                   Expanded(
                     child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,

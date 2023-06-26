@@ -10,7 +10,7 @@ import '../services/repo.dart';
 
 
 class SettingsPage extends StatefulWidget {
-  SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({Key? key}) : super(key: key);
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -29,14 +29,14 @@ class _SettingsPageState extends State<SettingsPage> {
       builder: (context, snapshot) {
         return Scaffold(
           key: key,
-          drawer: NavigationDrawer(),
+          drawer: const MyNavigationDrawer(),
           appBar: AppBar(
             title: Center(child: Text(l.settings)),
             automaticallyImplyLeading: false,
             leading: Builder(
               builder: (context) {
                 return IconButton(
-                  icon: Icon(Icons.menu),
+                  icon: const Icon(Icons.menu),
                   onPressed: () => Scaffold.of(context).openDrawer()
                 );
               }
@@ -51,7 +51,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        title: Text("All supplys related to deleted suppliers will be deleted. Are you sure?", softWrap: true,),
+                        title: const Text("All supplys related to deleted suppliers will be deleted. Are you sure?", softWrap: true,),
                         actions: [
                           ElevatedButton(child: Text(l.yes), onPressed: () {
                             Navigator.pop(context, true);

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:client/menu/add_dish/prime_cost_details/prime_cost_details_dialog.dart';
 import 'package:client/menu/widgets/groc_picker.dart';
-import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +12,6 @@ import '../../services/constants.dart';
 import '../../services/models.dart';
 import '../../services/repo.dart';
 import '../widgets/group_picker.dart';
-import '../widgets/label_icon_button.dart';
 import '../widgets/photo.dart';
 import '../widgets/text_editor.dart';
 import 'dish_details_bloc.dart';
@@ -55,7 +53,7 @@ class _DishDetalsPageState extends State<DishDetalsPage> {
                     automaticallyImplyLeading: false,
                     actions: [
                       IconButton(
-                        icon: Icon(Icons.menu),
+                        icon: const Icon(Icons.menu),
                         onPressed: () => key.currentState!.openDrawer()
                       ),
                       const BackButton(),

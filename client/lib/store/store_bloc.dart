@@ -23,12 +23,12 @@ import 'store_states_events.dart';
 
 class StoreBloc extends Bloc {
 
-  StreamController<StoreEvent> _eventCont = BehaviorSubject<StoreEvent>();
+  final StreamController<StoreEvent> _eventCont = BehaviorSubject<StoreEvent>();
   Stream<StoreEvent> get _outEvent => _eventCont.stream; // ивенты слушает блок
   Sink<StoreEvent> get inEvent => _eventCont.sink;  // ивенты приходят В блок из вне
 
 
-  StreamController<StoreState> _stateCont = BehaviorSubject<StoreState>();
+  final StreamController<StoreState> _stateCont = BehaviorSubject<StoreState>();
   Stream<StoreState> get outState => _stateCont.stream; // состояния слушают снаружи
   Sink<StoreState> get _inState => _stateCont.sink; // состояния поступают из блока
 

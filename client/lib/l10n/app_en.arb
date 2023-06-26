@@ -11,7 +11,7 @@
     "store": "Store",
     "stats": "Stats",
     "settings": "Settings",
-    "supply": "{count, select, 1{Supply} 2{Supplies}}",
+    "supply": "{count, select, 1{Supply} 2{Supplies} other{Supply}}",
     "@supply": {
         "placeholders": {
             "count": {}
@@ -39,7 +39,7 @@
         }
     },
 
-    "grocery": "{count,plural, one{Grocery} other{Groceries}",
+    "grocery": "{count,plural, one{Grocery} other{Groceries}}",
     "@grocery": {
         "placeholders": {
             "count": { }
@@ -48,7 +48,7 @@
 
     "price": "Price",
 
-    "supplier": "{count, select, 1{Supplier} 2{Suppliers}}",
+    "supplier": "{count, select, 1{Supplier} 2{Suppliers} other{err}}",
     "@supplier": {
         "placeholders": {
             "count": {}
@@ -89,7 +89,7 @@
     "filtering": "Filtering",
     "by": "By",
     "find": "Find",
-    "asc": "{a,select, asc{ascedenting} desc{descedenting}}",
+    "asc": "{a,select, asc{ascedenting} desc{descedenting} other{no}}",
     "@asc": {
         "placeholders": {
             "a": {
@@ -119,7 +119,7 @@
     "surname": "Last Name",
     "birthday": "Birthday",
     "hours_per_month": "Hours per month",
-    "gen": "{g,select, m{Mans} f{Womans}}",
+    "gen": "{g,select, m{Mans} f{Womans} other{no}}",
     "@gen": {
         "placeholders": {
             "g": {

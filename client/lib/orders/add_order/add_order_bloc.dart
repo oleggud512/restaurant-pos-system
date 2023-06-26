@@ -8,11 +8,11 @@ import 'add_order_states_events.dart';
 
 class AddOrderBloc extends Bloc {
 
-  StreamController<AddOrderEvent> _eventCont = BehaviorSubject<AddOrderEvent>();
+  final StreamController<AddOrderEvent> _eventCont = BehaviorSubject<AddOrderEvent>();
   Stream<AddOrderEvent> get _outEvent => _eventCont.stream;
   Sink<AddOrderEvent> get inEvent => _eventCont.sink;
 
-  StreamController<AddOrderState> _stateCont = BehaviorSubject<AddOrderState>();
+  final StreamController<AddOrderState> _stateCont = BehaviorSubject<AddOrderState>();
   Stream<AddOrderState> get outState => _stateCont.stream;
   Sink<AddOrderState> get _inState => _stateCont.sink;
 

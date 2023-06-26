@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:client/store/groceries/grocery.dart';
 import 'package:client/store/store_states_events.dart';
-import 'package:provider/provider.dart';
 
 import '../../bloc_provider.dart';
 import 'package:client/store/store_bloc.dart';
@@ -11,7 +10,7 @@ import '../../l10nn/app_localizations.dart';
 import 'my_text_field.dart';
 
 class GroceriesCard extends StatefulWidget {
-  GroceriesCard({Key? key}) : super(key: key);
+  const GroceriesCard({Key? key}) : super(key: key);
 
   @override
   State<GroceriesCard> createState() => _GroceriesCardState();
@@ -44,7 +43,7 @@ class _GroceriesCardState extends State<GroceriesCard> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)
                 ),
-                child: (bloc.grocSortNow == Sorting.asc) ? Icon(Icons.south_rounded) : Icon(Icons.north_rounded),
+                child: (bloc.grocSortNow == Sorting.asc) ? const Icon(Icons.south_rounded) : const Icon(Icons.north_rounded),
                 onPressed: () {
                   setState(() {
                     bloc.grocSortNow = (bloc.grocSortNow == Sorting.asc) ? Sorting.desc : Sorting.asc;

@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import '../services/models.dart';
 
 
 class MenuEvent extends Equatable {

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
-import 'dart:async';
 
 typedef BlocBuilder<T> = T Function();
 typedef BlocDisposer<T> = Function(T);
@@ -27,7 +25,7 @@ abstract class Bloc {
 }
 
 class BlocProvider<T extends Bloc> extends StatefulWidget {
-  BlocProvider({
+  const BlocProvider({
     Key? key,
     required this.blocBuilder,
     // required this.bloc,
@@ -91,7 +89,7 @@ class _BlocProviderState<T extends Bloc> extends State<BlocProvider<T>> {
 }
 
 class _BlocProviderInherited<T> extends InheritedWidget {
-  _BlocProviderInherited({
+  const _BlocProviderInherited({
     Key? key,
     required Widget child,
     required this.bloc,

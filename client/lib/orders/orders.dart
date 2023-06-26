@@ -14,7 +14,7 @@ import 'widgets/pay_order_dialog.dart';
 
 
 class OrdersPage extends StatefulWidget {
-  OrdersPage({Key? key}) : super(key: key);
+  const OrdersPage({Key? key}) : super(key: key);
 
   @override
   State<OrdersPage> createState() => _OrdersPageState();
@@ -40,7 +40,7 @@ class _OrdersPageState extends State<OrdersPage> {
               } else if (state is OrdersLoadedState) {
                 return Scaffold(
                   key: key,
-                  drawer: NavigationDrawer(),
+                  drawer: const MyNavigationDrawer(),
                   appBar: AppBar(
                     title: Center(child: Text(l.orders)),
                     actions: [

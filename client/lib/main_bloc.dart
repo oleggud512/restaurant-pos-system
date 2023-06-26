@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:client/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'bloc_provider.dart';
@@ -10,11 +12,11 @@ import 'services/repo.dart';
 
 class MainBloc extends Bloc {
 
-  StreamController<MainEvent> _eventCont = BehaviorSubject<MainEvent>();
+  final StreamController<MainEvent> _eventCont = BehaviorSubject<MainEvent>();
   Stream<MainEvent> get _outEvent => _eventCont.stream;
   Sink<MainEvent> get inEvent => _eventCont.sink;
 
-  StreamController<MainState> _stateCont = BehaviorSubject<MainState>();
+  final StreamController<MainState> _stateCont = BehaviorSubject<MainState>();
   Stream<MainState> get outState => _stateCont.stream;
   Sink<MainState> get _inState => _stateCont.sink;
 
@@ -29,28 +31,56 @@ class MainBloc extends Bloc {
     inEvent.add(MainLoadEvent());
   }
 
-  _handleEvent(dynamic event) {
+  _handleEvent(dynamic event) async {
     if (event is MainLoadEvent) { 
-      config = File('lib/config.json');
-      var data = jsonDecode(config.readAsStringSync());
-      curBr = data['theme'] == 'dark' ? Brightness.dark : Brightness.light;
-      curLang = data['language'];
-      print('$curBr $curLang');
+      await loadConfig();
       _inState.add(MainLoadedState());
     } else if (event is MainBrightnessChanged) {
-      curBr = event.brightness;
-      var data = jsonDecode(config.readAsStringSync());
-      data['theme'] = (curBr == Brightness.dark) ? 'dark' : 'light';
-      config.writeAsStringSync(jsonEncode(data));
+      await setBrightness(event.brightness);
       _inState.add(MainLoadedState());
     } else if (event is MainLanguageChangedEvent) {
-      curLang = event.newLang;
-      var data = jsonDecode(config.readAsStringSync());
-      data['language'] = curLang;
-      config.writeAsStringSync(jsonEncode(data));
+      await setLanguage(event.newLang);
       _inState.add(MainLoadedState());
     }
   }
+
+  Future<void> loadConfig() async {
+    final docs = await getApplicationDocumentsDirectory();
+    config = File('${docs.path}${Constants.configFileName}');
+
+    if (!await config.exists()) {
+      curBr = Brightness.light;
+      curLang = 'en';
+      return;
+    }
+
+    final data = jsonDecode(await config.readAsString()) as Map<String, dynamic>;
+
+    curBr = Brightness.values.firstWhere(
+      (b) => b.name == data[Constants.configBrightness]
+    );
+    curLang = data[Constants.configLang];
+  }
+
+  Future<void> setBrightness(Brightness newBrightness) async {
+    curBr = newBrightness;
+    final data = jsonDecode(await config.readAsString()) as Map<String, dynamic>;
+
+    data[Constants.configBrightness] = newBrightness;
+
+    await config.writeAsString(jsonEncode(data));
+  }
+
+  Future<void> setLanguage(String newLang) async {
+    curLang = newLang;
+    final data = jsonDecode(await config.readAsString()) as Map<String, dynamic>;
+
+    data[Constants.configLang] = curLang;
+
+    await config.writeAsString(jsonEncode(data));
+  }
+
+
 
 
   @override

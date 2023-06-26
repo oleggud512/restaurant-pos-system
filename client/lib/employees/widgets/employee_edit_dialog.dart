@@ -93,7 +93,7 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                         isExpanded: true,
                         value: widget.employee!.roleId,
                         items: [
-                          DropdownMenuItem(child: Text("none"), value: 0),
+                          const DropdownMenuItem(child: Text("none"), value: 0),
                           for (int i = 0; i < widget.roles.length; i++) DropdownMenuItem(
                             child: Text(widget.roles[i].roleName),
                             value: widget.roles[i].roleId

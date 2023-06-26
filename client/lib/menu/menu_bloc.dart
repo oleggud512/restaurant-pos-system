@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:client/services/models.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../bloc_provider.dart';
@@ -9,11 +8,11 @@ import 'menu_states_events.dart';
 
 class MenuBloc extends Bloc {
 
-  StreamController<MenuEvent> _eventCont = BehaviorSubject<MenuEvent>();
+  final StreamController<MenuEvent> _eventCont = BehaviorSubject<MenuEvent>();
   Stream<MenuEvent> get _outEvent => _eventCont.stream;
   Sink<MenuEvent> get inEvent => _eventCont.sink;
 
-  StreamController<MenuState> _stateCont = BehaviorSubject<MenuState>();
+  final StreamController<MenuState> _stateCont = BehaviorSubject<MenuState>();
   Stream<MenuState> get outState => _stateCont.stream;
   Sink<MenuState> get _inState => _stateCont.sink;
 

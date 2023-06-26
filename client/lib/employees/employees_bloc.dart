@@ -8,11 +8,11 @@ import 'employees_states_events.dart';
 
 class EmployeeBloc extends Bloc {
 
-  StreamController<EmployeeEvent> _eventCont = BehaviorSubject<EmployeeEvent>();
+  final StreamController<EmployeeEvent> _eventCont = BehaviorSubject<EmployeeEvent>();
   Stream<EmployeeEvent> get _outEvent => _eventCont.stream;
   Sink<EmployeeEvent> get inEvent => _eventCont.sink;
 
-  StreamController<EmployeeState> _stateCont = BehaviorSubject<EmployeeState>();
+  final StreamController<EmployeeState> _stateCont = BehaviorSubject<EmployeeState>();
   Stream<EmployeeState> get outState => _stateCont.stream;
   Sink<EmployeeState> get _inState => _stateCont.sink;
 
