@@ -2,18 +2,13 @@ import datetime
 from xmlrpc.client import DateTime
 from mysql.connector import connect, MySQLConnection
 from mysql.connector.cursor_cext import CMySQLCursor
+from mysql.connector.cursor import MySQLCursor
 from pprint import pprint
 from flask import jsonify
 from json import dumps, loads
 
 
-# con: MySQLConnection = connect(host='localhost', 
-#                                     port=3306, 
-#                                     user='restaurant_user', 
-#                                     password='rstrpass', 
-#                                     database='restaurant')
-
-def cur_to_dict(cur: CMySQLCursor):
+def cur_to_dict(cur: MySQLCursor):
     result = []
     data = cur.fetchall()
     for row in data:

@@ -9,24 +9,27 @@ from itsdangerous import base64_decode, base64_encode
 from mysql.connector import connect, MySQLConnection
 from mysql.connector.cursor_cext import CMySQLCursor
 from simplejson import dumps
-import services as srv
 import collections
 
-from database import cur_to_dict
+import src.utils.database as db_utils
+from src.utils.database import cur_to_dict
+import src.utils.query as q_utils
 
-con: MySQLConnection = connect(host='localhost', 
-                            port=3306, 
-                            user='restaurant_user', 
-                            password='rstrpass', 
-                            database='restaurant')
 
+con: MySQLConnection = connect(
+    host='localhost', 
+    port=3306, 
+    user='restaurant_user', 
+    password='rstrpass', 
+    database='restaurant'
+)
 
 app = Flask(__name__)
 
 
 @app.errorhandler(400)
 def bed_request(error):
-    return make_response(jsonify({'error': 'bed_request'}), 400)
+    return make_response(jsonify({'error': 'not found'}), 400)
 
 
 @app.route('/')
@@ -34,7 +37,7 @@ def index(): return 'Index page. Nothing interesting. Go to /restaurant/v%/...'
 
 
 @app.route('/restaurant/v1')
-def get_some():
+def get_restaurant_root():
     return '{"rest": "root"}'
 
 
@@ -42,6 +45,9 @@ def get_some():
 def get_groceries():
     """list of groceries"""
     cur: CMySQLCursor = con.cursor()
+
+    like = request.args['like'] if request.args['like'] else ''
+
     try:
         supplied_only = True if request.args['supplied_only'] == 'true' else False
     except:
@@ -51,7 +57,7 @@ def get_groceries():
     cur.execute(f"""
         SELECT DISTINCT groc_id, groc_name, groc_measure, ava_count 
         FROM groceries {'JOIN suppliers_groc USING(groc_id) ' if supplied_only else ' '}
-        WHERE groc_name LIKE '%{request.args["like"]}%'
+        WHERE groc_name LIKE '%{like}%'
         ORDER BY groc_name ASC
     """)
 
@@ -120,7 +126,7 @@ def update_grocery(groc_id):
 def add_grocery():
     """adds one grocery"""
     cur: CMySQLCursor = con.cursor()
-    
+
     ava_count = request.json['ava_count']
     groc_name = request.json['groc_name']
     groc_measure = request.json['groc_measure']
@@ -365,9 +371,9 @@ def get_menu():
     price_to = request.args.get('price_to', None)
     sort_column = request.args.get('sort_column')
     asc = request.args.get('asc')
-    groceries = srv.decode_array(request.args.get('groceries'), is_tuple=True, is_int=True)
+    groceries = db_utils.decode_query_array(request.args.get('groceries'), is_tuple=True, is_int=True)
     # groceries = request.args.get('groceries')
-    groups = srv.decode_array(request.args.get('groups'), is_tuple=True, is_int=True)
+    groups = db_utils.decode_query_array(request.args.get('groups'), is_tuple=True, is_int=True)
     if len(groups) == 1:
         groups = f'({groups[0]})'
 
@@ -468,7 +474,7 @@ def add_dish():
     photo = request.json.get('photo', None)
 
     if photo != None:
-        srv.save_photo(photo, dish_id)
+        db_utils.save_dish_image(photo, dish_id)
         cur.execute(f"""
             UPDATE dishes SET dish_photo_index = {dish_id} WHERE dish_id = {dish_id}
         """)
@@ -503,7 +509,7 @@ def update_dish():
     dish_descr = request.json.get('dish_descr')
 
     if photo != None:
-        srv.save_photo(photo, dish_id)
+        db_utils.save_dish_image(photo, dish_id)
     # print(str(dish_descr) + "MAMBA")
     cur.execute(f"""
         UPDATE dishes
@@ -565,7 +571,7 @@ def get_prime_cost(groc_ids):
     """
     # groceries - список id продуктов
     cur: CMySQLCursor = con.cursor()
-    groc_id_count = srv.decode_list_of_dict(groc_ids, 'groc_id', 'groc_count')
+    groc_id_count = db_utils.decode_query_list_of_dict(groc_ids, 'groc_id', 'groc_count')
     
     prime_cost = {'consist' : [], 'total': 0}
 
@@ -748,10 +754,10 @@ def get_employees(serialize=True):
     cur: CMySQLCursor = con.cursor()
 
     cur.execute(f"""
-        SELECT MIN(hours_per_month) as hours_per_month_from,
-            MAX(hours_per_month) as hours_per_month_to,
-            MIN(birthday) as birthday_from,
-            MAX(birthday) as birthday_to
+        SELECT COALESCE(MIN(hours_per_month), CURDATE()) as hours_per_month_from,
+            COALESCE(MAX(hours_per_month), CURDATE()) as hours_per_month_to,
+            COALESCE(MIN(birthday), CURDATE()) as birthday_from,
+            COALESCE(MAX(birthday), CURDATE()) as birthday_to
         FROM employees
     """)
 
@@ -767,7 +773,7 @@ def get_employees(serialize=True):
     gender = tuple(filter_sort_data['gender'] if request.args.get('gender') == None or len(request.args.get('gender')) == 0 else request.args.get('gender'))
     sort_column = request.args.get('sort_column', filter_sort_data['sort_column'])
     asc = request.args.get('asc', filter_sort_data['asc'])
-    roles = srv.decode_array(request.args.get('roles', '') if request.args.get('roles') and len(request.args.get('roles')) > 0 else '', is_tuple=True, is_int=True)
+    roles = q_utils.decode_query_array(request.args.get('roles', '') if request.args.get('roles') and len(request.args.get('roles')) > 0 else '', is_tuple=True, is_int=True)
 
     # print(f'AND role_id IN {str(roles)[0:-2] + ")"} ' if len(roles) > 0 else '', "gogog")
 
@@ -777,7 +783,7 @@ def get_employees(serialize=True):
         WHERE (hours_per_month BETWEEN {hours_per_month_from} AND {hours_per_month_to}) 
             AND (birthday BETWEEN DATE('{birthday_from}') AND DATE('{birthday_to}')) 
             AND gender IN {gender}
-            {f'AND role_id IN {srv.tuple_to_str(roles)} ' if len(roles) > 0 else ''}
+            {f'AND role_id IN {q_utils.tuple_to_mysql_str(roles)} ' if len(roles) > 0 else ''}
         ORDER BY {sort_column} {asc}
     """)
     
@@ -789,7 +795,7 @@ def get_employees(serialize=True):
     return dumps(res, indent=4) if serialize else res
 
 
-@app.route('/restaurant/v1/roles-employees', methods=['GET'])
+@app.route('/restaurant/v1/roles/employees', methods=['GET'])
 def get_roles_and_employees():
     return dumps({
         **get_employees(serialize=False),
@@ -974,22 +980,22 @@ def get_stats(serialize=True):
     cur: CMySQLCursor = con.cursor()
     
     cur.execute(f"""
-        SELECT MIN(ord_start_time) AS from_base, MAX(ord_start_time) AS to_base
+        SELECT COALESCE(MIN(ord_start_time), CURDATE()) AS from_base, COALESCE(MAX(ord_start_time), CURDATE()) AS to_base
         FROM orders
     """)
 
     filter_sort_data = cur_to_dict(cur)[0]
     filter_sort_data['group'] = 'DAY'
     filter_sort_data['dish_from'] = filter_sort_data['from_base']
-    filter_sort_data['dish_to']   = filter_sort_data['to_base']
-    filter_sort_data['ord_from']  = filter_sort_data['from_base']
-    filter_sort_data['ord_to']    = filter_sort_data['to_base']
+    filter_sort_data['dish_to'] = filter_sort_data['to_base']
+    filter_sort_data['ord_from'] = filter_sort_data['from_base']
+    filter_sort_data['ord_to'] = filter_sort_data['to_base']
 
-    ord_from  = request.args.get('ord_from',  filter_sort_data['ord_from'] ).rstrip('.000')
-    ord_to    = request.args.get('ord_to',    filter_sort_data['ord_to']   ).rstrip('.000')
+    ord_from = request.args.get('ord_from', filter_sort_data['ord_from']).rstrip('.000')
+    ord_to = request.args.get('ord_to', filter_sort_data['ord_to']).rstrip('.000')
     dish_from = request.args.get('dish_from', filter_sort_data['dish_from']).rstrip('.000')
-    dish_to   = request.args.get('dish_to',   filter_sort_data['dish_to']  ).rstrip('.000')
-    group          = request.args.get('group',          filter_sort_data['group']         )
+    dish_to = request.args.get('dish_to', filter_sort_data['dish_to']).rstrip('.000')
+    group = request.args.get('group', filter_sort_data['group'])
 
     cur.execute(f"""
         SELECT ord_start_time, COUNT(ord_id) AS `count`

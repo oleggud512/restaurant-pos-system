@@ -46,11 +46,17 @@ class MainBloc extends Bloc {
 
   Future<void> loadConfig() async {
     final docs = await getApplicationDocumentsDirectory();
-    config = File('${docs.path}${Constants.configFileName}');
-
+    config = File('${docs.path}/${Constants.configFileName}');
+    
     if (!await config.exists()) {
       curBr = Brightness.light;
       curLang = 'en';
+      final data = {
+        Constants.configLang: curLang,
+        Constants.configBrightness: curBr.name
+      };
+      await config.create();
+      await config.writeAsString(jsonEncode(data));
       return;
     }
 
@@ -66,7 +72,7 @@ class MainBloc extends Bloc {
     curBr = newBrightness;
     final data = jsonDecode(await config.readAsString()) as Map<String, dynamic>;
 
-    data[Constants.configBrightness] = newBrightness;
+    data[Constants.configBrightness] = newBrightness.name;
 
     await config.writeAsString(jsonEncode(data));
   }
