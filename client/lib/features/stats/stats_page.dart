@@ -6,6 +6,8 @@ import 'package:client/features/stats/stats_states_events.dart';
 import 'package:client/features/stats/widgets/dpp_filter/dpp_filter.dart';
 import 'package:client/features/stats/widgets/chart_controls.dart';
 import 'package:client/features/home/toggle_drawer_button.dart';
+import 'package:client/utils/extensions/string.dart';
+import 'package:client/utils/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -116,7 +118,12 @@ class _DashboardPageState extends State<DashboardPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ChartControls(
-          onInfoPressed: () { }, 
+          onInfoPressed: () { 
+            showDialog(context: context, builder: (context) => SimpleDialog(
+              titlePadding: const EdgeInsets.all(p24),
+              title: Text('Amount of orders, grouped by ${bloc.fsStats?.group}'.hc)
+            ));
+          }, 
           onFilterPressed: () => onChangeOppFilter(context)
         ),
         Expanded(
@@ -152,7 +159,12 @@ class _DashboardPageState extends State<DashboardPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ChartControls(
-          onInfoPressed: () { }, 
+          onInfoPressed: () { 
+            showDialog(context: context, builder: (context) => SimpleDialog(
+              titlePadding: const EdgeInsets.all(p24),
+              title: Text('The most popular dishes'.hc)
+            ));
+          }, 
           onFilterPressed: () => onChangeDppFilter(context)
         ),
         Expanded(
