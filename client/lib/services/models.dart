@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'dart:io';
 
+import 'package:client/utils/constants.dart';
+import 'package:intl/intl.dart';
+
 
 enum DataView { list, grid }
 enum Sorting { asc, desc }
@@ -713,7 +716,7 @@ class Order {
     bool isEnd;
     List<OrderNode> listOrders;
 
-    factory Order.init(int emp_id) {
+    factory Order.init(int empId) {
       return Order(
         ordId: null,
         ordDate: DateTime.now(),
@@ -721,7 +724,7 @@ class Order {
         ordEndTime: DateTime.now(),
         moneyFromCustomer: 0,
         totalPrice: 0,
-        empId: emp_id,
+        empId: empId,
         comm: '',
         isEnd: false,
         listOrders: []
@@ -745,10 +748,6 @@ class Order {
     );}
 
     Map<String, dynamic> toJson() => {
-        // "ord_date": "${ordDate.year.toString().padLeft(4, '0')}-${ordDate.month.toString().padLeft(2, '0')}-${ordDate.day.toString().padLeft(2, '0')}",
-        // "ord_start_time": ordStartTime,
-        // "ord_end_time": ordEndTime,
-        // "money_from_customer": moneyFromCustomer,
         "emp_id": empId,
         "comm": comm,
         "is_end": isEnd ? 1 : 0,
@@ -800,8 +799,10 @@ class FilterSortEmployeeData {
     );
 
     Map<String, dynamic> toJson() => {
-        "birthday_from": "${birthdayFrom.year.toString().padLeft(4, '0')}-${birthdayFrom.month.toString().padLeft(2, '0')}-${birthdayFrom.day.toString().padLeft(2, '0')}",
-        "birthday_to": "${birthdayTo.year.toString().padLeft(4, '0')}-${birthdayTo.month.toString().padLeft(2, '0')}-${birthdayTo.day.toString().padLeft(2, '0')}",
+        // "birthday_from": "${birthdayFrom.year.toString().padLeft(4, '0')}-${birthdayFrom.month.toString().padLeft(2, '0')}-${birthdayFrom.day.toString().padLeft(2, '0')}",
+        "birthday_from": Constants.dateOnlyFormat.format(birthdayFrom),
+        // "birthday_to": "${birthdayTo.year.toString().padLeft(4, '0')}-${birthdayTo.month.toString().padLeft(2, '0')}-${birthdayTo.day.toString().padLeft(2, '0')}",
+        "birthday_to": Constants.dateOnlyFormat.format(birthdayTo),
         "hours_per_month_from": hoursPerMonthFrom,
         "hours_per_month_to": hoursPerMonthTo,
         "gender": gender,
@@ -810,14 +811,6 @@ class FilterSortEmployeeData {
         'roles': roles.join('+')
     };
 }
-
-
-/////////////////////////////..///..///......///..//////..//////......../////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////..///..///..///////..//////..//////..////..////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////.......///..../////..//////..//////..////..//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////..///..///..///////..//////..//////..////..////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////..///..///......///......//......//........////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 StatsData statsDataFromMap(Map<String, dynamic> map) => StatsData.fromJson(map);
 
@@ -914,8 +907,8 @@ class FilterSortStats {
   });
 
   factory FilterSortStats.fromJson(Map<String, dynamic> json) => FilterSortStats(
-    fromBase: DateTime.parse(json['from_base']),
-    toBase: DateTime.parse(json['to_base']),
+    fromBase: DateTime.parse(json['ord_from']), // 'from_base'
+    toBase: DateTime.parse(json['ord_to']), // 'to_base'
     ordFrom: DateTime.parse(json['ord_from']),
     ordTo: DateTime.parse(json['ord_to']),
     dishFrom: DateTime.parse(json['dish_from']),

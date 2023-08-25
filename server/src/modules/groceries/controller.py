@@ -4,7 +4,7 @@ from mysql.connector.cursor import MySQLCursor
 from simplejson import dumps
 
 from ...utils.database import cur_to_dict
-from ...database import con
+from ...database import Db
 
 bp = Blueprint('groceries', __name__, url_prefix="/groceries")
 
@@ -12,7 +12,7 @@ bp = Blueprint('groceries', __name__, url_prefix="/groceries")
 @bp.get('/')
 def get_groceries():
     """list all groceries"""
-    cur = con.cursor()
+    cur = Db.cur()
 
     try:
         supplied_only = True if request.args['supplied_only'] == 'true' else False
@@ -27,7 +27,7 @@ def get_groceries():
         ORDER BY groc_name ASC
     """)
 
-    groceries = cur_to_dict(cur)
+    groceries = Db.fetch(cur)
 
     for groc in groceries:
         cur.execute(f"""
@@ -36,7 +36,7 @@ def get_groceries():
             WHERE groc_id = {groc["groc_id"]}
         """)
 
-        groc['supplied_by'] = cur_to_dict(cur)
+        groc['supplied_by'] = Db.fetch(cur)
 
 
     return dumps(groceries, indent=4, use_decimal=True)
@@ -45,7 +45,7 @@ def get_groceries():
 @bp.get('/<int:groc_id>')
 def get_grocery(groc_id):
     """get a single grocery"""
-    cur: MySQLCursor = con.cursor()
+    cur = Db.cur()
 
     cur.execute(f"""
         SELECT groc_id, groc_name, groc_measure, ava_count
@@ -53,7 +53,7 @@ def get_grocery(groc_id):
         WHERE groc_id = {groc_id}
     """)
 
-    grocery = cur_to_dict(cur)[0]
+    grocery = Db.fetch(cur)[0]
 
     cur.execute(f"""
             SELECT supplier_id, supplier_name, sup_groc_price
@@ -61,7 +61,7 @@ def get_grocery(groc_id):
             WHERE groc_id = {grocery["groc_id"]}
         """)
 
-    grocery['supplied_by'] = cur_to_dict(cur)
+    grocery['supplied_by'] = Db.fetch(cur)
     cur.close()
 
     return dumps(grocery, indent=4, use_decimal=True)
@@ -70,7 +70,7 @@ def get_grocery(groc_id):
 @bp.put('/<int:groc_id>')
 def update_grocery(groc_id):
     """update a single grocery info"""
-    cur: MySQLCursor = con.cursor()
+    cur = Db.cur()
     
     ava_count = request.args['ava_count']
     groc_name = request.args['groc_name']
@@ -83,7 +83,7 @@ def update_grocery(groc_id):
             groc_measure = \'{groc_measure}\'
         WHERE groc_id = {groc_id}
     """)
-    con.commit()
+    Db.commit()
 
     return 'success'
 
@@ -91,7 +91,7 @@ def update_grocery(groc_id):
 @bp.post('/')
 def add_grocery():
     """add one grocery"""
-    cur: MySQLCursor = con.cursor()
+    cur = Db.cur()
     
     if not request.json: return 'required data is missing'
 
@@ -104,5 +104,5 @@ def add_grocery():
         VALUES (\'{groc_name}\', \'{groc_measure}\', {ava_count})
     """)
 
-    con.commit()
+    Db.commit()
     return 'success'

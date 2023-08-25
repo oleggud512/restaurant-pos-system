@@ -1,12 +1,12 @@
-import 'package:client/l10nn/app_localizations.dart';
+import 'package:client/l10n/app_localizations.g.dart';
 import 'package:flutter/material.dart';
 
 class YesNoDialog extends StatelessWidget {
-  YesNoDialog({Key? key, this.title, required this.onNo, required this.onYes}) : super(key: key);
+  const YesNoDialog({Key? key, this.title, required this.onNo, required this.onYes}) : super(key: key);
 
-  void Function()? onNo;
-  void Function()? onYes;
-  Widget? title;
+  final void Function()? onNo;
+  final void Function()? onYes;
+  final Widget? title;
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +14,12 @@ class YesNoDialog extends StatelessWidget {
       title: title,
       actions: [
         ElevatedButton(
-          child: Text(AppLocalizations.of(context)!.no),
           onPressed: onNo,
+          child: Text(AppLocalizations.of(context)!.no),
         ),
         ElevatedButton(
-          child: Text(AppLocalizations.of(context)!.yes),
           onPressed: onYes,
+          child: Text(AppLocalizations.of(context)!.yes),
         )
       ]
     );

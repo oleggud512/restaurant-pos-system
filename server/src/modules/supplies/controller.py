@@ -1,8 +1,8 @@
-from flask import Blueprint, request
+from flask import Blueprint, Response, jsonify, request
 from simplejson import dumps
 
 from ...utils.database import cur_to_dict
-from ...database import con
+from ...database import Db
 
 bp = Blueprint('supplys', __name__, url_prefix='/supplys')
 
@@ -11,7 +11,8 @@ bp = Blueprint('supplys', __name__, url_prefix='/supplys')
 def get_supplys(
     # supply_id=None
 ):
-    cur = con.cursor()
+    cur = Db.cur()
+    
     sort_collumn = request.args['sort_collumn']
     sort_direction = request.args['sort_direction']
     price_from = request.args['price_from']
@@ -37,14 +38,14 @@ def get_supplys(
 
     cur.execute(sql)
 
-    supplys = cur_to_dict(cur)
+    supplys = Db.fetch(cur)
 
     cur.execute(f"""
         SELECT supply_id, groc_id, groc_count, groc_name, groc_price
         FROM supply_groceries_view
     """)
 
-    groceries = cur_to_dict(cur)
+    groceries = Db.fetch(cur)
     
     for supply in supplys: # присваивание поставкам их продуктов, указаных в list_supplys
         supply['groceries'] = list(filter(lambda groc: groc['supply_id'] == supply['supply_id'], groceries))
@@ -54,35 +55,37 @@ def get_supplys(
 
 @bp.get("/filter_sort")
 def filter_sort():
-    cur = con.cursor()
+    cur = Db.cur()
     
     cur.execute("""
         SELECT max_date, max_summ, min_date
         FROM max_values_view
     """)
     
-    filter_sort_data = cur_to_dict(cur)[0]
+    filter_sort_data = Db.fetch(cur)[0]
 
     cur.execute("""
         SELECT supplier_id, supplier_name
         FROM mini_suppliers_view
     """)
 
-    filter_sort_data['suppliers'] = cur_to_dict(cur)
-    # print(filter_sort_data)
-    return dumps(filter_sort_data, indent=4, use_decimal=True)
+    filter_sort_data["suppliers"] = Db.fetch(cur)
+    return jsonify(dumps(filter_sort_data, indent=4, use_decimal=True, default=str))
 
 
 @bp.post("/")
 def add_supply():
-    cur = con.cursor()
+    cur = Db.cur()
     # pprint(request.json)
+    if (not request.json or not request.json['supplier_id'] or not request.json['summ']): return 'error'
+    
     cur.execute(f"""
         INSERT INTO supplys(supplier_id, summ) 
         VALUES ({request.json['supplier_id']}, {request.json['summ']})
     """)
     supply_id = cur.lastrowid
-    con.commit()
+    Db.con.commit()
+
     for groc in request.json['groceries']:
         cur.execute(f"""
             CALL add_groc_to_certain_supply(
@@ -91,7 +94,7 @@ def add_supply():
                 {groc['groc_count']}
             )
         """)
-        con.commit()
+        Db.con.commit()
 
     cur.close()
     return 'success'
@@ -99,8 +102,8 @@ def add_supply():
 
 @bp.post("/<int:supply_id>")
 def delete_supply(supply_id):
-    cur = con.cursor()
+    cur = Db.cur()
     cur.execute(f'CALL delete_supply({supply_id})')
-    con.commit()
+    Db.con.commit()
     cur.close()
     return 'success'

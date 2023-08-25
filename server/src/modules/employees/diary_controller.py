@@ -4,40 +4,39 @@ from mysql.connector.cursor import MySQLCursor
 from simplejson import dumps
 
 # from ...utils import database as db_utils
-from ...utils.database import cur_to_dict
-from ...database import con
+from ...database import Db
 
 bp = Blueprint('diary', __name__, url_prefix='/diary')
 
 @bp.post('/start/<int:emp_id>')
 def employee_comes(emp_id):
-    cur = con.cursor()
+    cur = Db.cur()
 
     cur.execute(f"""
-        INSERT INTO diary(emp_id) VALUES ({emp_id})
-    """)
-    con.commit()
+        INSERT INTO diary(emp_id) VALUES (?)
+    """, [emp_id])
+    Db.commit()
 
     cur.close()
     return 'success'
 
 @bp.put('/gone/<int:emp_id>')
 def employee_has_gone(emp_id):  
-    cur = con.cursor()
+    cur = Db.cur()
 
     cur.execute(f"""
         UPDATE diary 
         SET end_time = TIME(NOW()),
             gone = 1
-        WHERE gone = 0 AND emp_id = {emp_id}
-    """)
+        WHERE gone = 0 AND emp_id = ?
+    """, [emp_id])
 
     cur.close()
     return 'success'
 
 @bp.get('/')
 def get_diary(serialize=True):
-    cur = con.cursor()
+    cur = Db.cur()
 
     cur.execute(f"""
         SELECT d.d_id, 
@@ -50,21 +49,17 @@ def get_diary(serialize=True):
         FROM diary d JOIN employees e USING(emp_id)
     """)
 
-    diary = cur_to_dict(cur)
-    # print(diary)
+    diary = Db.fetch(cur)
     
-
     cur.close()
     return dumps(diary, indent=4) if serialize else diary
 
 @bp.delete('/<int:d_id>')
 def delete_diary(d_id):
-    cur = con.cursor()
+    cur = Db.cur()
     
-    cur.execute(f"""
-        DELETE FROM diary WHERE d_id = {d_id}
-    """)
-    con.commit()
+    cur.execute("DELETE FROM diary WHERE d_id = ?", [d_id])
+    Db.commit()
 
     cur.close()
     return 'success'

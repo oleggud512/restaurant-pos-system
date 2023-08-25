@@ -3,7 +3,7 @@ from mysql.connector.cursor_cext import CMySQLCursor
 from simplejson import dumps
 
 from ...utils.database import cur_to_dict
-from ...database import con
+from ...database import Db
 
 bp = Blueprint('suppliers', __name__, url_prefix='/suppliers')
 
@@ -11,26 +11,27 @@ bp = Blueprint('suppliers', __name__, url_prefix='/suppliers')
 @bp.route('/<int:sup_id>', methods=['PUT'])
 def update_supplier(sup_id):
     """rewrites all information about single supplier"""
-    new_name = request.json.get("name", None)
-    new_contacts = request.json.get("contacts", None)
-    new_groceries = request.json.get("groceries", [])
+    new_name = (request.json or {}).get("name", None)
+    new_contacts = (request.json or {}).get("contacts", None)
+    new_groceries = (request.json or {}).get("groceries", [])
     
-    cur: CMySQLCursor = con.cursor()
+    cur = Db.cur()
     
     if not sup_id: return "where is id?"
 
+    sql: str | None = None
     if new_name and new_contacts:
         sql = f"UPDATE suppliers SET supplier_name = '{new_name}', contacts = '{new_contacts}' WHERE supplier_id = {sup_id}"
     elif new_name:
         sql = f"UPDATE suppliers SET supplier_name = '{new_name}' WHERE supplier_id = {sup_id}"
     elif new_contacts:
         sql = f"UPDATE suppliers SET contacts = '{new_contacts}' WHERE supplier_id = {sup_id}"
-    cur.execute(sql)
-    con.commit()
+    if sql: cur.execute(sql)
+    Db.commit()
     
     if new_groceries:
         cur.execute(f'DELETE FROM suppliers_groc WHERE supplier_id = "{sup_id}"')
-        con.commit()
+        Db.commit()
 
         sql = f'INSERT INTO suppliers_groc(supplier_id, groc_id, sup_groc_price) VALUES '
         values = []
@@ -39,7 +40,7 @@ def update_supplier(sup_id):
         sql += ', '.join(values)
 
         cur.execute(sql)
-        con.commit()
+        Db.commit()
 
     return 'success'
 
@@ -48,13 +49,13 @@ def update_supplier(sup_id):
 @bp.get('/')
 def get_suppliers(supplier_id=None):
     """if supplier_id is not None returns single supplier else returns list of all suppliers"""
-    cur: CMySQLCursor = con.cursor()
+    cur: CMySQLCursor = Db.cur()
     cur.execute(f"""SELECT * 
         FROM suppliers 
         WHERE supplier_name != 'deleted'
         {" AND supplier_id = " + str(supplier_id) if supplier_id != None else ''}
     """)
-    suppliers = cur_to_dict(cur)
+    suppliers = Db.fetch(cur)
     
     cur.execute(f"""
         SELECT supplier_id, groc_id, groc_name, sup_groc_price, groc_measure, ava_count
@@ -65,7 +66,7 @@ def get_suppliers(supplier_id=None):
         {" AND supplier_id = " + str(supplier_id) if supplier_id != None else ''}
     """)
 
-    groceries = cur_to_dict(cur)
+    groceries = Db.fetch(cur)
 
     for groc in groceries:
         cur.execute(f"""
@@ -74,7 +75,7 @@ def get_suppliers(supplier_id=None):
             WHERE groc_id = {groc["groc_id"]}
         """)
 
-        groc['supplied_by'] = cur_to_dict(cur)
+        groc['supplied_by'] = Db.fetch(cur)
 
     for supplier in suppliers:
         supplier["groceries"] = list(filter(lambda groc: groc['supplier_id'] == supplier['supplier_id'], groceries))
@@ -83,19 +84,23 @@ def get_suppliers(supplier_id=None):
     return dumps(suppliers, indent=4, use_decimal=True) 
 
 
-@bp.get("/suppliers")
+@bp.post("/")
 def add_supplier():
     """adds single supplier"""
+    if not request.json: return 'error'
+
     supplier_name = request.json['supplier_name']
     contacts = request.json['contacts']
 
-    cur: CMySQLCursor = con.cursor()
+    if not supplier_name and contacts: return 'error'
+
+    cur: CMySQLCursor = Db.cur()
 
     cur.execute(f"""
         INSERT INTO suppliers(supplier_name, contacts)
         VALUES ('{supplier_name}', '{contacts}')
     """)
-    con.commit()
+    Db.commit()
 
     cur.close()
 
@@ -106,7 +111,7 @@ def add_supplier():
 def delete_supplier(supplier_id):
     """deletes one supplier"""
     
-    cur: CMySQLCursor = con.cursor()
+    cur = Db.cur()
 
     cur.execute(f"""
         UPDATE suppliers 
@@ -119,7 +124,7 @@ def delete_supplier(supplier_id):
     #     WHERE supplier_id = {supplier_id}
     # """)
     
-    con.commit()
+    Db.commit()
     cur.close()
 
     return 'success'
@@ -127,8 +132,8 @@ def delete_supplier(supplier_id):
 @bp.delete('/delete_info_about_deleted_suppliers')
 def delete_inf_ab_del_s():
     """delete deleted suppliers (when you delete supplier it just change state to 'deleted')"""
-    cur: CMySQLCursor = con.cursor()
+    cur = Db.cur()
     cur.execute('CALL del_info_about_del_suppliers()')
-    con.commit()
+    Db.commit()
     cur.close()
     return 'success'

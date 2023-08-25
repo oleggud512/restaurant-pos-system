@@ -52,3 +52,6 @@
 /server/static/descr/*
 /server/static/images/*
 design.png
+
+**/*note.md
+.DS_Store

@@ -1,17 +1,20 @@
 from flask import Blueprint, request
 from simplejson import dumps
+from mysql.connector import MySQLConnection
 
 from ...utils.database import cur_to_dict
 from ...utils import database as db_utils
 from ...utils import query as q_utils
 
-from ...database import con
+from ...database import Db
 
 bp = Blueprint('orders', __name__, url_prefix='/orders')
 
 @bp.post('/')
 def add_order():
-    cur = con.cursor()
+    cur = Db.cur()
+
+    if not request.json: return 'error'
 
     emp_id = request.json.get('emp_id')
     comm = request.json.get('comm')
@@ -21,7 +24,7 @@ def add_order():
         INSERT INTO orders(emp_id, comm) VALUES ({emp_id}, "{comm}")
     """)
     ord_id = cur.lastrowid
-    con.commit()
+    Db.commit()
 
     for order_node in list_orders:
         cur.execute(f"""
@@ -33,19 +36,19 @@ def add_order():
                 {order_node['price']}
             )
         """)
-        con.commit()
+        Db.commit()
 
     cur.close()
     return 'success'
 
 @bp.delete('/<int:ord_id>')
 def delete_order(ord_id):
-    cur = con.cursor()
+    cur = Db.cur()
 
     cur.execute(f"""
         DELETE FROM orders WHERE ord_id = {ord_id}
     """)
-    con.commit()
+    Db.commit()
 
     cur.close()
     return 'success'
@@ -53,13 +56,13 @@ def delete_order(ord_id):
 
 @bp.get('/')
 def get_orders():
-    cur = con.cursor()
+    cur = Db.cur()
 
     cur.execute(f"""
         SELECT d.dish_id, d.dish_name, d.dish_price, d.dish_gr_id, d.dish_photo_index, d.dish_descr
         FROM dishes d
     """)
-    dishes = cur_to_dict(cur)
+    dishes = Db.fetch(cur)
 
     cur.execute(f"""
         SELECT o.ord_id, 
@@ -71,14 +74,14 @@ def get_orders():
             (SELECT CONCAT(emp_fname, ' ', emp_lname)
              FROM employees e
              WHERE e.emp_id = o.emp_id) as emp_name,
-            o.comm, 
+            -- o.comm, 
             (SELECT SUM(lord_price) 
              FROM list_orders lo 
              WHERE lo.ord_id = o.ord_id) as total_price,
             o.is_end
         FROM orders o
     """)
-    orders = cur_to_dict(cur)
+    orders = Db.fetch(cur)
 
     for order in orders:
         cur.execute(f"""
@@ -87,7 +90,7 @@ def get_orders():
             WHERE ord_id = {order['ord_id']}
         """)
 
-        list_orders = cur_to_dict(cur)
+        list_orders = Db.fetch(cur)
 
         for order_node in list_orders:
             order_node['dish'] = list(filter(lambda x: x['dish_id'] == order_node['dish_id'], dishes))[0]
@@ -100,7 +103,7 @@ def get_orders():
 
 @bp.put('/pay')
 def pay_order():
-    cur = con.cursor()
+    cur = Db.cur()
 
     money_from_customer = request.args.get('money_from_customer')
     ord_id = request.args.get('ord_id')
@@ -112,7 +115,7 @@ def pay_order():
             ord_end_time = parseISO(NOW())
         WHERE ord_id = {ord_id}
     """)
-    con.commit()
+    Db.commit()
 
     cur.close()
     return 'success'

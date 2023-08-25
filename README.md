@@ -1,2 +1,6 @@
 # Reastaurant point of sale system
-2022 course work project
+
+## Database
+
+![db without views](images/diagram-without-views.png)
+

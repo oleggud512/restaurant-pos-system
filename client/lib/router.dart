@@ -1,55 +1,58 @@
-import 'package:client/orders/orders.dart';
-import 'package:client/settings/settings.dart';
-import 'package:client/stats/stats_page.dart';
+import 'package:client/features/employees/employees.dart';
+import 'package:client/features/orders/orders.dart';
+import 'package:client/features/settings/settings.dart';
+import 'package:client/features/stats/stats_page.dart';
+import 'package:client/features/home/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:client/store/store.dart';
-import 'package:client/supplys/supplys.dart';
-import 'package:client/menu/menu.dart';
+import 'package:client/features/store/store.dart';
+import 'package:client/features/supplys/supplys.dart';
+import 'package:client/features/menu/menu.dart';
+import 'package:page_transition/page_transition.dart';
 
-class MyRouter {
-  Route onGenerateRoute(RouteSettings settings) {
-    //final GlobalKey<ScaffoldState> key = settings.arguments;
-    switch (settings.name) {
-      case '/':
-        return MaterialPageRoute<void>(
-          settings: const RouteSettings(name: '/'),
-          builder: (context) => const StatsPage()
-        );
-      case '/store':
-        return MaterialPageRoute<void>(
-          settings: const RouteSettings(name: '/store'),
-          builder: (context) => const StorePage()
-        );
-      case '/supplys':
-        return MaterialPageRoute<void>(
-          settings: const RouteSettings(name: '/supplys'),
-          builder: (context) => const SupplysPage()
-        );
-      case '/settings':
-        return MaterialPageRoute<void>(
-          settings: const RouteSettings(name: '/settings'),
-          builder: (context) =>const SettingsPage()
-        );
-      case '/menu':
-        return MaterialPageRoute<void>(
-          settings: const RouteSettings(name: '/menu'),
-          builder: (context) => const MenuPage()
-        );
-      // case '/menu/add-dish':
-      //   return MaterialPageRoute<void>(
-      //     settings: const RouteSettings(name: '/menu/add-dish'),
-      //     builder: (context) => AddDishPage()
-      //   );
-      case '/orders':
-        return MaterialPageRoute<void>(
-          settings: const RouteSettings(name: '/orders'),
-          builder: (context) => const OrdersPage()
-        );
-      default:
-        return MaterialPageRoute<void>(
-            settings: const RouteSettings(name: '/error'),
-            builder: (context) => const Center(child: Text("error"))
-        );
-    }
-  }
+
+class AppRoute {
+  static const home = '/';
+}
+
+class HomeScreenPage {
+  static const stats = 'stats';
+  static const store = 'store';
+  static const orders = 'orders';
+  static const menu = 'menu';
+  static const employees = 'employees';
+  static const supplys = 'supplys';
+  static const settings = 'settings';
+}
+
+
+Route generateHomeScreenRoute(RouteSettings settings) {
+  final page = switch (settings.name) {
+    HomeScreenPage.stats => const DashboardPage(),
+    HomeScreenPage.store => const StorePage(),
+    HomeScreenPage.orders => const OrdersPage(),
+    HomeScreenPage.menu => const MenuPage(),
+    HomeScreenPage.employees => const Employees(),
+    HomeScreenPage.supplys => const SupplysPage(),
+    HomeScreenPage.settings => const SettingsPage(),
+    _ => const Material(child: Center(child: Text('Page not found')))
+  };
+
+  return PageTransition(
+    settings: settings,
+    type: PageTransitionType.fade,
+    duration: const Duration(milliseconds: 200),
+    child: page,
+  );
+}
+
+Route generateRootRoute(RouteSettings settings) {
+  final page = switch (settings.name) {
+    AppRoute.home => HomeScreen(),
+    _ => Scaffold(appBar: AppBar(title: const Text('Screen not found')))
+  };
+
+  return MaterialPageRoute(
+    settings: settings,
+    builder: (context) => page
+  );
 }

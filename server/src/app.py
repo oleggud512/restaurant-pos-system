@@ -11,6 +11,8 @@ from .modules.stats.controller import bp as stats_bp
 
 app = Flask(__name__)
 
+app.url_map.strict_slashes = False
+
 main_bp = Blueprint('restaurant/v1', __name__, url_prefix="/restaurant/v1")
 
 main_bp.register_blueprint(groceries_bp)
@@ -22,6 +24,7 @@ main_bp.register_blueprint(employees_bp)
 main_bp.register_blueprint(diary_bp)
 main_bp.register_blueprint(orders_bp)
 main_bp.register_blueprint(stats_bp)
+
 
 
 @main_bp.errorhandler(400)

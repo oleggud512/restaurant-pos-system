@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../l10nn/app_localizations.dart';
+import '../l10n/app_localizations.g.dart';
 
 class GramLiterDropdown extends StatelessWidget {
-  GramLiterDropdown({
+  const GramLiterDropdown({
     Key? key, 
     this.value='gram',
     required this.onChanged
   }) : super(key: key);
 
-  String? value;
-  void Function(String?)? onChanged;
+  final String? value;
+  final void Function(String?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +21,8 @@ class GramLiterDropdown extends StatelessWidget {
       ),
       value: value,
       items: [
-        DropdownMenuItem(child: Text(l.measure('liter')), value: "liter"),
-        DropdownMenuItem(child: Text(l.measure('gram')), value: "gram"),
+        DropdownMenuItem(value: "liter", child: Text(l.measure('liter'))),
+        DropdownMenuItem(value: "gram", child: Text(l.measure('gram'))),
       ],
       onChanged: onChanged
     );

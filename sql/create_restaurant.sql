@@ -180,6 +180,8 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `restaurant`.`orders` (
   `ord_id` INT NOT NULL AUTO_INCREMENT,
+  `emp_id` INT NOT NULL,
+  `is_end` TINYINT(1) NOT NULL DEFAULT 0,
   `ord_date` DATE NOT NULL DEFAULT(curdate()),
   `ord_start_time` TIME NOT NULL DEFAULT(cast(now() as time)),
   `ord_end_time` TIME NULL DEFAULT NULL,
@@ -189,7 +191,10 @@ CREATE TABLE IF NOT EXISTS `restaurant`.`orders` (
   INDEX `orders_waiter_ref` (`waiter_login` ASC) VISIBLE,
   CONSTRAINT `orders_waiter_ref`
     FOREIGN KEY (`waiter_login`)
-    REFERENCES `restaurant`.`waiters` (`waiter_login`))
+    REFERENCES `restaurant`.`waiters` (`waiter_login`),
+  CONSTRAINT `orders_emp_ref`
+    FOREIGN KEY (`emp_id`)
+    REFERENCES `restaurant`.`employees` (`emp_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -202,6 +207,7 @@ CREATE TABLE IF NOT EXISTS `restaurant`.`list_orders` (
   `ord_id` INT NOT NULL,
   `dish_id` INT NOT NULL,
   `lord_count` INT NOT NULL,
+  `lord_price` INT NOT NULL DEFAULT 0,
   `comm` TINYTEXT NULL DEFAULT NULL,
   PRIMARY KEY (`lord_id`),
   INDEX `list_orders_ord_id_ref` (`ord_id` ASC) VISIBLE,

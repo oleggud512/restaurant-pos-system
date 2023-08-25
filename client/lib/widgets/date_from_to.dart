@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 
 class DateFromTo extends StatefulWidget {
-  DateFromTo({Key? key, required this.dateFrom, required this.dateTo}) : super(key: key);
+  const DateFromTo({Key? key, required this.dateFrom, required this.dateTo}) : super(key: key);
 
-  DateTime dateFrom;
-  DateTime dateTo;
+  final DateTime dateFrom;
+  final DateTime dateTo;
 
   @override
   State<DateFromTo> createState() => _DateFromToState();
