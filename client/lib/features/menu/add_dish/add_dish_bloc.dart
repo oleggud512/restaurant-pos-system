@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'package:client/services/entities/dish.dart';
+import 'package:client/services/entities/dish_grocery.dart';
+import 'package:client/services/entities/dish_group.dart';
+import 'package:client/services/entities/grocery.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../utils/bloc_provider.dart';
-import '../../../services/models.dart';
 import '../../../services/repo.dart';
 import 'add_dish_states_events.dart';
 
@@ -35,7 +38,7 @@ class AddDishBloc extends Bloc<AddDishEvent, AddDishState> {
     } 
     else if (event is AddDishAddGrocEvent) {
       if (dish.dishGrocs.where((element) => element.grocId == event.groc.grocId).isEmpty) {
-        dish.dishGrocs.add(DishGroc.initial(event.groc.grocId, event.groc.grocName));
+        dish.dishGrocs.add(DishGrocery.initial(event.groc.grocId, event.groc.grocName));
       }
     } 
     else if (event is AddDishDishGrocCountChangedEvent) {

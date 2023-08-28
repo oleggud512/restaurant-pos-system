@@ -1,5 +1,7 @@
 import 'package:client/l10n/app_localizations.g.dart';
 import 'package:client/features/supplys/show_supply/show_supply.dart';
+import 'package:client/services/entities/data_view.dart';
+import 'package:client/services/entities/supply.dart';
 import 'package:flutter/material.dart';
 import 'package:client/features/supplys/supplys_bloc.dart';
 import 'package:client/features/supplys/supplys_states_events.dart';
@@ -7,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
 import '../../utils/bloc_provider.dart';
-import '../../services/models.dart';
 import '../../services/repo.dart';
 import '../home/toggle_drawer_button.dart';
 import 'filter_sort_drawer/filter_sort_drawer.dart';

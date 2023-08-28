@@ -1,7 +1,21 @@
 import 'dart:convert';
+import 'package:client/services/entities/diary.dart';
+import 'package:client/services/entities/dish.dart';
+import 'package:client/services/entities/dish_group.dart';
+import 'package:client/services/entities/employee.dart';
+import 'package:client/services/entities/filter_sort_data.dart';
+import 'package:client/services/entities/filter_sort_employee_data.dart';
+import 'package:client/services/entities/filter_sort_menu.dart';
+import 'package:client/services/entities/filter_sort_stats.dart';
+import 'package:client/services/entities/grocery.dart';
+import 'package:client/services/entities/mini_grocery.dart';
+import 'package:client/services/entities/order.dart';
+import 'package:client/services/entities/role.dart';
+import 'package:client/services/entities/stats_data.dart';
+import 'package:client/services/entities/supplier.dart';
+import 'package:client/services/entities/supply.dart';
 import 'package:dio/dio.dart';
 
-import 'models.dart';
 
 class Repo {
   final dio = Dio();
@@ -55,7 +69,7 @@ class Repo {
     return responce.data;
   }
 
-  Future<String> addGrocery(MiniGroc groc) async {
+  Future<String> addGrocery(MiniGrocery groc) async {
     await dio.post(
       "${ROOT}groceries",
       data: {

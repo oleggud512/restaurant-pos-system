@@ -86,9 +86,9 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   void onDestinationSelected(i) {
-    print('destination selected ${routes[i].routeName}');
     widget.navigatorKey.currentState!
       .pushNamedAndRemoveUntil(routes[i].routeName, (route) => false);
+    widget.scaffoldKey.currentState!.closeDrawer();
     setState(() => currentRoute = i);
   }
 

@@ -1,8 +1,8 @@
 import 'package:client/l10n/app_localizations.g.dart';
+import 'package:client/services/entities/supply.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/models.dart';
 import '../../../services/repo.dart';
 
 class ShowSupplyDialog extends StatelessWidget {

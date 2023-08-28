@@ -1,7 +1,7 @@
 import 'package:client/l10n/app_localizations.g.dart';
+import 'package:client/services/entities/order.dart';
 import 'package:flutter/material.dart';
 
-import '../../../services/models.dart';
 
 
 class OrderDialog extends StatelessWidget {

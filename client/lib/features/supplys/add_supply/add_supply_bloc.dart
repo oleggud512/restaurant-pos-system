@@ -1,62 +1,96 @@
+import 'package:client/services/entities/supply_grocery.dart';
 
 import '../../../utils/bloc_provider.dart';
-import '../../../services/models.dart';
 import '../../../services/repo.dart';
 import 'add_supply_events_states.dart';
 
 class AddSupplyBloc extends Bloc<AddSupplyEvent, AddSupplyState> {
 
   Repo repo;
-  Supplier? supplier;
-  late List<Supplier> suppliers;
-  Supply supply = Supply.empty();
 
-  AddSupplyBloc(this.repo) : super(AddSupplyLoadingState());
+  AddSupplyBloc(this.repo) : super(AddSupplyState(isLoading: true));
 
   @override
   void handleEvent(dynamic event) async {
     switch (event) {
       case AddSupplyLoadEvent():
-        suppliers = await repo.getSuppliers();
-        emit(AddSupplyLoadedState(suppliers));
+        final suppliers = await repo.getSuppliers();
+        emit(state.copyWith(
+          isLoading: false,
+          suppliers: suppliers
+        ));
         break;
       
-      case AddSupplySupplierSelectedEvent():
-        supply = Supply.empty();
-        supplier = event.supplier;
-        supply.supplierId = event.supplier?.supplierId;
-        emit(AddSupplyLoadedState(suppliers));
+      case AddSupplySupplierSelectedEvent(
+        supplier: final sup
+      ):
+        emit(state.copyWith(
+          supplier: () => sup,
+          supply: state.supply.copyWith(
+            supplierId: () => sup?.supplierId
+          )
+        ));
         break;
       
-      case AddSupplyNewCount():
-        supply.groceries[event.index].grocCount = event.newCount;
-        _countSumm();
-        emit(AddSupplyLoadedState(suppliers));
+      case AddSupplyNewCountEvent(
+        groc: final groc, 
+        newCount: final count
+      ):
+        final grocIndex = state.supply.groceries.indexOf(groc);
+        final newGrocs = [...state.supply.groceries]
+          ..[grocIndex] = groc.copyWith(grocCount: () => count);
+        final newState = state.copyWith(
+          supply: state.supply.copyWith(
+            groceries: newGrocs
+          )
+        );
+        // updateTotalSumm(newState);
+        emit(newState);
         break;
 
-      case AddSupplyAddGrocToSupply():
-        if (supply.groceries.where((element) => element.grocId == event.grocery.grocId).toList().isEmpty) {
-          supply.groceries.add(
-            SupplyGrocery.empty()
-              ..grocId = event.grocery.grocId
-              ..grocName = event.grocery.grocName
-              ..supGrocPrice = event.grocery.supGrocPrice
-          );
-        }
-        emit(AddSupplyLoadedState(suppliers));
+      case AddSupplyAddGrocToSupply(
+        grocery: final groc
+      ):
+        // if the grocery is already in the supply... break
+        if (state.supply.groceries.where((g) => g.grocId == groc.grocId).toList().isNotEmpty) return;
+
+        final newGrocs = [
+          ...state.supply.groceries, 
+          SupplyGrocery(
+            grocId: groc.grocId, 
+            grocName: groc.grocName,
+            supGrocPrice: groc.supGrocPrice
+          )
+        ];
+        emit(state.copyWith(
+          supply: state.supply.copyWith(
+            groceries: newGrocs
+          )
+        ));
         break;
       
-      case AddSupplyRemoveGrocFromSupply():
-        supply.groceries.removeWhere((element) => element.grocId == event.grocId);
-        emit(AddSupplyLoadedState(suppliers));
+      case AddSupplyRemoveGrocFromSupply(grocId: final id):
+        emit(state.copyWith(
+          supply: state.supply.copyWith(
+            groceries: [...state.supply.groceries]
+              ..removeWhere((g) => g.grocId == id)
+          )
+        ));
         break;
       default:
     }
   }
 
-  _countSumm() {
-    supply.summ = 0;
-    for (var element in supply.groceries) {supply.summ += element.supGrocPrice! * element.grocCount!;}
-  }
+  // AddSupplyState updateTotalSumm(AddSupplyState state) {
+  //   var summ = 0.0;
+  //   for (var element in state.supply.groceries) {
+  //     summ += element.supGrocPrice! * element.grocCount!;
+  //   }
+  //   return state.copyWith(
+  //     supply: state.supply.copyWith(
+  //       summ: summ
+  //     )
+  //   );
+  // }
 
 }

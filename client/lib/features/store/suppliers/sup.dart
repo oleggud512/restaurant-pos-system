@@ -1,11 +1,15 @@
 import 'package:client/l10n/app_localizations.g.dart';
+import 'package:client/services/entities/grocery.dart';
+import 'package:client/utils/extensions/string.dart';
+import 'package:client/utils/extensions/widget.dart';
+import 'package:client/utils/sizes.dart';
 import 'package:client/widgets/yes_no_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:client/utils/bloc_provider.dart';
 import 'package:client/features/store/suppliers/sup_states_events.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/models.dart';
 import '../../../services/repo.dart';
 import 'sup_bloc.dart';
 
@@ -23,6 +27,27 @@ class SupplierDetailsDialog extends StatefulWidget {
 class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
   late AppLocalizations l;
 
+  // should be called under BlocBuilder<SupBloc, SupState>
+  Future<void> deleteSupplier(BuildContext context, SupState state) async {
+    // не отправляю событие а сразу выполняю логику здесь 
+    // для того чтобы suppliers в store перезагружались только после удаления
+    bool? save = await showDialog(
+      context: context,
+      builder: (contex) => YesNoDialog(
+        title: Text("Delete supplier?".hc),
+        onNo: () {
+          Navigator.pop(contex, false);
+        }, 
+        onYes: () {
+          Navigator.pop(contex, true);
+        }
+      )
+    );
+    if (save != null && save == true && mounted) {
+      await context.read<Repo>().deleteSupplier(state.supplierId)
+        .then((_) => Navigator.pop(context));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,23 +56,23 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
       create: (_) => SupBloc(Provider.of<Repo>(context), widget.id, widget.groceries)..add(SupLoadEvent()), 
       child: Dialog(
         child: Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(p16),
           width: 500, 
           height: 500,
           child: BlocBuilder<SupBloc, SupState>(
             builder: (context, state) {
               final bloc = context.readBloc<SupBloc>();
-              if (state is SupLoadingState) {
+              if (state.isLoading) {
                 return const Center(child: CircularProgressIndicator());
-              } else if (state is SupLoadedState) {
+              } else {
                 return Column(
                   children: [
-                    Text(bloc.supplier.supplierName),
+                    Text(state.supplier!.supplierName),
                     buildTable(context, bloc, state),
                     buildButtons(context, bloc, state),
                   ],
                 );
-              } return Container();
+              }
             }
           )
         )
@@ -55,7 +80,7 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
     );
   }
 
-  Widget buildTable(BuildContext context, SupBloc bloc, dynamic state) {
+  Widget buildTable(BuildContext context, SupBloc bloc, SupState state) {
     // if state is Loaded - Text, state is Edit - TextField
     return Expanded(
       child: Column(
@@ -73,7 +98,7 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
                     )
                   ],
                 ),
-                for (int i = 0; i < bloc.supplier.groceries!.length; i++) Theme(
+                for (int i = 0; i < state.supplier!.groceries!.length; i++) Theme(
                   data: Theme.of(context).copyWith(
                     tooltipTheme: const TooltipThemeData(
                       decoration: BoxDecoration(
@@ -85,9 +110,9 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
                     itemBuilder: (context) {
                       return [
                         PopupMenuItem(
-                          child: const Text("удалить"),
+                          child: Text("удалить".hc),
                           onTap: () {
-                            bloc.add(SupDeleteGroceryEvent(bloc.supplier.groceries![i].grocId));
+                            bloc.add(SupDeleteGroceryEvent(state.supplier!.groceries![i].grocId));
                           },
                         )
                       ];
@@ -95,10 +120,10 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: Center(child: Text(bloc.supplier.groceries![i].grocName),)
+                          child: Center(child: Text(state.supplier!.groceries![i].grocName),)
                         ),
                         Expanded(
-                          child: Center(child: Text(bloc.supplier.groceries![i].supGrocPrice.toString()),)
+                          child: Center(child: Text(state.supplier!.groceries![i].supGrocPrice.toString()),)
                         )
                       ],
                     )
@@ -107,13 +132,13 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
               ]
             ),
           ),
-          if (bloc.showAddGrocForm) buildAddGroceryForm(context, bloc, state)
+          if (state.isShowAddGrocForm) buildAddGroceryForm(context, bloc, state)
         ],
       ),
     );
   }
 
-  Widget buildAddGroceryForm(BuildContext context, SupBloc bloc, dynamic state) {
+  Widget buildAddGroceryForm(BuildContext context, SupBloc bloc, SupState state) {
     return Card(
       elevation: 3.0,
       margin: const EdgeInsets.all(5),
@@ -123,23 +148,32 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
           children: [
             Expanded(
               flex: 2,
-              child: DropdownButton<int>(
-                value: bloc.toAddGroc.grocId ?? widget.groceries[0].grocId,
-                items: widget.groceries.map((e) => DropdownMenuItem(
-                  value: e.grocId,
-                  child: Text(e.grocName),
-                )).toList(),
+              child: DropdownButton<int?>(
+                value: state.grocToAdd.grocId,
+                items: [
+                  DropdownMenuItem(
+                    value: null,
+                    child: Text('Select a grocery'.hc)
+                  ),
+                  ...widget.groceries.map((e) => DropdownMenuItem(
+                    value: e.grocId,
+                    child: Text(e.grocName),
+                  )).toList()
+                ],
                 onChanged: (newVal) {
-                  bloc.add(ToAddGrocIdChanged(newVal!));
+                  bloc.add(ToAddGrocIdChanged(newVal));
                 },
                 isExpanded: true,
               )
             ),
             Expanded(
-              child: TextField(
-                decoration: const InputDecoration(
+              child: TextFormField(
+                inputFormatters: [ FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')) ],
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
                   border: InputBorder.none,
-                  // hintText: 'введіть назву інгредієнту',
+                  contentPadding: const EdgeInsets.all(p16),
+                  hintText: 'price'.hc
                 ),
                 onChanged: (newVal) {
                   bloc.add(ToAddGrocCountChanged(newVal));
@@ -152,62 +186,43 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
     );
   }
 
-  Widget buildButtons(BuildContext context, SupBloc bloc, dynamic state) {
+  Widget buildButtons(BuildContext context, SupBloc bloc, SupState state) {
     return Row(
       children: [
-        ElevatedButton(
-          onPressed: () async {
-            // не отправляю событие а сразу выполняю логику здесь 
-            // для того чтобы suppliers в store перезагружались только после удаления
-            bool? save = await showDialog(
-              context: context,
-              builder: (contex) => YesNoDialog(
-                title: const Text("Delete supplier?"),
-                onNo: () {
-                  Navigator.pop(contex, false);
-                }, 
-                onYes: () {
-                  Navigator.pop(contex, true);
-                }
-              )
-            );
-            if (save != null && save == true) {
-              await Provider.of<Repo>(context, listen: false).deleteSupplier(bloc.supplierId);
-              Navigator.pop(context);
-            }
-          }, 
+        FilledButton(
+          onPressed: () => deleteSupplier(context, state), 
           child: const Icon(Icons.delete)
-        ),
-        const SizedBox(width: 10),
-        ...(!bloc.showAddGrocForm) ? [
-          Tooltip( //                     |delete|addGroc |                 |ok|
-            message: "додати інгрeдієнт",
-            child: ElevatedButton(
+        ).withTooltip("delete supplier".hc),
+
+        w8gap,
+        ...!state.isShowAddGrocForm 
+          ? [
+            FilledButton(
               onPressed: () {
                 bloc.add(SupShowAddGroceryFormEvent());
               },
               child: const Icon(Icons.add)
-            )
-          )
-        ] : [ //                          |delete|saveGroc|hideForm|        |ok|
-          ElevatedButton(
-            child: const Icon(Icons.check),
-            onPressed: () {
-              bloc.add(SupAddGroceryEvent());
-            }
-          ),
-          const SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: () {
-              bloc.add(SupHideAddGroceryFormEvent());
-            }, 
-            child: const Icon(Icons.close)
-          ),
-        ],
+            ).withTooltip("додати інгрeдієнт".hc)
+          ] 
+          : [ //                          |delete|saveGroc|hideForm|        |ok|
+            FilledButton(
+              child: const Icon(Icons.check),
+              onPressed: () {
+                bloc.add(SupAddGroceryEvent());
+              }
+            ),
+            const SizedBox(width: 10),
+            FilledButton(
+              onPressed: () {
+                bloc.add(SupHideAddGroceryFormEvent());
+              }, 
+              child: const Icon(Icons.close)
+            ),
+          ],
 
         const Spacer(),
-        ElevatedButton(
-          child: const Text("OK"),
+        FilledButton(
+          child: Text("OK".hc),
           onPressed: () {
             Navigator.pop(context);
           },

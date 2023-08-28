@@ -7,11 +7,7 @@ class DashboardEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class DashboardLoadEvent extends DashboardEvent { 
-  DashboardLoadEvent() {
-    print('StatsLoadEvent created');
-  }
-}
+class DashboardLoadEvent extends DashboardEvent { }
 
 
 

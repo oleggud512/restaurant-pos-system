@@ -79,7 +79,7 @@ def delete_employee(emp_id):
     """удалит всё нахрен. Работника не существовало"""
     cur = Db.cur()
 
-    # TODO: хмм... А чего тут ничего нет?
+    # TODO: (10) хмм... А чего тут ничего нет?
 
     cur.close()
     return 'success'

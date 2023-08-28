@@ -1,12 +1,12 @@
 import 'package:client/l10n/app_localizations.g.dart';
 import 'package:client/features/menu/add_dish/prime_cost_details/prime_cost_details_dialog.dart';
 import 'package:client/features/menu/widgets/text_editor.dart';
+import 'package:client/services/entities/dish_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/bloc_provider.dart';
-import '../../../services/models.dart';
 import '../../../services/repo.dart';
 import '../widgets/photo.dart';
 import 'add_dish_bloc.dart';

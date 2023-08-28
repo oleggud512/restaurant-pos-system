@@ -3,26 +3,6 @@ import 'dart:async';
 import 'package:client/utils/logger.dart';
 import 'package:flutter/material.dart';
 
-// abstract class Bloc {
-  
-//   // StreamController<Event> _eventCont = BehaviorSubject<Event>();
-//   // Stream<Event> get _outEvent => _eventCont.stream;
-//   // Sink<Event> get inEvent => _eventCont.sink;
-
-//   // StreamController<State> _stateCont = BehaviorSubject<State>();
-//   // Stream<State> get outState => _stateCont.stream;
-//   // Sink<State> get _inState => _stateCont.sink;
-
-//   // Bloc(initEvent) {
-//   //   _outEvent.listen((event) {_handleEvent(event);});
-//   //   inEvent.add(initEvent);
-//   // }
-
-//   // @required
-//   // void _handleEvent(Event event) {}
-//   // @required
-//   void dispose();
-// }
 
 abstract class Bloc<Event, State> {
   Bloc(State initState) {
@@ -32,6 +12,7 @@ abstract class Bloc<Event, State> {
 
   final _eventCont = StreamController<Event>.broadcast();
   late final StreamSubscription<Event> _eventSbs;
+
   final _stateCont = StreamController<State>.broadcast();
   late State _state;
   bool _hasState = false;
@@ -78,8 +59,7 @@ class BlocProvider<T extends Bloc> extends StatefulWidget {
 
   static T of<T extends Bloc>(BuildContext context) {
     try {
-      _BlocProviderInherited<T> provider = context.getElementForInheritedWidgetOfExactType<_BlocProviderInherited<T>>()!.widget as _BlocProviderInherited<T>; // TODO: ignores nullability??
-      // final provider = context.getInheritedWidgetOfExactType<_BlocProviderInherited<T>>()!;
+      _BlocProviderInherited<T> provider = context.getElementForInheritedWidgetOfExactType<_BlocProviderInherited<T>>()!.widget as _BlocProviderInherited<T>;
       return provider.bloc;
     } catch (e) {
       throw Exception('Bloc not found');
@@ -94,12 +74,13 @@ class _BlocProviderState<T extends Bloc> extends State<BlocProvider<T>> {
   void initState() {
     super.initState();
     bloc = widget.create(context);
+    glogger.i('INIT    $runtimeType');
   }
 
   @override
   void dispose() {
-    glogger.i("Disposing $runtimeType");
     bloc.dispose();
+    glogger.d('DISPOSE $runtimeType');
     super.dispose();
   }
 
@@ -156,6 +137,7 @@ class _BlocBuilderState<B extends Bloc<dynamic, S>, S> extends State<BlocBuilder
 
   void subscribe() {
     _sbs = stream.listen((s) {
+      // glogger.t('$runtimeType - new state - $s');
       setState(() => state = s);
     });
   }

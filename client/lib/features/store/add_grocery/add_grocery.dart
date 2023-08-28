@@ -1,17 +1,17 @@
 import 'package:client/l10n/app_localizations.g.dart';
+import 'package:client/services/entities/mini_grocery.dart';
 import 'package:flutter/material.dart';
 
-import '../../../services/models.dart';
 import '../../../services/repo.dart';
 import '../../../widgets/gram_liter_dropdown.dart';
 
+
 class AddGroceryDialog extends StatefulWidget {
-  AddGroceryDialog({
+  const AddGroceryDialog({
     Key? key, 
     required this.repo
   }) : super(key: key);
 
-  final MiniGroc groc = MiniGroc.empty();
   final Repo repo;
 
   @override
@@ -19,6 +19,9 @@ class AddGroceryDialog extends StatefulWidget {
 }
 
 class _AddGroceryDialogState extends State<AddGroceryDialog> {
+
+  MiniGrocery groc = const MiniGrocery(); // TODO: (7) create bloc for add grocery dialog 
+
   @override
   Widget build(BuildContext context) {
     var l = AppLocalizations.of(context)!;
@@ -41,15 +44,15 @@ class _AddGroceryDialogState extends State<AddGroceryDialog> {
                   border: const OutlineInputBorder()
                 ),
                 onChanged: (newVal) {
-                  widget.groc.grocName = newVal;
+                  groc = groc.copyWith(grocName: newVal);
                 },
               ),
               const SizedBox(height: 10,),
               GramLiterDropdown(
-                value: widget.groc.grocMeasure,
+                value: groc.grocMeasure,
                 onChanged: (newVal) {
                   setState(() {
-                    widget.groc.grocMeasure = newVal!;
+                    groc = groc.copyWith(grocMeasure: newVal);
                   });
                 }
               ),
@@ -60,15 +63,15 @@ class _AddGroceryDialogState extends State<AddGroceryDialog> {
                   border: const OutlineInputBorder()
                 ),
                 onChanged: (newVal) {
-                  widget.groc.avaCount = int.parse(newVal);
+                  groc = groc.copyWith(avaCount: int.parse(newVal));
                 },
               ),
               const Spacer(),
-              ElevatedButton(
+              FilledButton(
                 child: Text(l.add, style: const TextStyle(fontSize: 15)),
                 onPressed: () async {
-                  await widget.repo.addGrocery(widget.groc);
-                  Navigator.pop(context);
+                  await widget.repo.addGrocery(groc);
+                  if (mounted) Navigator.pop(context);
                 },
               )
             ]

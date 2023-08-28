@@ -30,7 +30,7 @@ Route generateHomeScreenRoute(RouteSettings settings) {
     HomeScreenPage.stats => const DashboardPage(),
     HomeScreenPage.store => const StorePage(),
     HomeScreenPage.orders => const OrdersPage(),
-    HomeScreenPage.menu => const MenuPage(),
+    HomeScreenPage.menu => MenuPage(),
     HomeScreenPage.employees => const Employees(),
     HomeScreenPage.supplys => const SupplysPage(),
     HomeScreenPage.settings => const SettingsPage(),

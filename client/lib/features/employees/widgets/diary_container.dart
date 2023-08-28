@@ -1,8 +1,8 @@
 import 'package:client/l10n/app_localizations.g.dart';
+import 'package:client/services/entities/diary.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/constants.dart';
-import '../../../services/models.dart';
 
 class DiaryContainer extends StatelessWidget {
   const DiaryContainer({Key? key, required this.diary, required this.onDelete, required this.onGone}) : super(key: key);

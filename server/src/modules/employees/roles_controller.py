@@ -3,8 +3,8 @@ from flask import jsonify, request, Blueprint
 from mysql.connector.cursor import MySQLCursor
 from simplejson import dumps
 
-from .diary_controller import get_diary # TODO: replace with service method
-from .employees_controller import get_employees, get_employees_data # TODO: replace with service method
+from .diary_controller import get_diary # TODO: (2) replace with service method
+from .employees_controller import get_employees_data
 
 from ...utils.database import cur_to_dict
 from ...database import Db

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:client/l10n/app_localizations.g.dart';
-import 'package:client/services/models.dart';
+import 'package:client/services/entities/dish.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

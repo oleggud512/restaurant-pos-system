@@ -1,4 +1,8 @@
-import 'package:client/services/models.dart';
+
+import 'package:client/services/entities/dish.dart';
+import 'package:client/services/entities/dish_group.dart';
+import 'package:client/services/entities/filter_sort_menu.dart';
+import 'package:client/services/entities/grocery.dart';
 
 import '../../utils/bloc_provider.dart';
 import '../../services/repo.dart';

@@ -49,10 +49,10 @@ class _AddSupplierDialogState extends State<AddSupplierDialog> {
                 ),
               ),
               const Spacer(),
-              ElevatedButton(
+              FilledButton(
                 onPressed: () async {
                   await widget.repo.addSupplier(nameCont.text, contactsCont.text);
-                  Navigator.pop(context);
+                  if (mounted) Navigator.pop(context);
                 }, 
                 child: Text(l.add, style: const TextStyle(
                   color: Colors.white,

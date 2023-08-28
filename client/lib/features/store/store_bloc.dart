@@ -1,6 +1,9 @@
+import 'package:client/services/entities/grocery.dart';
+import 'package:client/services/entities/sorting.dart';
+import 'package:client/services/entities/supplier.dart';
+
 import '../../utils/bloc_provider.dart';
 import '../../services/repo.dart';
-import '../../services/models.dart';
 import 'store_states_events.dart';
 
 

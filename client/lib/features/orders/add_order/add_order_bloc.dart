@@ -1,6 +1,11 @@
 
+import 'package:client/services/entities/dish.dart';
+import 'package:client/services/entities/dish_group.dart';
+import 'package:client/services/entities/employee.dart';
+import 'package:client/services/entities/order.dart';
+import 'package:client/services/entities/order_node.dart';
+
 import '../../../utils/bloc_provider.dart';
-import '../../../services/models.dart';
 import '../../../services/repo.dart';
 import 'add_order_states_events.dart';
 

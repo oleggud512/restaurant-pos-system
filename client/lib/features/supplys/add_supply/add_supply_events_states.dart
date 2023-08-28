@@ -1,6 +1,10 @@
+import 'package:client/services/entities/grocery.dart';
+import 'package:client/services/entities/supplier.dart';
+import 'package:client/services/entities/supply.dart';
+import 'package:client/services/entities/supply_grocery.dart';
+import 'package:client/utils/logger.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../services/models.dart';
 
 
 class AddSupplyEvent extends Equatable {
@@ -19,13 +23,13 @@ class AddSupplySupplierSelectedEvent extends AddSupplyEvent {
   List<Object?> get props => [supplier];
 }
 
-class AddSupplyNewCount extends AddSupplyEvent {
-  AddSupplyNewCount(this.index, String newCount) : newCount = double.parse((newCount.isNotEmpty) ? newCount : '0');
-  final int index;
+class AddSupplyNewCountEvent extends AddSupplyEvent {
+  AddSupplyNewCountEvent(this.groc, String newCount) : newCount = double.parse((newCount.isNotEmpty) ? newCount : '0');
+  final SupplyGrocery groc;
   final double newCount;
 
   @override
-  List<Object?> get props => [index, newCount];
+  List<Object?> get props => [groc, newCount];
 }
 
 class AddSupplyAddGrocToSupply extends AddSupplyEvent {
@@ -50,18 +54,59 @@ class AddSupplySUBMIT extends AddSupplyEvent { }
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class TotalSupplySummCalcException implements Exception { }
+
 class AddSupplyState extends Equatable {
+  final bool isLoading;
+  /// selected supplier
+  final Supplier? supplier;
+  /// available suppliers
+  final List<Supplier> suppliers;
+  /// supply to add
+  final Supply supply;
+  // FIXME: (1) currently, summ of the supply will always be zero
+
+  double get totalSupplySumm {
+    try {
+      return supply.groceries.map((g) {
+        if (g.supGrocPrice != null && g.grocCount != null) {
+          return g.supGrocPrice! * g.grocCount!;
+        }
+        throw TotalSupplySummCalcException();
+      }).reduce((p, n) => p + n);
+    } on TotalSupplySummCalcException catch (_) {
+      return 0;
+    } on StateError catch (_) {
+      return 0;
+    }
+  }
+
+  AddSupplyState({
+    this.isLoading = true,
+    this.supplier,
+    this.suppliers = const [],
+    Supply? supply
+  }) : supply = supply ?? Supply();
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [
+    isLoading,
+    supplier,
+    suppliers,
+    supply
+  ];
+
+  AddSupplyState copyWith({
+    bool? isLoading,
+    Supplier? Function()? supplier,
+    List<Supplier>? suppliers,
+    Supply? supply
+  }) {
+    return AddSupplyState(
+      isLoading: isLoading ?? this.isLoading,
+      supplier: supplier != null ? supplier() : this.supplier,
+      suppliers: suppliers ?? this.suppliers,
+      supply: supply ?? this.supply,
+    );
+  }
 }
-
-class AddSupplyLoadingState extends AddSupplyState { }
-
-class AddSupplyLoadedState extends AddSupplyState { 
-  AddSupplyLoadedState(this.suppliers);
-
-  final List<Supplier> suppliers;
-}
-
-class AddSupplyReloadedState extends AddSupplyState { }

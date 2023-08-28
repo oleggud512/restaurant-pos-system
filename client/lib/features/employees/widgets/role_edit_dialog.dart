@@ -1,8 +1,8 @@
 import 'package:client/l10n/app_localizations.g.dart';
+import 'package:client/services/entities/role.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../services/models.dart';
 
 
 class RoleEditDialog extends StatefulWidget {

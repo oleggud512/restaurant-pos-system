@@ -1,5 +1,5 @@
 import 'package:client/l10n/localizations_context_ext.dart';
-import 'package:client/services/models.dart';
+import 'package:client/services/entities/sorting.dart';
 import 'package:flutter/material.dart';
 
 import 'package:client/features/store/groceries/grocery.dart';

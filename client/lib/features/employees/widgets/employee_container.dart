@@ -1,7 +1,8 @@
+import 'package:client/services/entities/employee.dart';
+import 'package:client/services/entities/role.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/constants.dart';
-import '../../../services/models.dart';
 
 
 class EmployeeContainer extends StatelessWidget {

@@ -40,12 +40,11 @@ DELIMITER ;
 -- Table `restaurant`.`roles`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `restaurant`.`roles` (
-  `role_id` INT NOT NULL AUTO_INCREMENT,
+  `role_id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `role_name` VARCHAR(50) NULL DEFAULT NULL,
   `salary_per_hour` DECIMAL(10,2) NOT NULL,
-  PRIMARY KEY (`role_id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
+  PRIMARY KEY (`role_id`)
+);
 
 
 -- -----------------------------------------------------
@@ -257,15 +256,13 @@ CREATE TABLE IF NOT EXISTS `restaurant`.`supplys` (
   `supply_id` INT NOT NULL AUTO_INCREMENT,
   `supply_date` DATE NULL DEFAULT(curdate()),
   `supplier_id` INT NOT NULL,
-  `summ` DECIMAL(10,2) NULL DEFAULT NULL,
+  `summ` DECIMAL(10,2) NOT NULL DEFAULT 0,
   PRIMARY KEY (`supply_id`),
   INDEX `supplys_sup_ref` (`supplier_id` ASC) VISIBLE,
   CONSTRAINT `supplys_sup_ref`
     FOREIGN KEY (`supplier_id`)
-    REFERENCES `restaurant`.`suppliers` (`supplier_id`))
-ENGINE = InnoDB
-AUTO_INCREMENT = 39
-DEFAULT CHARACTER SET = utf8mb3;
+    REFERENCES `restaurant`.`suppliers` (`supplier_id`)
+);
 
 
 -- -----------------------------------------------------
@@ -371,32 +368,54 @@ END$$
 DELIMITER ;
 
 -- -----------------------------------------------------
--- procedure add_groc_to_certain_supply
+-- procedure add_grocery_to_certain_supply
 -- -----------------------------------------------------
-
 DELIMITER $$
 USE `restaurant`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_groc_to_certain_supply`(
-	sup_id INT,
-    g_id INT,
-    g_count INT
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_grocery_to_certain_supply`(
+	certain_supply_id INT,
+    grocery_id INT,
+    grocery_count INT
 )
-BEGIN
+BEGIN 
+	DECLARE supplier_id INT DEFAULT 0;
+	DECLARE groc_price DECIMAL(10,2) DEFAULT 0.1;
+	DECLARE groc_name VARCHAR(50) DEFAULT "";
+    
+    -- obtain supplier id
+    SELECT s.supplier_id INTO supplier_id
+    FROM supplys s
+    WHERE s.supply_id = certain_supply_id;
+    
+	-- obtain price
+	SELECT sg.sup_groc_price INTO groc_price
+	FROM suppliers_groc sg
+	WHERE sg.groc_id = grocery_id AND sg.supplier_id = supplier_id;
+    
+    -- obtain grocery name
+    SELECT g.groc_name INTO groc_name
+    FROM groceries g
+    WHERE g.groc_id = grocery_id;
+
+	-- add grocery to the check
 	INSERT INTO list_supplys(supply_id, groc_id, groc_count, groc_name, groc_price)
-    VALUES (
-		sup_id, 
-        g_id, 
-        g_count, 
-        (SELECT groc_name
-        FROM groceries 
-        WHERE groc_id = g_id),
-        (SELECT DISTINCT sup_groc_price 
-        FROM suppliers_groc JOIN supplys USING(supplier_id)
-        WHERE supply_id = sup_id AND groc_id = g_id)
+	VALUES (
+		certain_supply_id, 
+		grocery_id, 
+		grocery_count, 
+		groc_name,
+		groc_price
 	);
-    UPDATE groceries 
-    SET ava_count = ava_count + g_count
-    WHERE groc_id = g_id;
+
+	-- increase total supply summ
+	UPDATE supplys s
+	SET s.summ = s.summ + groc_price * grocery_count
+	WHERE s.supply_id = certain_supply_id;
+	
+	-- increase current amount of grocery available
+	UPDATE groceries 
+	SET ava_count = ava_count + grocery_count
+	WHERE groc_id = grocery_id;
 END$$
 
 DELIMITER ;

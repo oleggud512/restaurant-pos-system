@@ -1,6 +1,8 @@
 
+import 'package:client/services/entities/dish.dart';
+import 'package:client/services/entities/dish_group.dart';
+
 import '../../../utils/bloc_provider.dart';
-import '../../../services/models.dart';
 import '../../../services/repo.dart';
 import 'dish_details_states_events.dart';
 

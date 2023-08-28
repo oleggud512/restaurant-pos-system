@@ -1,6 +1,6 @@
+import 'package:client/services/entities/dish.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../services/models.dart';
 
 
 class AddOrderEvent extends Equatable {

@@ -1,6 +1,8 @@
+import 'package:client/services/entities/grocery.dart';
+import 'package:client/services/entities/sorting.dart';
+import 'package:client/services/entities/supplier.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../services/models.dart';
 
 abstract class StoreEvent extends Equatable {
   const StoreEvent();

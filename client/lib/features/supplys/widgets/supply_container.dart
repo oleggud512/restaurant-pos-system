@@ -1,6 +1,7 @@
 import 'package:client/l10n/app_localizations.g.dart';
+import 'package:client/services/entities/data_view.dart';
 import 'package:flutter/material.dart';
-import '../../../services/models.dart' as m;
+import '../../../services/entities/supply.dart';
 import '../add_supply/add_supply.dart';
 import '../supplys_bloc.dart';
 import '../supplys_states_events.dart';
@@ -9,8 +10,8 @@ import '../supplys_states_events.dart';
 class SupplyContainer extends StatelessWidget {
   const SupplyContainer({Key? key, required this.supply, required this.view, required this.onTap}) : super(key: key);
 
-  final m.Supply supply;
-  final m.DataView view;
+  final Supply supply;
+  final DataView view;
   final void Function()? onTap;
 
   final TextStyle style = const TextStyle(
@@ -27,7 +28,7 @@ class SupplyContainer extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(10),
           width: 300, 
-          height: (view == m.DataView.grid) ? 100 : 80,
+          height: (view == DataView.grid) ? 100 : 80,
           child: Column(
             children: [
               Row(
@@ -49,9 +50,9 @@ class SupplyContainer extends StatelessWidget {
               const Spacer(),
               Row(
                 children: [
-                  Text(m.dateToString(supply.supplyDate), style: style),
+                  Text(dateToString(supply.supplyDate), style: style),
                   const Spacer(),
-                  Text("${supply.summ} \$", style: style)
+                  Text("${supply.summ ?? 0.0} \$", style: style)
                 ]
               )
             ]
@@ -70,7 +71,7 @@ class AddSupplyContainer extends StatelessWidget {
   }) : super(key: key);
 
   final SupplysBloc bloc;
-  final m.DataView view;
+  final DataView view;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +87,7 @@ class AddSupplyContainer extends StatelessWidget {
         },
         child: SizedBox(
           width: 300,
-          height: (view == m.DataView.grid) ? 100 : 80,
+          height: (view == DataView.grid) ? 100 : 80,
           child: const Center(
             child: Icon(Icons.add, size: 50, color: Colors.grey)
           )

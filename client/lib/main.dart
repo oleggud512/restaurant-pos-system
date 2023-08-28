@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:client/router.dart';
+import 'package:client/utils/expanded_slider_track_shape.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -62,6 +63,10 @@ class MyApp extends StatelessWidget {
               inputDecorationTheme: const InputDecorationTheme(
                 border: OutlineInputBorder()
               ),
+              sliderTheme: SliderThemeData(
+                trackShape: ExpandedRoundedRectSliderTrackShape(),
+                rangeTrackShape: ExpandedRoundedRectRangeSliderTrackShape()
+              )
             ),
           );
         }

@@ -1,6 +1,10 @@
 
+import 'package:client/services/entities/diary.dart';
+import 'package:client/services/entities/employee.dart';
+import 'package:client/services/entities/filter_sort_employee_data.dart';
+import 'package:client/services/entities/role.dart';
+
 import '../../utils/bloc_provider.dart';
-import '../../services/models.dart';
 import '../../services/repo.dart';
 import 'employees_states_events.dart';
 

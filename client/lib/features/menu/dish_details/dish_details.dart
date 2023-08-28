@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:client/features/menu/add_dish/prime_cost_details/prime_cost_details_dialog.dart';
 import 'package:client/features/menu/widgets/groc_picker.dart';
+import 'package:client/services/entities/dish.dart';
+import 'package:client/services/entities/dish_group.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +11,6 @@ import 'package:provider/provider.dart';
 import '../../../utils/bloc_provider.dart';
 import '../../../l10n/app_localizations.g.dart';
 import '../../../utils/constants.dart';
-import '../../../services/models.dart';
 import '../../../services/repo.dart';
 import '../widgets/group_picker.dart';
 import '../widgets/photo.dart';

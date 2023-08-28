@@ -1,6 +1,11 @@
 import 'package:client/features/menu/menu_states_events.dart';
 import 'package:client/l10n/localizations_context_ext.dart';
 import 'package:client/utils/bloc_provider.dart';
+import 'package:client/utils/expanded_slider_track_shape.dart';
+import 'package:client/utils/extensions/string.dart';
+import 'package:client/utils/logger.dart';
+import 'package:client/utils/number_range_picker.dart';
+import 'package:client/utils/sizes.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_treeview/flutter_treeview.dart';
 
@@ -31,7 +36,7 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
             child: ListView(
               controller: ScrollController(),
               children: [
-                ListTile(title: Text(l.sorting)),
+                ListTile(title: Text(l.sorting, style: Theme.of(context).textTheme.titleMedium)),
                 ListTile(  // выбор того по чем сортируем
                   leading: Radio<String>(
                     value: 'dish_name',
@@ -64,7 +69,7 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
                     });
                   }
                 )),
-                ListTile(title: Text(l.filtering)), 
+                ListTile(title: Text(l.filtering, style: Theme.of(context).textTheme.titleMedium)), 
                 ListTile(           // поиск по названию (работает сразу)
                   title: TextFormField(
                     // controller: TextEditingController(text: bloc.fsMenu!.like),
@@ -99,6 +104,17 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
                     )),
                   ],
                 )),
+                NumberRangePicker(
+                  min: 100,
+                  max: 7000,
+                  label: 'Price'.hc,
+                  toLabel: 'To'.hc,
+                  fromLabel: 'From'.hc,
+                  initial: const RangeValues(0.3, 0.8),
+                  onChanged: (start, end) {
+                    glogger.i('$start - $end');
+                  }
+                ),
                 ListTile(
                   title: InkWell(
                     onTap: () { 
@@ -187,15 +203,15 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
           
           Expanded(
             flex: 0,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                elevation: MaterialStateProperty.all(0),
+            child: BottomAppBar(
+              height: p56,
+              child: FilledButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  bloc.add(MenuLoadEvent());
+                },
+                child: Text(l.find)
               ),
-              onPressed: () {
-                Navigator.pop(context);
-                bloc.add(MenuLoadEvent());
-              },
-              child: Text(l.find)
             )
           )
         ]

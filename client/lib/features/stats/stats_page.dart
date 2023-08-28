@@ -1,11 +1,12 @@
 import 'package:client/l10n/app_localizations.g.dart';
 import 'package:client/l10n/localizations_context_ext.dart';
-import 'package:client/services/models.dart';
 import 'package:client/features/stats/stats_bloc.dart';
 import 'package:client/features/stats/stats_states_events.dart';
 import 'package:client/features/stats/widgets/dpp_filter/dpp_filter.dart';
 import 'package:client/features/stats/widgets/chart_controls.dart';
 import 'package:client/features/home/toggle_drawer_button.dart';
+import 'package:client/services/entities/dish_per_period.dart';
+import 'package:client/services/entities/orders_per_period.dart';
 import 'package:client/utils/extensions/string.dart';
 import 'package:client/utils/sizes.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,6 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   void initState() {
-    print('_StatsPageState initialized');
     super.initState();
   }
 
@@ -68,7 +68,6 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('StatsPage built');
     return BlocProvider<DashboardBloc>(
       create: (_) => DashboardBloc(Provider.of<Repo>(context, listen: false))
         ..add(DashboardLoadEvent()),
@@ -136,11 +135,11 @@ class _DashboardPageState extends State<DashboardPage> {
               enablePanning: true
             ),
             
-            series: <ChartSeries<OrdPerPeriod, String>>[
+            series: <ChartSeries<OrdersPerPeriod, String>>[
               ColumnSeries(
                 dataSource: bloc.sdata.ordPerPeriod, 
-                xValueMapper: (OrdPerPeriod opp, _) => opp.ordStartTime.toString().substring(0, 10), 
-                yValueMapper: (OrdPerPeriod opp, _) => opp.count
+                xValueMapper: (OrdersPerPeriod opp, _) => opp.ordStartTime.toString().substring(0, 10), 
+                yValueMapper: (OrdersPerPeriod opp, _) => opp.count
               )
             ]
           ),

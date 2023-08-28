@@ -1,3 +1,6 @@
+import 'package:client/services/entities/grocery.dart';
+import 'package:client/services/entities/mini_grocery.dart';
+import 'package:client/services/entities/supplier.dart';
 import 'package:equatable/equatable.dart';
 
 class SupEvent extends Equatable {
@@ -22,7 +25,7 @@ class SupDeleteGroceryEvent extends SupEvent {
 
 
 class ToAddGrocIdChanged extends SupEvent {
-  final int grocId;
+  final int? grocId;
 
   ToAddGrocIdChanged(this.grocId);
 
@@ -43,13 +46,63 @@ class ToAddGrocCountChanged extends SupEvent {
 
 class SupCommitEvent extends SupEvent { }
 
-///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////state///////////////////////////////////
 
-class SupState extends Equatable {
+class SupState extends Equatable { 
+  final bool isLoading;
+  final int supplierId;
+  /// is null only during initialization. If there is an internet connection, 
+  /// then it won't be null. Else, you don't even need the state...
+  final Supplier? supplier;
+  final bool isShowAddGrocForm;
+  final List<Grocery> groceries;
+  final MiniGrocery grocToAdd;
+
+  const SupState({
+    this.isLoading = false,
+    required this.supplierId,
+    this.supplier,
+    this.isShowAddGrocForm = false,
+    this.groceries = const [],
+    this.grocToAdd = const MiniGrocery()
+  });
+
+  SupState copyWith({
+    bool? isLoading,
+    int? supplierId,
+    Supplier? supplier,
+    bool? isShowAddGrocForm,
+    List<Grocery>? groceries,
+    MiniGrocery? grocToAdd
+  }) {
+    return SupState(
+      isLoading: isLoading ?? this.isLoading,
+      supplierId: supplierId ?? this.supplierId,
+      supplier: supplier ?? this.supplier,
+      isShowAddGrocForm: isShowAddGrocForm ?? this.isShowAddGrocForm,
+      groceries: groceries ?? this.groceries,
+      grocToAdd: grocToAdd ?? this.grocToAdd
+    );
+  }
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [
+    supplierId, 
+    supplier, 
+    isShowAddGrocForm, 
+    groceries,
+    grocToAdd,
+    isLoading,
+  ];
 }
 
-class SupLoadingState extends SupState { }
 
-class SupLoadedState extends SupState { }
+extension LoadableState on SupState {
+  SupState startLoading() {
+    return copyWith(isLoading: true);
+  }
+
+  SupState stopLoading() {
+    return copyWith(isLoading: false);
+  }
+}

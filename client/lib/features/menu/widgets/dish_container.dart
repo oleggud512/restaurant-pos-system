@@ -1,7 +1,8 @@
 import 'package:client/features/menu/widgets/photo.dart';
+import 'package:client/services/entities/dish.dart';
+import 'package:client/services/entities/dish_group.dart';
 import 'package:flutter/material.dart';
 
-import '../../../services/models.dart';
 
 
 class DishContainer extends StatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:client/l10n/app_localizations.g.dart';
-import 'package:client/services/models.dart';
+import 'package:client/services/entities/employee.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

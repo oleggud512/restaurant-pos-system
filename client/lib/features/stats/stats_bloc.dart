@@ -1,6 +1,8 @@
 
+import 'package:client/services/entities/filter_sort_stats.dart';
+import 'package:client/services/entities/stats_data.dart';
+
 import '../../utils/bloc_provider.dart';
-import '../../services/models.dart';
 import '../../services/repo.dart';
 import 'stats_states_events.dart';
 

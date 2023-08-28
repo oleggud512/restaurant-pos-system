@@ -1,3 +1,5 @@
+import 'package:client/services/entities/employee.dart';
+import 'package:client/services/entities/role.dart';
 import 'package:client/utils/bloc_provider.dart';
 import 'package:client/features/employees/employees_bloc.dart';
 import 'package:client/features/employees/employees_states_events.dart';
@@ -8,7 +10,6 @@ import 'package:client/features/employees/widgets/employee_edit_dialog.dart';
 import 'package:client/features/employees/widgets/role_edit_dialog.dart';
 import 'package:client/features/employees/widgets/role_container.dart';
 import 'package:client/l10n/app_localizations.g.dart';
-import 'package:client/services/models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

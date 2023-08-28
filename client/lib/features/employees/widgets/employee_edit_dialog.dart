@@ -1,8 +1,9 @@
 import 'package:client/features/employees/widgets/gender_picker.dart';
 import 'package:client/l10n/app_localizations.g.dart';
+import 'package:client/services/entities/employee.dart';
+import 'package:client/services/entities/role.dart';
 import 'package:flutter/material.dart';
 
-import '../../../services/models.dart';
 
 
 class EmployeeEditDialog extends StatefulWidget {

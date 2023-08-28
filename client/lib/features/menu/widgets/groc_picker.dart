@@ -1,15 +1,16 @@
+import 'package:client/services/entities/dish_grocery.dart';
+import 'package:client/services/entities/grocery.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../l10n/app_localizations.g.dart';
-import '../../../services/models.dart';
 import '../../../services/repo.dart';
 
 class GrocPicker extends StatefulWidget {
   const GrocPicker({Key? key, this.groceries = const [], this.grocCurState = const []}) : super(key: key);
 
   final List<Grocery> groceries;
-  final List<DishGroc> grocCurState;
+  final List<DishGrocery> grocCurState;
 
   @override
   State<GrocPicker> createState() => _GrocPickerState();
@@ -18,7 +19,7 @@ class GrocPicker extends StatefulWidget {
 class _GrocPickerState extends State<GrocPicker> {
 
   Future<List<Grocery>> _grocs = Future.value([]);
-  List<DishGroc> picked = []; // дублирование. нужно было все что ниже делать не через picker. а через widget.curGrocState
+  List<DishGrocery> picked = []; // дублирование. нужно было все что ниже делать не через picker. а через widget.curGrocState
   List<Grocery> tempGrocs = [];
   TextEditingController grocNameCont = TextEditingController();
 
@@ -104,8 +105,6 @@ class _GrocPickerState extends State<GrocPicker> {
                   future: _grocs,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      // widget.groceries = snapshot.data!; // TODO: or better uncomment?
-                      // вот тут
                       tempGrocs = snapshot.data!.where((element) => element.grocName.contains(grocNameCont.text)).toList();
                       return SingleChildScrollView(
                         controller: ScrollController(),
@@ -121,7 +120,7 @@ class _GrocPickerState extends State<GrocPicker> {
                               onTap: () {
                                 setState(() { 
                                   if (picked.where((element) => element.grocId == tempGrocs[i].grocId).toList().isEmpty) {
-                                    picked.add(DishGroc.initial(tempGrocs[i].grocId, tempGrocs[i].grocName));
+                                    picked.add(DishGrocery.initial(tempGrocs[i].grocId, tempGrocs[i].grocName));
                                   }
                                 });
                               }

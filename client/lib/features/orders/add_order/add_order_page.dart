@@ -1,11 +1,12 @@
 
 import 'package:client/l10n/app_localizations.g.dart';
 import 'package:client/features/orders/add_order/add_order_states_events.dart';
+import 'package:client/services/entities/dish.dart';
+import 'package:client/services/entities/dish_group.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/bloc_provider.dart';
-import '../../../services/models.dart';
 import '../../../services/repo.dart';
 import 'add_order_bloc.dart';
 

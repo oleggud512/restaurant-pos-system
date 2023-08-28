@@ -1,8 +1,8 @@
+import 'package:client/services/entities/dish.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../l10n/app_localizations.g.dart';
-import '../../../../services/models.dart';
 import '../../../../services/repo.dart';
 import '../widgets/prime_cost_table.dart';
 

@@ -1,8 +1,8 @@
 
+import 'package:client/services/entities/grocery.dart';
 import 'package:client/services/repo.dart';
 
 import '../../../utils/bloc_provider.dart';
-import '../../../services/models.dart';
 import 'grocery_states_events.dart';
 
 

@@ -1,5 +1,7 @@
+import 'package:client/services/entities/grocery.dart';
+import 'package:client/services/entities/mini_grocery.dart';
+
 import '../../../utils/bloc_provider.dart';
-import '../../../services/models.dart';
 import '../../../services/repo.dart';
 import 'sup_states_events.dart';
 
@@ -7,65 +9,79 @@ import 'sup_states_events.dart';
 class SupBloc extends Bloc<SupEvent, SupState> {
 
   Repo repo;
-  int supplierId;
-  late Supplier supplier;
-  bool showAddGrocForm = false;
-  List<Grocery> groceries;
 
-  MiniGroc toAddGroc = MiniGroc.empty();
-
-  SupBloc(this.repo, this.supplierId, this.groceries) : super(SupLoadingState());
+  SupBloc(this.repo, int supplierId, List<Grocery> groceries) 
+    : super(SupState(
+      isLoading: true, 
+      supplierId: supplierId, 
+      groceries: groceries
+    ));
   
   @override
   void handleEvent(SupEvent event) async {
     switch (event) {
 
       case SupLoadEvent():
-        emit(SupLoadingState());
-        supplier = await repo.getSupplier(supplierId);
-        emit(SupLoadedState());
+        emit(state.startLoading());
+        final supplier = await repo.getSupplier(state.supplierId);
+        emit(state.stopLoading().copyWith(supplier: supplier));
         break;
       
       case SupDeleteGroceryEvent():
-        emit(SupLoadingState());
-        supplier.groceries!.removeWhere((element) => element.grocId == event.grocId);
+        // TODO: (7) loading with delay
+        final supplier = state.supplier!.copyWith(groceries: 
+          [...state.supplier!.groceries]..removeWhere(
+            (groc) => groc.grocId == event.grocId
+          )
+        );
         await repo.updateSupplier(supplier);
-        emit(SupLoadedState());
+        emit(state.copyWith(supplier: supplier));
         break;
       
       case SupShowAddGroceryFormEvent(): // ElevatedButton
-        showAddGrocForm = true;
-        emit(SupLoadedState());       // в3аимозаменяемы
+        emit(state.copyWith(isShowAddGrocForm: true));       // взаимозаменяемы
         break;
       case SupHideAddGroceryFormEvent(): // ElevatedButton
-        showAddGrocForm = false;
-        toAddGroc = MiniGroc.empty();
-        emit(SupLoadedState());
+        emit(state.copyWith(
+          grocToAdd: const MiniGrocery(), 
+          isShowAddGrocForm: false
+        ));
         break;
         
       case SupAddGroceryEvent():
-        emit(SupLoadingState());
-        if (toAddGroc.grocId != null && toAddGroc.supGrocPrice != null && 
-              !supplier.groceries!.map((e) => e.grocId).contains(toAddGroc.grocId)) {
-          var groc = groceries.firstWhere((element) => element.grocId == toAddGroc.grocId)
-            ..supGrocPrice = toAddGroc.supGrocPrice;
-          supplier.groceries!.add(groc);
-          await repo.updateSupplier(supplier);
-          // print("YYYYEEEEEESSSSWS");
-          toAddGroc = MiniGroc.empty();
-          showAddGrocForm = false;
-        }
+        // TODO: (7) create show loading screen only with some delay
+        // if the grocery that we are trying to add is already exist AND
+        if (state.grocToAdd.grocId == null || state.grocToAdd.supGrocPrice == null) return;
+        // is NOT supplied by the current supplier...
+        if (state.supplier!.groceries.map((groc) => groc.grocId).contains(state.grocToAdd.grocId!)) return;
+
+        // ... then we update it's price
+        final groc = state.groceries.firstWhere((groc) => groc.grocId == state.grocToAdd.grocId)
+          ..supGrocPrice = state.grocToAdd.supGrocPrice;
+        final supplier = state.supplier!.copyWith(groceries: [...state.supplier!.groceries, groc]);
+
+        await repo.updateSupplier(supplier);
         
-        emit(SupLoadedState());
+        emit(state.copyWith(
+          grocToAdd: const MiniGrocery(), 
+          isShowAddGrocForm: false,
+          supplier: supplier,
+        ));
         break;
       
       case ToAddGrocIdChanged():
-        toAddGroc.grocId = event.grocId;
-        emit(SupLoadedState());
+        emit(state.copyWith(
+          grocToAdd: state.grocToAdd.copyWith(
+            grocId: () => event.grocId,
+          )
+        ));
         break;
       case ToAddGrocCountChanged():
-        toAddGroc.supGrocPrice = event.supGrocPrice;
-        emit(SupLoadedState());
+        emit(state.copyWith(
+          grocToAdd: state.grocToAdd.copyWith(
+            supGrocPrice: () => event.supGrocPrice
+          )
+        ));
         break;
       
       // case SupCommitEvent:
