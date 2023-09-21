@@ -1,7 +1,7 @@
-import 'package:client/services/entities/grocery.dart';
+import 'package:client/services/entities/grocery/grocery.dart';
 import 'package:client/services/entities/supplier.dart';
 import 'package:client/services/entities/supply.dart';
-import 'package:client/services/entities/supply_grocery.dart';
+import 'package:client/services/entities/grocery/supply_grocery.dart';
 import 'package:client/utils/logger.dart';
 import 'package:equatable/equatable.dart';
 
@@ -57,6 +57,14 @@ class AddSupplySUBMIT extends AddSupplyEvent { }
 class TotalSupplySummCalcException implements Exception { }
 
 class AddSupplyState extends Equatable {
+  AddSupplyState({
+    this.isLoading = true,
+    this.supplier,
+    this.suppliers = const [],
+    Supply? supply
+  }) : supply = supply ?? Supply();
+
+
   final bool isLoading;
   /// selected supplier
   final Supplier? supplier;
@@ -64,7 +72,7 @@ class AddSupplyState extends Equatable {
   final List<Supplier> suppliers;
   /// supply to add
   final Supply supply;
-  // FIXME: (1) currently, summ of the supply will always be zero
+
 
   double get totalSupplySumm {
     try {
@@ -81,12 +89,6 @@ class AddSupplyState extends Equatable {
     }
   }
 
-  AddSupplyState({
-    this.isLoading = true,
-    this.supplier,
-    this.suppliers = const [],
-    Supply? supply
-  }) : supply = supply ?? Supply();
 
   @override
   List<Object?> get props => [
@@ -95,6 +97,7 @@ class AddSupplyState extends Equatable {
     suppliers,
     supply
   ];
+
 
   AddSupplyState copyWith({
     bool? isLoading,
@@ -109,4 +112,5 @@ class AddSupplyState extends Equatable {
       supply: supply ?? this.supply,
     );
   }
+
 }

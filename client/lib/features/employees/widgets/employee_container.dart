@@ -3,6 +3,7 @@ import 'package:client/services/entities/role.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/constants.dart';
+import '../../../utils/sizes.dart';
 
 
 class EmployeeContainer extends StatelessWidget {
@@ -14,35 +15,39 @@ class EmployeeContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme.bodyLarge;
+    final emphasisTextStyle = textStyle?.copyWith(
+      color: Theme.of(context).colorScheme.primary
+    );
+    // TODO: (2) сделать полноценный раутинг для всего в employees
     return Card(
       elevation: 3.0,
-      child: SizedBox(
-        height: 25,
-        child: InkWell(
-          onTap: onTap,
-          child: Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Container(
-                  alignment: Alignment.center,
-                  color: Constants.grey,
-                  child: Text(employee.empId.toString(), overflow: TextOverflow.ellipsis)
-                )
-              ),
-              Expanded(
-                flex: 16, 
-                child: Center(child: Text("${employee.empFname} ${employee.empLname}", overflow: TextOverflow.ellipsis))
-              ),
-              Expanded(
-                flex: 3,
-                child: Container(
-                  alignment: Alignment.center,
-                  color: Constants.grey,
-                  child: Text(role.roleName, overflow: TextOverflow.ellipsis)
-                )
-              )
-            ],
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(p8),
+          child: IntrinsicHeight(
+            child: Row(
+              children: [
+                w4gap,
+                Text(employee.empId.toString(),
+                  overflow: TextOverflow.ellipsis,
+                  style: textStyle,
+                ),
+                const VerticalDivider(width: p24),
+                Text("${employee.empFname} ${employee.empLname}",
+                  overflow: TextOverflow.ellipsis,
+                  style: emphasisTextStyle
+                ),
+                const Spacer(),
+                const VerticalDivider(width: p24),
+                Text(role.roleName,
+                  overflow: TextOverflow.ellipsis,
+                  style: emphasisTextStyle
+                ),
+                w4gap,
+              ],
+            ),
           ),
         ),
       )

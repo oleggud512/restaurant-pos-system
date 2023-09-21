@@ -1,0 +1,1 @@
+enum AddDishPageMode { add, edit }

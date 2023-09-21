@@ -1,4 +1,4 @@
-import 'package:client/services/entities/grocery.dart';
+import 'package:client/services/entities/grocery/grocery.dart';
 import 'package:equatable/equatable.dart';
 
 class GroceryEvent extends Equatable {

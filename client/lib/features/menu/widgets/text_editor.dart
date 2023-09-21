@@ -14,6 +14,13 @@ class TextEditor extends StatefulWidget {
 }
 
 class _TextEditorState extends State<TextEditor> {
+  late final TextEditingController cont;
+  @override
+  void initState() { 
+    super.initState();
+    cont = TextEditingController(text: widget.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return widget.isEdit ? TextFormField(
@@ -21,7 +28,7 @@ class _TextEditorState extends State<TextEditor> {
         border: const OutlineInputBorder(),
         hintText: AppLocalizations.of(context)!.enter_descr,
       ),
-      controller: TextEditingController(text: widget.text),
+      controller: cont,
       textAlignVertical: TextAlignVertical.top,
       maxLines: null,
       minLines: null,

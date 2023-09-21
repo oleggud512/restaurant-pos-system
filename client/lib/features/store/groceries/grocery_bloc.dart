@@ -1,5 +1,5 @@
 
-import 'package:client/services/entities/grocery.dart';
+import 'package:client/services/entities/grocery/grocery.dart';
 import 'package:client/services/repo.dart';
 
 import '../../../utils/bloc_provider.dart';

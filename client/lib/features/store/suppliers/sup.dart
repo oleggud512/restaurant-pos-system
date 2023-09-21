@@ -1,5 +1,5 @@
 import 'package:client/l10n/app_localizations.g.dart';
-import 'package:client/services/entities/grocery.dart';
+import 'package:client/services/entities/grocery/grocery.dart';
 import 'package:client/utils/extensions/string.dart';
 import 'package:client/utils/extensions/widget.dart';
 import 'package:client/utils/sizes.dart';

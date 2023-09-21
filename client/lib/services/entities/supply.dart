@@ -1,7 +1,7 @@
 
 import 'dart:convert';
 
-import 'package:client/services/entities/supply_grocery.dart';
+import 'package:client/services/entities/grocery/supply_grocery.dart';
 
 Supply supplyFromJson(String str) => Supply.fromJson(json.decode(str));
 

@@ -1,7 +1,6 @@
 import 'package:client/features/menu/menu_states_events.dart';
 import 'package:client/l10n/localizations_context_ext.dart';
 import 'package:client/utils/bloc_provider.dart';
-import 'package:client/utils/expanded_slider_track_shape.dart';
 import 'package:client/utils/extensions/string.dart';
 import 'package:client/utils/logger.dart';
 import 'package:client/utils/number_range_picker.dart';
@@ -185,12 +184,12 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      for (int i = 0; i < bloc.groups!.length; i++) ListTile(
-                        title: Text(bloc.groups![i].groupName),
+                      for (final group in bloc.groups!) ListTile(
+                        title: Text(group.groupName),
                         leading: Checkbox(
-                          value: bloc.groups![i].selected,
+                          value: bloc.fsMenu!.groups.contains(group),
                           onChanged: (newVal) {
-                            bloc.add(MenuFiterGroupsChangedEvent(i));
+                            bloc.add(MenuToggleFilterDishGroupEvent(group));
                           }
                         )
                       )

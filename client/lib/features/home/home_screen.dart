@@ -1,3 +1,4 @@
+import 'package:client/features/home/current_route.dart';
 import 'package:client/router.dart';
 import 'package:client/utils/sizes.dart';
 import 'package:flutter/material.dart';

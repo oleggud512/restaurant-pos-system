@@ -1,79 +1,175 @@
 import 'dart:async';
-import 'package:client/services/entities/dish.dart';
-import 'package:client/services/entities/dish_grocery.dart';
+import 'dart:io';
+import 'package:client/features/menu/domain/entities/prime_cost_data.dart';
+import 'package:client/services/entities/grocery/dish_grocery.dart';
 import 'package:client/services/entities/dish_group.dart';
-import 'package:client/services/entities/grocery.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:client/services/entities/grocery/grocery.dart';
+import 'package:client/utils/logger.dart';
 
+import '../../../services/entities/dish.dart';
 import '../../../utils/bloc_provider.dart';
 import '../../../services/repo.dart';
-import 'add_dish_states_events.dart';
+import 'add_dish_events.dart';
+import 'add_dish_page_mode.dart';
+import 'add_dish_state.dart';
 
 class AddDishBloc extends Bloc<AddDishEvent, AddDishState> {
+  final Repo repo;
+  final AddDishPageMode mode;
 
-  final StreamController<AddDishState> _primeCostCont = BehaviorSubject<AddDishState>(); // something like state too
-  Stream<AddDishState> get outPrimeCost => _primeCostCont.stream;
-  Sink<AddDishState> get _inPrimeCost => _primeCostCont.sink;
-
-  Repo repo;
-  List<DishGroup> dishGroups;
-  late List<Grocery> groceries;
-  List<Grocery> tempGrocs = [];
-  Dish dish = Dish.initial();
-  Map<String, dynamic> primeCost = <String, dynamic>{'total': 0.0};
-
-  AddDishBloc(this.repo, this.dishGroups) : super(AddDishLoadingState());
+  AddDishBloc(this.repo, {
+    required this.mode,
+    Dish? dish
+  }) : super(AddDishState(
+    isLoading: true,
+    dish: dish ?? const Dish(),
+    mode: mode
+  ));
 
   @override
-  void handleEvent(dynamic event) async {
-    if (event is AddDishLoadEvent) {
-      emit(AddDishLoadingState());
-      groceries = await repo.getGroceries(suppliedOnly: true);
-      tempGrocs = List.from(groceries);
-      _inPrimeCost.add(AddDishPrimeCostLoadedState());
-      // await Future.delayed(Duration(seconds: 1), () => null);
-    } 
-    else if (event is AddDishFindGrocEvent) {
-      tempGrocs = List<Grocery>.from(groceries.where((element) => element.grocName.contains(event.like)));
-    } 
-    else if (event is AddDishAddGrocEvent) {
-      if (dish.dishGrocs.where((element) => element.grocId == event.groc.grocId).isEmpty) {
-        dish.dishGrocs.add(DishGrocery.initial(event.groc.grocId, event.groc.grocName));
-      }
-    } 
-    else if (event is AddDishDishGrocCountChangedEvent) {
-      add(AddDishLoadPrimeCostEvent());
-      dish.dishGrocs.firstWhere((element) => element.grocId == event.grocId).grocCount = event.newCount;
+  void handleEvent(AddDishEvent event) async { 
+    switch (event) {
+      case AddDishLoadEvent():
+        await load();
+        break;
+      case AddDishFindGroceryEvent(like: final query):
+        findGrocery(query);
+        break;
+      case AddDishGroupSelectedEvent():
+        // NOTE: unimplemented event handlers
+        glogger.w('unimplemented event handler');
+        break;
+      case AddDishAddGroceryEvent(groc: final grocToAdd):
+        // check if the grocery is already added
+        if (state.dish.dishGroceries.where((g) => g.grocId == grocToAdd.grocId).isNotEmpty) return;
+        emit(state.copyWith(
+          dish: state.dish.copyWith(
+            dishGroceries: [...state.dish.dishGroceries, DishGrocery(
+              grocId: grocToAdd.grocId, 
+              grocName: grocToAdd.grocName
+            )]
+          )
+        ));
+        break;
+      case AddDishDishGrocCountChangedEvent(
+        grocId: final grocId, 
+        newCount: final newCount,
+      ):
+        // emit(state.copyWith(isLoading: true));
+
+        final newGrocs = [...state.dish.dishGroceries];
+        final dishGrocI = newGrocs.indexWhere((groc) => groc.grocId == grocId);
+
+        newGrocs[dishGrocI] = newGrocs[dishGrocI].copyWith(grocCount: newCount);
+
+        final newDish = state.dish.copyWith(dishGroceries: newGrocs);
+        final updatedPrimeCost = await getPrimeCost(newGrocs);
+
+        emit(state.copyWith(
+          isLoading: false,
+          dish: newDish,
+          primeCostData: updatedPrimeCost
+        ));
+        break;
+      case AddDishRemoveDishGroceryEvent(grocId: final grocId):
+        removeDishGrocery(grocId);
+        break;
+      case AddDishGroupChangedEvent(groupId: final groupId):
+        emit(state.copyWith(dish: state.dish.copyWith(
+          dishGrId: groupId
+        )));
+        break;
+      case AddDishPriceChangedEvent(price: final price):
+        emit(state.copyWith(dish: state.dish.copyWith(
+          dishPrice: () => price
+        )));
+        break;
+      case AddDishNameChangedEvent(name: final name):
+        emit(state.copyWith(dish: state.dish.copyWith(
+          dishName: name
+        )));
+        break;
+      case AddDishDishDescriptionChangedEvent(descr: final newDescription): 
+        emit(state.copyWith(
+          dish: state.dish.copyWith(
+            dishDescr: newDescription
+          )
+        ));
+        break;
+      case AddDishLoadPrimeCostEvent():
+        final p = await getPrimeCost(state.dish.dishGroceries);
+        emit(state.copyWith(primeCostData: p));
+        break;
+      case AddDishUpdateDishPhotoEvent(dishPhoto: final dishPhoto):
+        updateDishPhoto(dishPhoto);
+        break;
+      case AddDishDeleteDishPhotoEvent():
+        deleteDishPhoto();
+        break;
+      case AddDishSubmitEvent(onSuccess: final onSuccess):
+        await submit(onSuccess);
+        break;
     }
-    else if (event is AddDishRemoveGrocEvent) {
-      dish.dishGrocs.removeAt(event.index);
-      add(AddDishLoadPrimeCostEvent());
-    }
-    else if (event is AddDishGroupChanged) {
-      dish.dishGrId = event.newGroupId;
-    }
-    else if (event is AddDishPriceChangedEvent) {
-      dish.dishPrice = event.price;
-    }
-    else if (event is AddDishNameChangedEvent) {
-      dish.dishName = event.name;
-    }
-    else if (event is AddDishLoadPrimeCostEvent) {
-      _inPrimeCost.add(AddDishPrimeCostLoadingState());
-      if (dish.dishGrocs.isNotEmpty) {
-        primeCost = await repo.getPrimeCost(dish);
-      } else {
-        primeCost = <String, dynamic>{'total': 0.0};
-      }
-      _inPrimeCost.add(AddDishPrimeCostLoadedState());
-    }
-    emit(AddDishLoadedState(tempGrocs));
+  }
+
+  Future<void> load() async {
+    final groceries = await repo.getGroceries(suppliedOnly: true);
+    final groups = await repo.getAllDishGroups();
+    final tempGrocs = List<Grocery>.from(groceries);
+    // get prime cost only if there are some groceries
+    final primeCost = state.dish.dishGroceries.isNotEmpty
+        ? await repo.getPrimeCost(state.dish.dishGroceries)
+        : null;
+    emit(state.copyWith(
+        isLoading: false,
+        groceries: () => groceries,
+        searchStateGrocs: tempGrocs,
+        dishGroups: groups,
+        primeCostData: primeCost,
+    ));
+  }
+
+  void findGrocery(String query) {
+    final searchStateGrocs = List<Grocery>.from(state.groceries?.where(
+            (groc) => groc.grocName.contains(query)) ?? <Grocery>[]);
+    emit(state.copyWith(
+        searchStateGrocs: searchStateGrocs
+    ));
+  }
+
+  void removeDishGrocery(int grocId) {
+    emit(state.copyWith(
+      dish: state.dish.copyWith(
+        dishGroceries: [...state.dish.dishGroceries]
+          ..removeWhere((g) => g.grocId == grocId)
+      )
+    ));
+  }
+
+  Future<void> updateDishPhoto(File newDishPhoto) async {
+    emit(state.copyWith(dishPhoto: () => newDishPhoto));
   }
 
 
-  @override
-  void dispose() {
-    _primeCostCont.close();
-    super.dispose();
+  void deleteDishPhoto() {
+    emit(state.copyWith(dishPhoto: () => null));
+  }
+
+  Future<void> submit([void Function()? onSuccess]) async {
+    // TODO: make add dish page be able to edit dish
+    if (state.isEditDish) {
+      glogger.i('trying to repo.updateDish');
+      await repo.updateDish(state.dish, state.dishPhoto);
+    } else {
+      glogger.i('trying to repo.addDish');
+      await repo.addDish(state.dish, state.dishPhoto);
+    }
+    onSuccess?.call();
+  }
+
+  Future<PrimeCostData> getPrimeCost(List<DishGrocery> groceries) async {
+    if (groceries.isEmpty) return const PrimeCostData();
+    final data = repo.getPrimeCost(groceries);
+    return data;
   }
 }

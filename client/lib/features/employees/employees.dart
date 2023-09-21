@@ -3,13 +3,15 @@ import 'package:client/services/entities/role.dart';
 import 'package:client/utils/bloc_provider.dart';
 import 'package:client/features/employees/employees_bloc.dart';
 import 'package:client/features/employees/employees_states_events.dart';
-import 'package:client/features/employees/widgets/diary_add_dialog.dart';
+import 'package:client/features/employees/widgets/select_employee_dialog.dart';
 import 'package:client/features/employees/widgets/diary_container.dart';
 import 'package:client/features/employees/widgets/employee_container.dart';
 import 'package:client/features/employees/widgets/employee_edit_dialog.dart';
 import 'package:client/features/employees/widgets/role_edit_dialog.dart';
 import 'package:client/features/employees/widgets/role_container.dart';
 import 'package:client/l10n/app_localizations.g.dart';
+import 'package:client/utils/extensions/string.dart';
+import 'package:client/utils/yes_no_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,8 +32,103 @@ class _EmployeesState extends State<Employees> {
 
   EmployeesPage curPage = EmployeesPage.employees;
   int curI = 0;
-  GlobalKey<ScaffoldState> gc0 = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   late AppLocalizations l;
+
+
+  Future<void> addNewEmployee(BuildContext context, EmployeeBloc bloc) async {
+    final employee = await EmployeeEditDialog(roles: bloc.roles).show(context);
+    if (employee != null && employee.isSaveable && mounted) {
+      // TODO: (6) hardcoded Repo usage.
+      await context.read<Repo>().addEmployee(employee);
+      bloc.add(EmployeeLoadEvent());
+    }
+  }
+
+
+  Future<void> addNewRole(BuildContext context, EmployeeBloc bloc) async {
+    final role = await const RoleEditDialog().show(context);
+    if (role != null && mounted) {
+      await context.read<Repo>().addRole(role);
+      bloc.add(EmployeeLoadEvent());
+    }
+  }
+
+
+  Future<void> addNewDiary(BuildContext context, EmployeeBloc bloc) async {
+    final employee = await SelectEmployeeDialog(
+        employees: bloc.employees
+    ).show(context);
+    if (employee != null && mounted) {
+      await context.read<Repo>().diaryStart(employee.empId!);
+      bloc.add(EmployeeLoadEvent());
+    }
+  }
+
+
+  Future<void> onAddButtonPressed(BuildContext context, EmployeeBloc bloc) async {
+    return switch (curI) {
+      0 => addNewEmployee(context, bloc),
+      1 => addNewRole(context, bloc),
+      2 => addNewDiary(context, bloc),
+      _ => throw 'invalid page index'
+    };
+  }
+
+
+  Future<void> updateEmployee(
+    Employee employeeToUpdate,
+    EmployeeBloc bloc
+  ) async {
+    final updatedEmployee = await EmployeeEditDialog(
+    roles: bloc.roles,
+    employee: employeeToUpdate
+    ).show(context);
+
+    if (updatedEmployee == null) return;
+    if (!updatedEmployee.isSaveable) return;
+    if (!mounted) return;
+
+    await context.read<Repo>().updateEmployee(updatedEmployee);
+    // TODO: make updateEmployee return updatedEmployee,
+    //  refresh only this employee using bloc
+    bloc.add(EmployeeLoadEvent());
+  }
+
+
+  Future<void> updateRole(
+      BuildContext context,
+      Role role,
+      EmployeeBloc bloc
+      ) async {
+    final updatedRole = await RoleEditDialog(role: role).show(context);
+
+    if (updatedRole == null) return;
+    if (!mounted) return;
+
+    await context.read<Repo>().updateRole(updatedRole);
+    bloc.add(EmployeeLoadEvent());
+  }
+
+
+  Future<void> deleteRole(
+      BuildContext context,
+      Role role,
+      EmployeeBloc bloc
+      ) async {
+    final isSure = await YesNoDialog(
+        message: 'Are you sure you want to delete this role? This action is irreversible'.hc
+    ).show(context);
+
+    if (isSure != true) return;
+    if (!mounted) return;
+
+    // TODO: why without this 'await' the whole server crushes???
+    //  it's because flask's multithreading and mysql connection don't allow
+    //  to reuse the same connection across multiple threads
+    await context.read<Repo>().deleteRole(role.roleId!);
+    bloc.add(EmployeeLoadEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +139,7 @@ class _EmployeesState extends State<Employees> {
       child: BlocBuilder<EmployeeBloc, EmployeeState>(
         builder: (context, state) {
           final bloc = context.readBloc<EmployeeBloc>();
+
           if (state is EmployeeLoadingState) {
             return Scaffold(
               bottomNavigationBar: buildBNBar(), 
@@ -51,176 +149,98 @@ class _EmployeesState extends State<Employees> {
               body: const Center(child: CircularProgressIndicator())
             );
           }
-          
-          if (curI == 0) {
-            if (state is EmployeeLoadedState) {
-              return Scaffold(
-                key: gc0,
-                endDrawer: const FilterSortEmployee(),
-                bottomNavigationBar: buildBNBar(),
-                appBar: buildAppBar(bloc), 
-                body: ListView(
-                  children: [
-                    for (int i = 0; i < bloc.employees.length; i++) if (bloc.filteredEmployees.contains(bloc.employees[i])) EmployeeContainer(
-                      employee: bloc.employees[i],
-                      role: bloc.roles.firstWhere((e) => e.roleId == bloc.employees[i].roleId),
-                      onTap: () async {
-                        await showDialog(
-                          context: context,
-                          builder: (context) {
-                            return EmployeeEditDialog(
-                              roles: bloc.roles,
-                              employee: bloc.employees[i],
-                              actions: [
-                                ElevatedButton(
-                                  child: Text(l.save),
-                                  onPressed: () async {
-                                    if (!bloc.roles[i].saveable) return;
 
-                                    await Provider.of<Repo>(context, listen: false).updateEmployee(bloc.employees[i]);
-                                    if (mounted) Navigator.pop(context);
-                                  },
-                                ),
-                              ]
-                            );
-                          }
-                        );
-                        bloc.add(EmployeeLoadEvent());
-                      },
-                    )
-                  ]
-                )
-              );
-            }
-
-          } else if (curI == 1) {
-            if (state is EmployeeLoadedState) {
-              return Scaffold(
-                appBar: buildAppBar(bloc),
-                body: ListView(
-                  children: [
-                    for (int i = 0; i < bloc.roles.length; i++) RoleContainer(
-                      bloc.roles[i],
-                      onTap: () async {
-                        // диалог для просмотра / редактирования роли
-                        await showDialog(
-                          context: context, 
-                          builder: (_) => RoleEditDialog(
-                            title: Center(child: Text(l.update_role)),
-                            role: bloc.roles[i],
-                            actions: [
-                              ElevatedButton(
-                                child: Text(l.delete),
-                                onPressed: () async {
-                                  await Provider.of<Repo>(context, listen: false).deleteRole(bloc.roles[i].roleId!);
-                                  if (mounted) Navigator.pop(context);
-                                },
-                              ),
-                              ElevatedButton(
-                                child: Text(l.save),
-                                onPressed: () async {
-                                  if (bloc.roles[i].saveable) {
-                                    await Provider.of<Repo>(context, listen: false).updateRole(bloc.roles[i]);
-                                    if (mounted) Navigator.pop(context);
-                                  } 
-                                },
-                              ),
-                            ],
-                          )
-                        );
-                        bloc.add(EmployeeLoadEvent());
-                      },
-                    )
-                  ]
-                ),
-                bottomNavigationBar: buildBNBar(),
-              );
-            }
-          } else if (curI == 2) {
-            return Scaffold(
-              appBar: buildAppBar(bloc),
-              bottomNavigationBar: buildBNBar(),
-              body: ListView(
-                children: [
-                  for (int i = 0; i < bloc.diary.length; i++) DiaryContainer(
-                    diary: bloc.diary[i], 
-                    onDelete: () async {
-                      await Provider.of<Repo>(context, listen: false).deleteDiary(bloc.diary[i].dId);
-                      bloc.add(EmployeeReloadDiary());
-                    },
-                    onGone: () async {
-                      await Provider.of<Repo>(context, listen: false).diaryGone(bloc.diary[i].empId);
-                      bloc.add(EmployeeReloadDiary());
-                    }
-                  )
-                ],
-              ),
-            );
-          }
-          return Container();
+          return switch (curI) {
+            0 => buildEmployeePage(context, bloc, state),
+            1 => buildRolesPage(context, bloc, state),
+            2 => buildDiaryPage(context, bloc, state),
+            _ => throw 'incorrect index'
+          };
         }
       ),
     );
   }
 
-  PreferredSizeWidget buildAppBar(EmployeeBloc bloc) {
-    Role role = Role.init();
-    Employee emp = Employee.init();
+
+  Widget buildEmployeePage(BuildContext context, EmployeeBloc bloc, EmployeeState state) {
+    if (state is EmployeeLoadedState) {
+      return Scaffold(
+        key: scaffoldKey,
+        endDrawer: const FilterSortEmployee(),
+        bottomNavigationBar: buildBNBar(),
+        appBar: buildAppBar(context, bloc),
+        body: ListView(
+          children: [
+            // TODO: (7) wtf is happening here? Why? Fix it.
+            for (int i = 0; i < bloc.employees.length; i++) if (bloc.filteredEmployees.contains(bloc.employees[i])) EmployeeContainer(
+              employee: bloc.employees[i],
+              role: bloc.roles.firstWhere((e) => e.roleId == bloc.employees[i].roleId),
+              onTap: () => updateEmployee(bloc.employees[i], bloc),
+            )
+          ]
+        )
+      );
+    }
+    return const Material();
+  }
+
+
+  Widget buildRolesPage(BuildContext context, EmployeeBloc bloc, EmployeeState state) {
+    if (state is EmployeeLoadedState) {
+      return Scaffold(
+        appBar: buildAppBar(context, bloc),
+        body: ListView(
+            children: [
+              for (final role in bloc.roles) RoleContainer(
+                role,
+                onEditRole: () => updateRole(context, role, bloc),
+                onDeleteRole: () => deleteRole(context, role, bloc),
+              )
+            ]
+        ),
+        bottomNavigationBar: buildBNBar(),
+      );
+    }
+    return const Material();
+  }
+
+
+  Widget buildDiaryPage(BuildContext context, EmployeeBloc bloc, EmployeeState state) {
+    return Scaffold(
+      appBar: buildAppBar(context, bloc),
+      bottomNavigationBar: buildBNBar(),
+      body: ListView(
+        children: [
+          for (final diaryEntry in bloc.diary) DiaryContainer(
+              diary: diaryEntry,
+              onDelete: () async {
+                await context.read<Repo>().deleteDiary(diaryEntry.dId);
+                bloc.add(EmployeeReloadDiary());
+              },
+              onGone: () async {
+                await context.read<Repo>().diaryGone(diaryEntry.empId);
+                bloc.add(EmployeeReloadDiary());
+              }
+          )
+        ],
+      ),
+    );
+  }
+
+
+  PreferredSizeWidget buildAppBar(BuildContext context, EmployeeBloc bloc) {
     return AppBar(
       leading: const ToggleDrawerButton(),
       title: Center(child: curI == 0 ? Text(l.employees) : curI == 1 ? Text(l.roles) : Text(l.diary)), 
       actions: [
         IconButton(
           icon: const Icon(Icons.add),
-          onPressed: () async {
-            await showDialog(
-              context: context, 
-              builder: (context) {
-                if (curI == 0) {
-                  return EmployeeEditDialog(
-                    roles: bloc.roles, 
-                    employee: emp,
-                    actions: [
-                      ElevatedButton(
-                        child: Text(l.save),
-                        onPressed: () async {
-                          if (emp.saveable) {
-                            await Provider.of<Repo>(context, listen: false).addEmployee(emp);
-                            Navigator.pop(context); 
-                          }
-                        },
-                      )
-                    ],
-                  );
-                } else if (curI == 1) {
-                  return RoleEditDialog(
-                    title: Center(child: Text(l.add_role)),
-                    role: role,
-                    actions: [
-                      ElevatedButton(
-                        child: Text(l.add),
-                        onPressed: () async {
-                          if (role.saveable) {
-                            await Provider.of<Repo>(context, listen: false).addRole(role);
-                            Navigator.pop(context); 
-                          }
-                        },
-                      )
-                    ],
-                  );
-                } else if (curI == 2) {
-                  return DiaryAddDialog(employees: bloc.employees);
-                }
-                return const Dialog(child: Center(child: Text("something went wrong")));
-              }
-            );
-            bloc.add(EmployeeLoadEvent());
-          }
+          onPressed: () => onAddButtonPressed(context, bloc)
         ),
         if (curI == 0) IconButton(
           icon: const Icon(Icons.filter_alt_outlined),
           onPressed: () {
-            gc0.currentState?.openEndDrawer();
+            scaffoldKey.currentState?.openEndDrawer();
           },
         )
       ]

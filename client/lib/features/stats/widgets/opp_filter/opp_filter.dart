@@ -1,5 +1,5 @@
 import 'package:client/l10n/localizations_context_ext.dart';
-import 'package:client/services/entities/filter_sort_stats.dart';
+import 'package:client/services/entities/filter_sort_stats_data.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/logger.dart';
 import 'package:client/utils/sizes.dart';
@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class OrdPerPeriodFilterDialog extends StatefulWidget {
   const OrdPerPeriodFilterDialog({Key? key, required this.fs}) : super(key: key);
 
-  final FilterSortStats fs;
+  final FilterSortStatsData fs;
 
   @override
   State<OrdPerPeriodFilterDialog> createState() => _OrdPerPeriodFilterDialogState();

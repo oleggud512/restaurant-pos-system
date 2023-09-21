@@ -3,8 +3,7 @@ from flask import request, Blueprint
 from mysql.connector.cursor import MySQLCursor
 from simplejson import dumps
 
-from ...utils.database import cur_to_dict
-from ...database import Db
+from src.database import Db
 
 bp = Blueprint('groceries', __name__, url_prefix="/groceries")
 

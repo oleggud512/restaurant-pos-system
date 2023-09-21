@@ -2,7 +2,6 @@ from flask import Blueprint, request
 from mysql.connector.cursor_cext import CMySQLCursor
 from simplejson import dumps
 
-from ...utils.database import cur_to_dict
 from ...database import Db
 
 bp = Blueprint('suppliers', __name__, url_prefix='/suppliers')
@@ -30,7 +29,10 @@ def update_supplier(sup_id):
     Db.commit()
     
     if new_groceries:
-        cur.execute(f'DELETE FROM suppliers_groc WHERE supplier_id = "{sup_id}"')
+        cur.execute(f"""
+            DELETE FROM suppliers_groc 
+            WHERE supplier_id = '{sup_id}'
+        """)
         Db.commit()
 
         sql = f'INSERT INTO suppliers_groc(supplier_id, groc_id, sup_groc_price) VALUES '
@@ -49,11 +51,11 @@ def update_supplier(sup_id):
 @bp.get('/')
 def get_suppliers(supplier_id=None):
     """if supplier_id is not None returns single supplier else returns list of all suppliers"""
-    cur: CMySQLCursor = Db.cur()
+    cur = Db.cur()
     cur.execute(f"""SELECT * 
         FROM suppliers 
         WHERE supplier_name != 'deleted'
-        {" AND supplier_id = " + str(supplier_id) if supplier_id != None else ''}
+        {" AND supplier_id = " + str(supplier_id) if supplier_id is not None else ''}
     """)
     suppliers = Db.fetch(cur)
     
@@ -63,7 +65,7 @@ def get_suppliers(supplier_id=None):
             JOIN groceries gr USING(groc_id) 
             JOIN suppliers USING(supplier_id)
         WHERE supplier_name != 'deleted'
-        {" AND supplier_id = " + str(supplier_id) if supplier_id != None else ''}
+        {" AND supplier_id = " + str(supplier_id) if supplier_id is not None else ''}
     """)
 
     groceries = Db.fetch(cur)

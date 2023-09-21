@@ -32,6 +32,7 @@ class AddDishGroupDialog extends StatelessWidget {
               child: Text(l.add_group),
               onPressed: () async {
                 if (cont.text.isNotEmpty) {
+                  // TODO: move addDishGroup call to bloc away from widget tree...
                   await Provider.of<Repo>(context, listen: false).addDishGroup(cont.text);
                 }
                 Navigator.pop(context);

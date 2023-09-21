@@ -31,12 +31,12 @@ class OrderNode {
     };
   }
 
-  void incr() {
+  void increment() {
     count += 1;
     price += dish.dishPrice!;
   }
 
-  void decr() {
+  void decrement() {
     count -= 1;
     price -= dish.dishPrice!;
   }

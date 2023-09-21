@@ -11,5 +11,7 @@ class Constants {
   static const String configLang = 'language'; 
 
   static final DateFormat dateOnlyFormat = DateFormat('yyyy-MM-dd');
+
+  static const dishPlaceholderAsset = 'assets/dish_placeholder.jpeg';
 }
 

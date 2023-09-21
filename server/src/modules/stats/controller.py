@@ -1,17 +1,25 @@
-from collections import namedtuple
-from flask import Blueprint, jsonify, request
+from datetime import datetime
+from typing import NamedTuple
+
+from flask import Blueprint, jsonify, request, Response
 from simplejson import dumps
 from mysql.connector.cursor_cext import CMySQLCursorDict, CMySQLCursor
-from ...utils.database import cur_to_dict
 
 from ...database import Db
+from ...utils.default_srlz import default_srlz
 
 bp = Blueprint('stats', __name__, url_prefix='/stats')
 
 
-Defaults = namedtuple('Defaults', ['dish_from', 'dish_to', 'ord_from', 'ord_to', 'group'])
+class StatsDefaults(NamedTuple):
+    dish_from: str
+    dish_to: str
+    ord_from: str
+    ord_to: str
+    group: str
 
-def get_filtering_defaults(cur: CMySQLCursorDict) -> Defaults:
+
+def get_filtering_defaults(cur: CMySQLCursorDict) -> StatsDefaults:
     # get filtering default values (oldest order datetime and newest order datetime)
     cur.execute(f"""
         SELECT COALESCE(MIN(ord_start_time), CURDATE()) AS oldest, 
@@ -21,31 +29,37 @@ def get_filtering_defaults(cur: CMySQLCursorDict) -> Defaults:
 
     order_time_bounds = Db.fetch(cur)[0]
 
-    defaults = Defaults(
-        group='DAY',# HOUR | MONTH | YEAR
-        dish_from=str(order_time_bounds['oldest']), 
-        dish_to=str(order_time_bounds['newest']),
-        ord_from=str(order_time_bounds['oldest']), 
-        ord_to=str(order_time_bounds['newest']),
+    oldest: datetime = order_time_bounds['oldest']
+    newest: datetime = order_time_bounds['newest']
+
+    defaults = StatsDefaults(
+        group='DAY',  # HOUR | MONTH | YEAR
+        dish_from=oldest.isoformat(),
+        dish_to=newest.isoformat(),
+        ord_from=oldest.isoformat(),
+        ord_to=newest.isoformat(),
     )
     return defaults
 
+
 @bp.get('/')
-def get_stats(serialize=True):
-    cur: CMySQLCursor = Db.cur()
-    
+def get_stats():
+    cur = Db.cur()
+
     defaults = get_filtering_defaults(cur)
-    
+
     ### getting filter properties from request body. If there is no value - use default one. 
     # getting a group
-    group = request.args.get('group', defaults.group) 
+    group = request.args.get('group', defaults.group)
 
     # getting order bounds
-    ord_from = str(request.args.get('ord_from', defaults.ord_from)).rstrip('.000')
+    ord_from = (str(request.args.get('ord_from', defaults.ord_from))
+                .rstrip('.000'))
     ord_to = str(request.args.get('ord_to', defaults.ord_to)).rstrip('.000')
 
     # getting dish bounds
-    dish_from = str(request.args.get('dish_from', defaults.dish_from)).rstrip('.000')
+    dish_from = (str(request.args.get('dish_from', defaults.dish_from))
+                 .rstrip('.000'))
     dish_to = str(request.args.get('dish_to', defaults.dish_to)).rstrip('.000')
 
     # select the number of orders in the group and the first order datetime
@@ -72,11 +86,10 @@ def get_stats(serialize=True):
 
     dishes_sold_per_period = Db.fetch(cur)
 
-
     cur.execute(f"""
         SELECT d.emp_id, 
             -- just get the name
-            CONCAT(e.emp_fname, e.emp_lname) AS emp_name,
+            CONCAT(e.emp_fname, ' ', e.emp_lname) AS emp_name,
             
             -- the number of hours worked at all??? (not per month???)
             SUM(TIMESTAMPDIFF(HOUR, d.start_time, d.end_time)) AS worked, 
@@ -98,4 +111,7 @@ def get_stats(serialize=True):
     }
 
     cur.close()
-    return jsonify(res) if serialize else res
+    return Response(
+        dumps(res, default=default_srlz),
+        mimetype='application/json'
+    )

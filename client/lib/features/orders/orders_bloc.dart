@@ -1,6 +1,6 @@
 import 'package:client/services/entities/dish.dart';
 import 'package:client/services/entities/dish_group.dart';
-import 'package:client/services/entities/filter_sort_menu.dart';
+import 'package:client/services/entities/filter_sort_menu_data.dart';
 import 'package:client/services/entities/order.dart';
 
 import '../../utils/bloc_provider.dart';
@@ -21,9 +21,8 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     if (event is OrdersLoadEvent) {
       emit(OrdersLoadingState());
       orders = await repo.getOrders();
-      var data = await repo.getDishes(fsMenu: FilterSortMenu.init());
-      dishes = data['dishes'];
-      groups = data['groups'];
+      dishes = await repo.getDishes(FilterSortMenuData());
+      groups = await repo.getAllDishGroups();
       emit(OrdersLoadedState());
     } 
     else if (event is OrdersReloadEvent) {

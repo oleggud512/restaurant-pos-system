@@ -1,14 +1,17 @@
 
 import 'package:client/l10n/app_localizations.g.dart';
-import 'package:client/features/orders/add_order/add_order_states_events.dart';
+import 'package:client/features/orders/add_order/add_order_events.dart';
 import 'package:client/services/entities/dish.dart';
 import 'package:client/services/entities/dish_group.dart';
+import 'package:client/utils/extensions/string.dart';
+import 'package:client/utils/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/bloc_provider.dart';
 import '../../../services/repo.dart';
 import 'add_order_bloc.dart';
+import 'add_order_state.dart';
 
 
 class AddOrderPage extends StatefulWidget {
@@ -29,119 +32,132 @@ class _AddOrderPageState extends State<AddOrderPage> {
     l = AppLocalizations.of(context)!;
     return BlocProvider<AddOrderBloc>(
       create: (_) => AddOrderBloc(
-        Provider.of<Repo>(context, listen: false), 
-        widget.dishes, 
+        Provider.of<Repo>(context, listen: false),
+        widget.dishes,
         widget.dishGroups
       )..add(AddOrderLoadEvent()),
       child: BlocBuilder<AddOrderBloc, AddOrderState>(
-        builder: (BuildContext context, state) {
+        builder: (context, state) {
           final bloc = context.readBloc<AddOrderBloc>();
-          if (state is AddOrderLoadingState) {
-            return Scaffold(appBar: AppBar(), body: const Center(child: CircularProgressIndicator()));
-          } else if (state is AddOrderLoadedState) {
+
+          if (state.isLoading) {
             return Scaffold(
               appBar: AppBar(),
-              body: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: buildFirstColumn(bloc)
-                    ),
-                    Expanded(
-                      child: buildSecondColumn(bloc)
-                    )
-                  ],
-                ),
-              )
+              body: const Center(child: CircularProgressIndicator()),
             );
-          } return Container();
+          }
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Add new order'.hc)
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(p16),
+              child: Row(
+                children: [
+                  Expanded(child: buildFirstColumn(context, bloc, state)),
+                  w16gap,
+                  Expanded(child: buildSecondColumn(context, bloc, state)),
+                ],
+              ),
+            )
+          );
         },
       )
     );
   }
 
+  final cont1 = ScrollController();
 
-  Widget buildFirstColumn(AddOrderBloc bloc) {
+  Widget buildFirstColumn(BuildContext context, AddOrderBloc bloc, AddOrderState state) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-          child: DropdownButton<int>(
-            isExpanded: true,
-            value: bloc.order.empId,
-            items: [
-              const DropdownMenuItem(value: 0, child: Text("NULL")),
-              for (var emp in bloc.emps.where((e) => e.isWaiter)) DropdownMenuItem(
-                value: emp.empId,
-                child: Text('${emp.empLname} ${emp.empFname}'),
-              )
-            ],
-            onChanged: (newVal) {
-              bloc.add(AddOrderEmpChoosedEvent(newVal!));
-            }
-          ),
+        DropdownButton<int>(
+          isExpanded: true,
+          value: state.order.empId,
+          items: [
+            DropdownMenuItem(value: null, child: Text("[no waiter selected]".hc)),
+            for (var emp in state.employees.where((e) => e.isWaiter)) DropdownMenuItem(
+              value: emp.empId,
+              child: Text('${emp.empLname} ${emp.empFname}'),
+            )
+          ],
+          onChanged: (newVal) {
+            bloc.add(AddOrderEmployeeSelectedEvent(newVal!));
+          }
         ),
-        Container(
-          padding: const EdgeInsets.all(5),
-          margin: const EdgeInsets.symmetric(horizontal: 5),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(15)),
-            color: Colors.grey[100]
-          ),
-          height: 200,
-          child: ListView(
-            controller: ScrollController(),
-            children: [
-              for (int i = 0; i < bloc.order.listOrders.length; i++) Row(
-                children: [
-                  Text(bloc.order.listOrders[i].dish.dishName),
-                  const Spacer(),
-                  Text(bloc.order.listOrders[i].count.toString()),
-                  InkWell(
-                    child: const Icon(Icons.remove),
-                    onTap: () {
-                      bloc.add(AddOrderRemoveDishEvent(i));
-                    }
-                  )
-                ],
-              )
-            ],
-          )
+        h8gap,
+        // ORDER LIST
+        Text('Order list'.hc,
+          style: Theme.of(context).textTheme.titleLarge
         ),
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: TextFormField(
-              textAlignVertical: TextAlignVertical.top,
-              maxLines: null,
-              minLines: null,
-              expands: true,
-              onChanged: (newVal) {
-                bloc.add(AddOrderCommentEvent(newVal));
-              },
-              decoration: InputDecoration(
-                labelText: l.comment,
-                border: const OutlineInputBorder()
+          child: IntrinsicHeight(
+            child: Padding(
+              padding: const EdgeInsets.all(p16),
+              child: ListView(
+                children: [
+                  for (int i = 0; i < state.order.listOrders.length; i++) Row(
+                    children: [
+                      Text(state.order.listOrders[i].dish.dishName,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const Spacer(),
+                      Text(state.order.listOrders[i].count.toString(),
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      InkWell(
+                        child: const Icon(Icons.remove),
+                        onTap: () {
+                          bloc.add(AddOrderRemoveDishEvent(i));
+                        }
+                      )
+                    ],
+                  )
+                ]
               )
-            ),
+            )
+          )
+        ),
+        h8gap,
+        ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxHeight: p184
+          ),
+          child: TextFormField(
+            scrollController: cont1,
+            textAlignVertical: TextAlignVertical.top,
+            maxLines: null,
+            minLines: null,
+            onChanged: (newVal) {
+              bloc.add(AddOrderCommentChangedEvent(newVal));
+            },
+            decoration: InputDecoration(
+              labelText: l.comment,
+              border: const OutlineInputBorder()
+            )
           ),
         ),
+        h8gap,
         Row(
           children: [
-            ElevatedButton(
+            FilledButton(
               child: Text(l.add),
               onPressed: () async {
-                if (bloc.order.addable) {
+                if (state.order.canAddOrder) {
                   // print(jsonEncode(bloc.order.toJson()));
-                  await bloc.repo.addOrder(bloc.order);
+                  await bloc.repo.addOrder(state.order);
                   // bloc.add(AddOrderLoadEvent());
-                  if (mounted) Navigator.pop(context);                  
+                  if (mounted) Navigator.pop(context);
                 }
+                bloc.add(AddOrderSubmitEvent(onSuccess: () {
+                  if (mounted) Navigator.pop(context);
+                }));
               },
             ),
             const Spacer(),
-            Text('${l.summ}: ${bloc.order.totalPrice}')
+            Text('${l.summ}: ${state.order.totalPrice}')
           ]
         )
       ]
@@ -149,7 +165,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
   }
 
 
-  Widget buildSecondColumn(AddOrderBloc bloc) {
+  Widget buildSecondColumn(BuildContext context, AddOrderBloc bloc, AddOrderState state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -157,15 +173,17 @@ class _AddOrderPageState extends State<AddOrderPage> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              for (int i = 0; i < bloc.dishGroups.length; i++) Row(
+              for (final group in state.dishGroups) Row(
                 children: [
                   Checkbox(
                     onChanged: (newVal) {
-                      bloc.add(AddOrderSelectGroupEvent(i));
-                    }, 
-                    value: bloc.dishGroups[i].selected
+                      bloc.add(AddOrderGroupSelectedChangedEvent(group));
+                    },
+                    value: state.isDishGroupSelected(group)
                   ),
-                  Text(bloc.dishGroups[i].groupName, overflow: TextOverflow.ellipsis,)
+                  Text(group.groupName,
+                    overflow: TextOverflow.ellipsis,
+                  )
                 ]
               )
             ]
@@ -181,7 +199,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
                   border: const OutlineInputBorder()
                 ),
                 onChanged: (newVal) {
-                  bloc.add(AddOrderFilterNameEvent(newVal));
+                  bloc.add(AddOrderDishFilterChangedEvent(newVal));
                 },
               ),
             )
@@ -190,16 +208,14 @@ class _AddOrderPageState extends State<AddOrderPage> {
         Expanded(
           child: ListView(
             children: [
-              for (var dish in bloc.dishes.where((e) => e.dishName.contains(bloc.like) && 
-                  // bloc.dishGroups.where((ee) => ee.selected).map<int>((eee) => eee.groupId).contains(e.dishGrId)
-                  (bloc.dishGroups.where((ee) => ee.selected).isNotEmpty ? bloc.dishGroups.where((ee) => ee.selected).map<int>((eee) => eee.groupId).contains(e.dishGrId) : true)
-                )) ListTile(
+              for (final dish in state.filteredDishes) ListTile(
                 title: Row(
                   children: [
-                    // Text(dish.dishId.toString()),
                     Text(dish.dishName, overflow: TextOverflow.ellipsis,),
                     const Spacer(),
-                    Text(bloc.dishGroups.firstWhere((e) => e.groupId == dish.dishGrId).groupName, style: TextStyle(color: Colors.grey[600]))
+                    Text(state.dishGroups.firstWhere((e) => e.groupId == dish.dishGrId).groupName,
+                      style: TextStyle(color: Colors.grey[600])
+                    )
                   ],
                 ),
                 onTap: () {

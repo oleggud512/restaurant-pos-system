@@ -2,16 +2,20 @@ import 'package:client/features/employees/widgets/gender_picker.dart';
 import 'package:client/l10n/app_localizations.g.dart';
 import 'package:client/services/entities/employee.dart';
 import 'package:client/services/entities/role.dart';
+import 'package:client/utils/dialog_widget.dart';
+import 'package:client/utils/extensions/string.dart';
 import 'package:flutter/material.dart';
 
 
 
-class EmployeeEditDialog extends StatefulWidget {
-  const EmployeeEditDialog({Key? key, this.employee, required this.roles, this.actions = const <Widget>[]}) : super(key: key);
+class EmployeeEditDialog extends StatefulWidget with DialogWidget<Employee> {
+  const EmployeeEditDialog({
+    Key? key, this.employee,
+    required this.roles,
+  }) : super(key: key);
 
   final Employee? employee;
   final List<Role> roles;
-  final List<Widget> actions;
 
   @override
   State<EmployeeEditDialog> createState() => _EmployeeEditDialogState();
@@ -22,7 +26,54 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
   @override
   void initState() {
     super.initState();
-    emp = widget.employee ?? Employee.init();
+    emp = widget.employee?.copyWith() ?? Employee();
+  }
+
+  onFirstNameChanged(String newFirstName) {
+    emp = emp.copyWith(empFname: newFirstName);
+  }
+
+  onLastNameChanged(String newLastName) {
+    emp = emp.copyWith(empLname: newLastName);
+  }
+
+  selectBirthday() async {
+    var date = await showDatePicker(
+        context: context,
+        initialDate: emp.birthday,
+        firstDate: DateTime.parse('1960-01-01'),
+        lastDate: DateTime.now()
+    );
+    if (date == null) return;
+    setState(() {
+      emp = emp.copyWith(birthday: date);
+    });
+  }
+
+  onGenderChanged(String? newGender) {
+    setState(() {
+      emp = emp.copyWith(gender: newGender);
+    });
+  }
+
+  onRoleChanged(int? newRole) {
+    setState(() {
+      emp = emp.copyWith(roleId: newRole);
+    });
+  }
+
+  onHoursPerMonthChanged(String newHoursPerMonth) {
+    emp = emp.copyWith(
+        hoursPerMonth: int.parse(newHoursPerMonth.isEmpty
+            ? '0'
+            : newHoursPerMonth)
+    );
+  }
+
+  onIsWaiterChanged(bool? newIsWaiter) {
+    setState(() {
+      emp = emp.copyWith(isWaiter: newIsWaiter);
+    });
   }
 
   @override
@@ -41,52 +92,32 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                   children : [
                     ListTile(
                       title: TextFormField(
-                        controller: TextEditingController(text: emp.empFname),
+                        initialValue: emp.empFname,
                         decoration: InputDecoration(
                           labelText: l.namee
                         ),
-                        onChanged: (newVal) {
-                          emp.empFname = newVal;
-                        },
+                        onChanged: onFirstNameChanged,
                       ),
                     ),
                     ListTile(
                       title: TextFormField(
-                        controller: TextEditingController(text: emp.empLname),
+                        initialValue: emp.empLname,
                         decoration: InputDecoration(
                           labelText: l.surname
                         ),
-                        onChanged: (newVal) {
-                          emp.empLname = newVal;
-                        },
+                        onChanged: onLastNameChanged,
                       ),
                     ),
                     ListTile(
-                      title: InkWell(
-                        child: Center(child: Text(emp.birthday.toString().substring(0, 10))),
-                        onTap: () async {
-                          var date = await showDatePicker(
-                            context: context, 
-                            initialDate: emp.birthday,
-                            firstDate: DateTime.parse('1960-01-01'),
-                            lastDate: DateTime.now()
-                          );
-                          if (date != null) {
-                            setState(() {
-                              emp.birthday = date;
-                            });
-                          }
-                        }
+                      title: TextButton(
+                        onPressed: selectBirthday,
+                        child: Text(emp.birthday.toString().substring(0, 10))
                       )
                     ),
                     ListTile(
                       title: GenderPickerDropdown(
                         value: emp.gender,
-                        onChanged: (newVal) {
-                          setState(() {
-                            emp.gender = newVal!;
-                          });
-                        },
+                        onChanged: onGenderChanged,
                       )
                     ),
                     ListTile(
@@ -94,17 +125,13 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                         isExpanded: true,
                         value: emp.roleId,
                         items: [
-                          const DropdownMenuItem(value: 0, child: Text("none")),
-                          for (int i = 0; i < widget.roles.length; i++) DropdownMenuItem(
-                            value: widget.roles[i].roleId,
-                            child: Text(widget.roles[i].roleName)
-                          )
+                          DropdownMenuItem(value: 0, child: Text("[no role selected]".hc)),
+                          ...widget.roles.map((r) => DropdownMenuItem(
+                            value: r.roleId,
+                            child: Text(r.roleName)
+                          )).toList()
                         ],
-                        onChanged: (newVal) {
-                          setState(() {
-                            emp.roleId = newVal!;
-                          });
-                        }
+                        onChanged: onRoleChanged
                       ) 
                     ),
                     ListTile(
@@ -112,20 +139,14 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                         decoration: InputDecoration(
                           labelText: l.hours_per_month
                         ),
-                        controller: TextEditingController(text: emp.hoursPerMonth.toString()),
-                        onChanged: (newVal) {
-                          emp.hoursPerMonth = int.parse(newVal.isEmpty ? '0' : newVal);
-                        },
+                        initialValue: emp.hoursPerMonth.toString(),
+                        onChanged: onHoursPerMonthChanged,
                       )
                     ),
                     ListTile(
                       leading: Checkbox(
                         value: emp.isWaiter,
-                        onChanged: (newVal) {
-                          setState(() {
-                            emp.isWaiter = newVal!;
-                          });
-                        }
+                        onChanged: onIsWaiterChanged
                       ),
                       title: Text(l.waiter)
                     )
@@ -135,7 +156,18 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
               Row(
                 children: [
                   const Spacer(),
-                  ...widget.actions
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('cancel'.hc),
+                  ),
+                  FilledButton(
+                    onPressed: () {
+                      Navigator.pop(context, emp);
+                    },
+                    child: Text('submit'.hc)
+                  )
                 ]
               )
             ],

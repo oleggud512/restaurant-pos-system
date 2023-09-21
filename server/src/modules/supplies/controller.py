@@ -1,7 +1,6 @@
 from flask import Blueprint, Response, jsonify, request, abort
 from simplejson import dumps
 
-from ...utils.database import cur_to_dict
 from ...utils.query import decode_query_array
 from ...database import Db
 
@@ -27,10 +26,12 @@ def get_supplys(
         is_tuple=True
     )
 
-    suppliers_str = ''
-    if not suppliers: suppliers_str = '(0)'
-    elif len(suppliers) == 1: suppliers_str = f'(${suppliers[0]})'
-    else: suppliers_str = str(suppliers)
+    if not suppliers:
+        suppliers_str = '(0)'
+    elif len(suppliers) == 1:
+        suppliers_str = f'({suppliers[0]})'
+    else:
+        suppliers_str = str(suppliers)
 
     sql = f"""
         SELECT supply_id, supply_date, supplier_id, supplier_name, summ 
@@ -59,7 +60,7 @@ def get_supplys(
 
     groceries = Db.fetch(cur)
     
-    for supply in supplys: # присваивание поставкам их продуктов, указаных в list_supplys
+    for supply in supplys:  # присваивание поставкам их продуктов, указаных в list_supplys
         supply['groceries'] = [groc for groc in groceries if groc['supply_id'] == supply['supply_id']]
 
     return jsonify(dumps(supplys, indent=4, use_decimal=True, default=str))

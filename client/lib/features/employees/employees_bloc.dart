@@ -40,13 +40,16 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       emit(EmployeeLoadedState());
     }
     else if (event is EmployeeFilterGenderEvent) {
-      (event.newVal) ? fsEmp!.gender += event.gender : fsEmp!.gender = fsEmp!.gender.replaceAll(event.gender, '');
+      event.newVal
+          ? fsEmp!.gender += event.gender
+          : fsEmp!.gender = fsEmp!.gender.replaceAll(event.gender, '');
       emit(EmployeeLoadedState());
     }
     else if (event is EmployeeRoleSelectedEvent) {
       roles[event.index].selected = event.newVal;
-      event.newVal ? 
-        fsEmp!.roles.add(roles[event.index].roleId!) : fsEmp!.roles.removeWhere((e) => e == roles[event.index].roleId);
+      event.newVal
+          ? fsEmp!.roles.add(roles[event.index].roleId!)
+          : fsEmp!.roles.removeWhere((e) => e == roles[event.index].roleId);
       emit(EmployeeLoadedState()); 
     }
     else if (event is EmployeeLikeChangedEvent) {

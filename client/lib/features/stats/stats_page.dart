@@ -95,10 +95,10 @@ class _DashboardPageState extends State<DashboardPage> {
                   children: [
                     Expanded(
                       flex: 2,
-                      child: buildOppFilter(context, bloc)
+                      child: buildOrderPerPeriodChart(context, bloc)
                     ),
                     Expanded(
-                      child: buildDppFilter(context, bloc),
+                      child: buildSecondColumn(context, bloc),
                     )
                   ],
                 ),
@@ -111,7 +111,8 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget buildOppFilter(BuildContext context, DashboardBloc bloc) {
+
+  Widget buildOrderPerPeriodChart(BuildContext context, DashboardBloc bloc) {
     final l = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -152,71 +153,88 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget buildDppFilter(BuildContext context, DashboardBloc bloc) {
+
+  Widget buildSecondColumn(BuildContext context, DashboardBloc bloc) {
     final l = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ChartControls(
-          onInfoPressed: () { 
-            showDialog(context: context, builder: (context) => SimpleDialog(
-              titlePadding: const EdgeInsets.all(p24),
-              title: Text('The most popular dishes'.hc)
-            ));
-          }, 
-          onFilterPressed: () => onChangeDppFilter(context)
-        ),
-        Expanded(
-          child: SfCartesianChart(
-            primaryXAxis: CategoryAxis(
-              visibleMaximum: 8,
-              visibleMinimum: 0
-            ),
-            zoomPanBehavior: ZoomPanBehavior(
-              enablePanning: true
-            ),
-            tooltipBehavior: TooltipBehavior(
-              enable: true,
-              // Templating the tooltip
-              builder: (dynamic data, dynamic point, dynamic series, int pointIndex, int seriesIndex) {
-                return Text('${data.dishName}', style: const TextStyle(color: Colors.white));
-              }
-            ),
-            series: <ChartSeries<DishPerPeriod, int>>[
-                ColumnSeries<DishPerPeriod, int>(
-                  dataSource: bloc.sdata.dishPerPeriod,
-                  xValueMapper: (DishPerPeriod data, _) => data.dishId,
-                  yValueMapper: (DishPerPeriod data, _) => data.count
-                )
-            ]
-          )
-        ),
-        Text('${l.date}: ${bloc.fsStats!.dishFrom.toIso8601String().substring(0, 10)} - ${bloc.fsStats!.dishTo.toIso8601String().substring(0, 10)}', style: TextStyle(color: Colors.grey[600])),
+        buildDishPerPeriodChart(context, bloc),
         Expanded(
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (int i = 0; i < bloc.sdata.empWorked.length; i++) ...[
-                  Text(bloc.sdata.empWorked[i].empName),
-                  SfRangeSlider(
-                    enableTooltip: true,
-                    min: 0,
-                    max: bloc.sdata.empWorked[i].hoursPerMonth,
-                    values: SfRangeValues(0.0, bloc.sdata.empWorked[i].worked.toDouble()),
-                    // interval: 20,
-                    // showTicks: true,
-                    showLabels: true,
-                    onChanged: (SfRangeValues value) {
-                      
-                    },
-                  ),
-                ],
-              ],
-            )
+            child: buildEmployeeStatistics(context, bloc)
           )
         )
       ],
     );
   }
+
+
+  Widget buildDishPerPeriodChart(BuildContext context, DashboardBloc bloc) {
+    final l = context.ll!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ChartControls(
+          onInfoPressed: () {
+            showDialog(context: context, builder: (context) => SimpleDialog(
+              titlePadding: const EdgeInsets.all(p24),
+              title: Text('The most popular dishes'.hc)
+            ));
+          },
+          onFilterPressed: () => onChangeDppFilter(context)
+        ),
+        SfCartesianChart(
+          primaryXAxis: CategoryAxis(
+            visibleMaximum: 8,
+            visibleMinimum: 0
+          ),
+          zoomPanBehavior: ZoomPanBehavior(
+            enablePanning: true,
+          ),
+          tooltipBehavior: TooltipBehavior(
+            enable: true,
+            // Templating the tooltip
+            builder: (dynamic data, dynamic point, dynamic series, int pointIndex, int seriesIndex) {
+              return Text('${data.dishName}', style: const TextStyle(color: Colors.white));
+            },
+          ),
+          series: <ChartSeries<DishPerPeriod, int>>[
+            ColumnSeries<DishPerPeriod, int>(
+              dataSource: bloc.sdata.dishPerPeriod,
+              xValueMapper: (DishPerPeriod data, _) => data.dishId,
+              yValueMapper: (DishPerPeriod data, _) => data.count
+            )
+          ]
+        ),
+        Text('${l.date}: ${bloc.fsStats!.dishFrom.toIso8601String().substring(0, 10)} - ${bloc.fsStats!.dishTo.toIso8601String().substring(0, 10)}', style: TextStyle(color: Colors.grey[600])),
+      ]
+    );
+  }
+
+
+  Widget buildEmployeeStatistics(BuildContext context, DashboardBloc bloc) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (int i = 0; i < bloc.sdata.empWorked.length; i++) ...[
+          Text(bloc.sdata.empWorked[i].empName),
+          SfRangeSlider(
+            enableTooltip: true,
+            min: 0,
+            max: bloc.sdata.empWorked[i].hoursPerMonth,
+            values: SfRangeValues(0.0, bloc.sdata.empWorked[i].worked.toDouble()),
+            // interval: 20,
+            // showTicks: true,
+            showLabels: true,
+            onChanged: (SfRangeValues value) {
+
+            },
+          ),
+        ],
+      ],
+    );
+  }
+
 }

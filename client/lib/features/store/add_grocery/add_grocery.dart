@@ -1,5 +1,5 @@
 import 'package:client/l10n/app_localizations.g.dart';
-import 'package:client/services/entities/mini_grocery.dart';
+import 'package:client/services/entities/grocery/mini_grocery.dart';
 import 'package:flutter/material.dart';
 
 import '../../../services/repo.dart';

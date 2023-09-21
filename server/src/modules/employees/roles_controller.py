@@ -1,13 +1,14 @@
-from flask import jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint, Response
 # from mysql.connector.cursor_cext import CMySQLCursor
-from mysql.connector.cursor import MySQLCursor
 from simplejson import dumps
 
-from .diary_controller import get_diary # TODO: (2) replace with service method
+from .diary_service import get_all_diary_entries
 from .employees_controller import get_employees_data
+from .roles_service import get_all_roles
 
-from ...utils.database import cur_to_dict
 from ...database import Db
+from ...utils.response_code import ResponseCode
+from ...utils.wizard_to_dict import wizard_to_dict
 
 bp = Blueprint('roles', __name__, url_prefix="/roles")
 
@@ -16,7 +17,8 @@ bp = Blueprint('roles', __name__, url_prefix="/roles")
 def add_role():
     cur = Db.cur()
 
-    if not request.json: return 'error'
+    if not request.json:
+        return 'error'
     role_name = request.json['role_name']
     salary_per_hour = request.json['salary_per_hour']
 
@@ -29,17 +31,19 @@ def add_role():
     cur.close()
     return 'success'
 
+
 @bp.put('/')
 def update_role():
     cur = Db.cur()
 
-    if not request.json: return 'error'
+    if not request.json:
+        return Response('no data', ResponseCode.BAD_REQUEST)
 
     role_id = request.json['role_id']
     role_name = request.json['role_name']
     salary_per_hour = request.json['salary_per_hour']
 
-    # print(request.json)
+    print(request.json)
 
     cur.execute(f"""
         UPDATE roles 
@@ -52,27 +56,21 @@ def update_role():
     cur.close()
     return 'success'
 
+
 @bp.get('/')
-def get_roles(serialize=True):
-    cur = Db.cur()
+def get_roles_route(serialize=True):
+    return jsonify(wizard_to_dict(get_all_roles()))
 
-    cur.execute(f"""
-        SELECT r.role_id, r.role_name, r.salary_per_hour
-        FROM roles r
-    """)
-
-    roles = Db.fetch(cur)
-
-    cur.close()
-    return dumps(roles, indent=4) if serialize else roles
 
 @bp.delete('/<int:role_id>')
-def delete_role(role_id):
+def delete_role(role_id: int):
     cur = Db.cur()
-
+    print(role_id)
     cur.execute(f"""
-        DELETE FROM roles WHERE role_id = {role_id}
-    """)
+        DELETE FROM roles WHERE role_id = %s
+    """, [
+        role_id
+    ])
     Db.commit()
 
     cur.close()
@@ -82,12 +80,12 @@ def delete_role(role_id):
 @bp.get('/employees')
 def get_roles_and_employees():
 
-    emp = dict(get_employees_data(request.args, Db.cur()))
+    emp_data = get_employees_data(request.args, Db.cur())
     return jsonify(dumps(
         obj={
-            **emp,
-            'roles': get_roles(serialize=False),
-            'diary': get_diary(serialize=False)
+            **emp_data.to_dict(),
+            'roles': wizard_to_dict(get_all_roles()),
+            'diary': wizard_to_dict(get_all_diary_entries())
         }, 
         indent=4,
         default=str

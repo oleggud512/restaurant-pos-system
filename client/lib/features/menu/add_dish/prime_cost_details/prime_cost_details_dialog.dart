@@ -1,9 +1,12 @@
+import 'package:client/features/menu/domain/entities/prime_cost_data.dart';
 import 'package:client/services/entities/dish.dart';
+import 'package:client/utils/extensions/string.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../l10n/app_localizations.g.dart';
 import '../../../../services/repo.dart';
+import '../../../../utils/sizes.dart';
 import '../widgets/prime_cost_table.dart';
 
 class PrimeCostDetailsDialog extends StatefulWidget {
@@ -28,32 +31,30 @@ class _PrimeCostDetailsDialogState extends State<PrimeCostDetailsDialog> {
     var l = AppLocalizations.of(context)!;
     return Dialog(
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(p24),
         width: 700,
         height: 500,
-        child: FutureBuilder(
-          future: Provider.of<Repo>(context, listen: false).getPrimeCost(widget.dish),
+        child: FutureBuilder<PrimeCostData>(
+          future: context.read<Repo>().getPrimeCost(widget.dish.dishGroceries),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              Map<String, dynamic>? data = snapshot.data as Map<String, dynamic>;
+              final data = snapshot.data!;
               return Column(
                 children: [
                   Center(child: Text(l.prime_cost, style: Theme.of(context).textTheme.titleLarge)),
                   Expanded(
                     child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,
-                      child: (data['consist'] != null) ? 
-                        PrimeCostTable(data: data) : const Center(child: Text("grocery list is empty..."))
+                      child: data.items.isNotEmpty 
+                        ? PrimeCostTable(items: data.items) 
+                        : const Center(child: Text("grocery list is empty..."))
                     ),
                   ),
                   Row(
                     children: [
                       const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text("${l.total1}: ", style: const TextStyle(fontWeight: FontWeight.bold))
-                      ),
-                      Text('${data["total"]}')
+                      Text("${l.total1}: ", style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Text(data.total.toString())
                     ]
                   )
                 ],

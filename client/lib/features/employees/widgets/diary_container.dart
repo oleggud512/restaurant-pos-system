@@ -1,8 +1,10 @@
 import 'package:client/l10n/app_localizations.g.dart';
 import 'package:client/services/entities/diary.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../utils/constants.dart';
+import '../../../utils/sizes.dart';
 
 class DiaryContainer extends StatelessWidget {
   const DiaryContainer({Key? key, required this.diary, required this.onDelete, required this.onGone}) : super(key: key);
@@ -14,71 +16,49 @@ class DiaryContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var l = AppLocalizations.of(context)!;
+
+    final textStyle = Theme.of(context).textTheme.bodyLarge;
     return Card(
-      child: SizedBox(
-        height: 25,
-        child: Row(
-          children: [
-            Expanded(
-              flex: 2,
-              child: Container(
-                color: Constants.grey,
-                child: Center(child: Text(diary.date.toString().substring(0, 10)))
-              )
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                color: diary.gone ? Constants.grey : Colors.red,
-                child: Center(child: Text(diary.dId.toString()))
-              )
-            ),
-            Expanded(
-              flex: 10,
-              child: Center(child: Text(diary.empName))
-            ),
-            Expanded(
-              flex: 0,
-              child: Center(child: Text(' ${l.from} '))
-            ),
-            Expanded(
-              flex: 0,
-              child: Center(child: Text(diary.startTime))
-            ),
-            Expanded(
-              flex: 0,
-              child: Center(child: Text(' ${l.to} '))
-            ),
-            Expanded(
-              flex: 0,
-              child: Center(child: Text(diary.endTime))
-            ),
-            const Expanded(
-              flex: 1,
-              child: SizedBox()
-            ),
-            Expanded(
-              flex: 1,
-              child: InkWell(
-                onTap: onGone,
-                child: Container(
-                  color: Constants.grey,
-                  child: Center(child: Text(l.has_gone))
-                )
-              )
-            ),
-            Expanded(
-              flex: 1,
-              child: InkWell(
-                onTap: onDelete,
-                child: Container(
-                  color: Constants.grey,
-                  child: const Center(child: Icon(Icons.close))
+      child: Padding(
+        padding: const EdgeInsets.all(p4),
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              w8gap,
+              Text(DateFormat(DateFormat.MONTH_WEEKDAY_DAY).format(diary.date)),
+              const VerticalDivider(width: p24),
+              Text(diary.dId.toString(),
+                style: textStyle,
+              ),
+              const VerticalDivider(width: p24),
+              Text(diary.empName,
+                style: textStyle?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-              )
-            )
-          ],
-        )
+              ),
+              const Spacer(),
+              Text('${l.from} ${diary.startTime} ${l.to} ${diary.endTime == diary.startTime ? '...' : diary.endTime}',
+                style: textStyle?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                )
+              ),
+              w8gap,
+              Tooltip(
+                message: 'Mark as gone',
+                child: TextButton(
+                  onPressed: diary.gone ? null : onGone,
+                  child: Text(diary.gone ? 'Has Gone' : 'Working...'),
+                ),
+              ),
+              w8gap,
+              IconButton(
+                  onPressed: onDelete,
+                  icon: const Icon(Icons.delete_forever_outlined)
+              ),
+              w8gap,
+            ],
+          ),
+        ),
       )
     );
   }

@@ -1,4 +1,4 @@
-import 'package:client/services/entities/filter_sort_stats.dart';
+import 'package:client/services/entities/filter_sort_stats_data.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/logger.dart';
 import 'package:client/utils/sizes.dart';
@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class DishPerPeriodFilterDialog extends StatefulWidget {
   const DishPerPeriodFilterDialog({Key? key, required this.fs}) : super(key: key);
 
-  final FilterSortStats fs;
+  final FilterSortStatsData fs;
 
   @override
   State<DishPerPeriodFilterDialog> createState() => _DishPerPeriodFilterDialogState();

@@ -1,5 +1,5 @@
-import 'package:client/services/entities/dish_grocery.dart';
-import 'package:client/services/entities/grocery.dart';
+import 'package:client/services/entities/grocery/dish_grocery.dart';
+import 'package:client/services/entities/grocery/grocery.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +19,7 @@ class GrocPicker extends StatefulWidget {
 class _GrocPickerState extends State<GrocPicker> {
 
   Future<List<Grocery>> _grocs = Future.value([]);
-  List<DishGrocery> picked = []; // дублирование. нужно было все что ниже делать не через picker. а через widget.curGrocState
+  late List<DishGrocery> picked; // дублирование. нужно было все что ниже делать не через picker. а через widget.curGrocState
   List<Grocery> tempGrocs = [];
   TextEditingController grocNameCont = TextEditingController();
 
@@ -74,7 +74,9 @@ class _GrocPickerState extends State<GrocPicker> {
 
                         ),
                         onChanged: (newVal) {
-                          picked[i].grocCount = double.parse(newVal.isEmpty ? '0.0' : newVal);
+                          picked[i] = picked[i].copyWith(
+                            grocCount: double.parse(newVal.isEmpty ? '0.0' : newVal)
+                          );
                         },
                       ),
                     )
@@ -120,7 +122,10 @@ class _GrocPickerState extends State<GrocPicker> {
                               onTap: () {
                                 setState(() { 
                                   if (picked.where((element) => element.grocId == tempGrocs[i].grocId).toList().isEmpty) {
-                                    picked.add(DishGrocery.initial(tempGrocs[i].grocId, tempGrocs[i].grocName));
+                                    picked.add(DishGrocery(
+                                      grocId: tempGrocs[i].grocId, 
+                                      grocName: tempGrocs[i].grocName
+                                    ));
                                   }
                                 });
                               }

@@ -1,8 +1,9 @@
 
 import 'package:client/services/entities/dish.dart';
 import 'package:client/services/entities/dish_group.dart';
-import 'package:client/services/entities/filter_sort_menu.dart';
-import 'package:client/services/entities/grocery.dart';
+import 'package:client/services/entities/filter_sort_menu_data.dart';
+import 'package:client/services/entities/grocery/grocery.dart';
+import 'package:client/utils/logger.dart';
 
 import '../../utils/bloc_provider.dart';
 import '../../services/repo.dart';
@@ -14,8 +15,8 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
   
   List<DishGroup>? groups;
   late List<Dish> dishes;
-  late List<Dish> toShowDishes;
-  FilterSortMenu? fsMenu;
+  late List<Dish> filteredDishes;
+  FilterSortMenuData? fsMenu;
   late List<Grocery> groceries;
 
   bool showGrocList = false;
@@ -25,47 +26,49 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
   MenuBloc(this.repo) : super(MenuLoadingState());
 
   @override
-  void handleEvent(dynamic event) async {
-    if (event is MenuLoadEvent) {
+  void handleEvent(MenuEvent event) async {
+    if (event case MenuLoadEvent()) {
       emit(MenuLoadingState());
-      Map<String, dynamic> data = await repo.getDishes(fsMenu: fsMenu);
+
+      // fetch filters and groceries only a single time.
       if (fsMenu == null) {
+        fsMenu = await repo.getFilterSortMenuData();
         groceries = await repo.getGroceries(suppliedOnly: false);
-        fsMenu = await repo.getFilterSortMenu();
-        // data = await repo.getDishes(fsMenu!);
-      } 
-      groups ??= data['groups'];
-      dishes = data['dishes'];
-      setShownDishes(fsMenu!.like);
+      }
+
+      groups ??= await repo.getAllDishGroups();
+
+      dishes = await repo.getDishes(fsMenu);
+      filteredDishes = getFilteredDishesByName(fsMenu!.like);
+
       emit(MenuLoadedState());
 
-    } else if (event is MenuFiterGroceriesChangedEvent) {
-      groceries[event.grocIndex].selected = !groceries[event.grocIndex].selected;
-      if (groceries[event.grocIndex].selected) {
-        fsMenu!.groceries.add(groceries[event.grocIndex]);
+    } else if (event case MenuFiterGroceriesChangedEvent(:final grocIndex)) {
+      groceries[grocIndex].selected = !groceries[grocIndex].selected;
+      if (groceries[grocIndex].selected) {
+        fsMenu!.groceries.add(groceries[grocIndex]);
       } else {
-        fsMenu!.groceries.remove(groceries[event.grocIndex]);
+        fsMenu!.groceries.remove(groceries[grocIndex]);
       }
       emit(MenuLoadedState());
 
-    } else if (event is MenuFiterGroupsChangedEvent) {
-      groups![event.groupIndex].selected = !groups![event.groupIndex].selected;
-      if (groups![event.groupIndex].selected) {
-        fsMenu!.groups.add(groups![event.groupIndex]);
+    } else if (event case MenuToggleFilterDishGroupEvent(:final group)) {
+      if (fsMenu!.groups.contains(group)) {
+        fsMenu!.groups.add(group);
       } else {
-        fsMenu!.groups.remove(groups![event.groupIndex]);
+        fsMenu!.groups.remove(group);
       }
       emit(MenuLoadedState());
 
-    } else if (event is MenuFilterDishNameEvent) {
-      fsMenu!.like = event.like;
-      setShownDishes(event.like);
+    } else if (event case MenuFilterDishNameEvent(:final like)) {
+      fsMenu!.like = like;
+      filteredDishes = getFilteredDishesByName(like);
       emit(MenuLoadedState());
     
     }
   }
 
-  void setShownDishes(String like) {
-    toShowDishes = dishes.where((e) => e.dishName.contains(like)).toList();
+  List<Dish> getFilteredDishesByName(String like) {
+    return dishes.where((e) => e.dishName.contains(like)).toList();
   }
 }

@@ -1,8 +1,8 @@
-import 'package:client/features/menu/widgets/photo.dart';
 import 'package:client/services/entities/dish.dart';
 import 'package:client/services/entities/dish_group.dart';
+import 'package:client/utils/constants.dart';
+import 'package:client/utils/sizes.dart';
 import 'package:flutter/material.dart';
-
 
 
 class DishContainer extends StatelessWidget {
@@ -27,17 +27,19 @@ class DishContainer extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 2,
-                  child: Photo(dish: dish, height: 30, edit: false,),
+                  child: dish.dishPhotoUrl.isNotEmpty
+                    ? Image.network(dish.dishPhotoUrl)
+                    : Image.asset(Constants.dishPlaceholderAsset)
                 ),
                 Expanded(
                   flex: 3,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Row(
                         children: [
-                          const Spacer(),
-                          Text(dish.dishName),
-                          const Spacer(),
+                          Expanded(child: Text(dish.dishName, overflow: TextOverflow.ellipsis)),
+                          w4gap,
                           Text(dish.dishId.toString())
                         ],
                       ),

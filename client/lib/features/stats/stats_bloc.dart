@@ -1,5 +1,5 @@
 
-import 'package:client/services/entities/filter_sort_stats.dart';
+import 'package:client/services/entities/filter_sort_stats_data.dart';
 import 'package:client/services/entities/stats_data.dart';
 
 import '../../utils/bloc_provider.dart';
@@ -8,7 +8,7 @@ import 'stats_states_events.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Repo repo;
-  FilterSortStats? fsStats;
+  FilterSortStatsData? fsStats;
   late StatsData sdata;
 
   DashboardBloc(this.repo) : super(DashboardLoadingState());

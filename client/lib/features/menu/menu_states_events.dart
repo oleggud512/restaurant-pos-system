@@ -1,3 +1,4 @@
+import 'package:client/services/entities/dish_group.dart';
 import 'package:equatable/equatable.dart';
 
 
@@ -19,9 +20,9 @@ class MenuFiterGroceriesChangedEvent extends MenuEvent {
   final int grocIndex;
 }
 
-class MenuFiterGroupsChangedEvent extends MenuEvent {
-  MenuFiterGroupsChangedEvent(this.groupIndex);
-  final int groupIndex;
+class MenuToggleFilterDishGroupEvent extends MenuEvent {
+  MenuToggleFilterDishGroupEvent(this.group);
+  final DishGroup group;
 }
 
 class MenuFilterDishNameEvent extends MenuEvent {

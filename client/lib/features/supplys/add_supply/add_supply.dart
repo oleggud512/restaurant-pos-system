@@ -1,5 +1,5 @@
 import 'package:client/features/supplys/add_supply/add_supply_events_states.dart';
-import 'package:client/services/entities/grocery.dart';
+import 'package:client/services/entities/grocery/grocery.dart';
 import 'package:client/services/entities/supplier.dart';
 import 'package:client/utils/extensions/string.dart';
 import 'package:client/utils/logger.dart';

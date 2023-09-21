@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:client/features/home/current_route.dart';
 import 'package:client/router.dart';
 import 'package:client/utils/expanded_slider_track_shape.dart';
+import 'package:client/utils/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -56,6 +58,9 @@ class MyApp extends StatelessWidget {
             onGenerateRoute: generateRootRoute,
 
             title: 'Restaurant POS',
+            // navigatorObservers: [
+            //   CurrentRouteNavigatorObserver()
+            // ],
             theme: ThemeData(
               useMaterial3: true,
               colorSchemeSeed: Colors.pink,
@@ -66,6 +71,9 @@ class MyApp extends StatelessWidget {
               sliderTheme: SliderThemeData(
                 trackShape: ExpandedRoundedRectSliderTrackShape(),
                 rangeTrackShape: ExpandedRoundedRectRangeSliderTrackShape()
+              ),
+              bottomAppBarTheme: const BottomAppBarTheme(
+                height: p56
               )
             ),
           );

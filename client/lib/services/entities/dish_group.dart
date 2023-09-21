@@ -1,27 +1,42 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
+
+
 List<DishGroup> groupFromJson(String str) => List<DishGroup>.from(json.decode(str).map((x) => DishGroup.fromJson(x)));
 
 String groupToJson(List<DishGroup> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class DishGroup {
+class DishGroup extends Equatable {
 
-    DishGroup({
-        required this.groupId,
-        required this.groupName,
-    });
+  const DishGroup({
+    required this.groupId,
+    required this.groupName,
+  });
 
-    int groupId;
-    String groupName;
-    bool selected = false;
+  final int groupId;
+  final String groupName;
 
-    factory DishGroup.fromJson(Map<String, dynamic> json) => DishGroup(
-        groupId: json["dish_gr_id"],
-        groupName: json["dish_gr_name"],
+  factory DishGroup.fromJson(Map<String, dynamic> json) => DishGroup(
+    groupId: json["dish_gr_id"],
+    groupName: json["dish_gr_name"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "dish_gr_id": groupId,
+    "dish_gr_name": groupName,
+  };
+
+  DishGroup copyWith({bool? selected}) {
+    return DishGroup(
+      groupId: groupId,
+      groupName: groupName,
     );
+  }
 
-    Map<String, dynamic> toJson() => {
-        "dish_gr_id": groupId,
-        "dish_gr_name": groupName,
-    };
+  @override
+  List<Object?> get props => [
+    groupId,
+    groupName,
+  ];
 }
