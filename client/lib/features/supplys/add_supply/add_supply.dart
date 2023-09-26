@@ -1,8 +1,8 @@
 import 'package:client/features/supplys/add_supply/add_supply_events_states.dart';
+import 'package:client/l10n/localizations_context_ext.dart';
 import 'package:client/services/entities/grocery/grocery.dart';
 import 'package:client/services/entities/supplier.dart';
-import 'package:client/utils/extensions/string.dart';
-import 'package:client/utils/logger.dart';
+import 'package:client/utils/constants.dart';
 import 'package:client/utils/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +12,6 @@ import '../../../utils/bloc_provider.dart';
 import '../../../services/repo.dart';
 import 'add_supply_bloc.dart';
 
-
 class AddSupplyDialog extends StatefulWidget {
   const AddSupplyDialog({Key? key}) : super(key: key);
 
@@ -21,7 +20,9 @@ class AddSupplyDialog extends StatefulWidget {
 }
 
 class _AddSupplyDialogState extends State<AddSupplyDialog> {
+
   Future<void> addSupply(BuildContext context, AddSupplyState state) async {
+    // TODO: move validation out of here.
     // cannot supply if...
     // 1. Supplier is not selected
     if (state.supply.supplierId == null) return;
@@ -35,6 +36,7 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
     await context.read<Repo>().addSupply(state.supply);
     if (mounted) Navigator.pop(context);
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AddSupplyBloc>(
@@ -56,7 +58,7 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Center(
-                      child: Text("supply".hc, style: Theme.of(context).textTheme.titleLarge)
+                      child: Text(context.ll!.new_supply, style: Theme.of(context).textTheme.titleLarge)
                     ),
                     buildDropdownSumm(bloc, state),
                     Expanded(
@@ -64,7 +66,7 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
                         child: state.supplier != null 
                           ? buildSupplyContent(bloc) 
                           : Center(
-                            child: Text("select supplier".hc, style: TextStyle(
+                            child: Text(context.ll!.select_supplier_placeholder, style: TextStyle(
                               color: Colors.grey[500],
                               fontWeight: FontWeight.bold,
                               fontSize: 20
@@ -73,7 +75,7 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
                       ),
                     ),
                     FilledButton(
-                      child: Text("supply".hc),
+                      child: Text(context.ll!.supply('1')),
                       onPressed: () => addSupply(context, state)
                     )
                   ],
@@ -91,11 +93,11 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
       children: [
         DropdownButton<Supplier>(
           value: state.supplier,
-          hint: Text("choose supplier".hc),
+          hint: Text(context.ll!.choose_supplier_hint),
           items: [
             DropdownMenuItem<Supplier>(
               value: null,
-              child: Text("choose supplier".hc), 
+              child: Text(context.ll!.no_supplier_selected_placeholder), 
             ),
             ...state.suppliers.map((s) => DropdownMenuItem<Supplier>(
               value: s,
@@ -107,7 +109,7 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
           }
         ),
         const Spacer(),
-        Text("Summ: ${state.totalSupplySumm}".hc)
+        Text(context.ll!.amount(state.totalSupplySumm))
       ],
     );
   }
@@ -122,7 +124,7 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
             tooltip: '',
             itemBuilder: (context) => [
               PopupMenuItem(
-                child: Text("delete".hc), 
+                child: Text(context.ll!.delete), 
                 onTap: () {
                   bloc.add(AddSupplyRemoveGrocFromSupply(groc.grocId!));
                 },
@@ -140,7 +142,7 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
                   child: TextFormField(
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,3}'.hc))
+                      FilteringTextInputFormatter.allow(Constants.decimalValueRegExp)
                     ],
                     onChanged: (newVal) {
                       bloc.add(AddSupplyNewCountEvent(groc, newVal));
@@ -153,7 +155,7 @@ class _AddSupplyDialogState extends State<AddSupplyDialog> {
         ),
         PopupMenuButton<Grocery>(
           key: popupKey,
-          tooltip: 'Select a new grocery from the list',
+          tooltip: context.ll!.select_grocery_tooltip,
           itemBuilder: (context) {
             return [
               for (final groc in bloc.state.supplier!.groceries) PopupMenuItem(

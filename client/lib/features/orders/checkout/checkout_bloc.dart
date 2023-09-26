@@ -1,4 +1,4 @@
-import 'package:client/features/orders/checkout/checkout_event.dart';
+import 'package:client/features/orders/checkout/checkout_events.dart';
 import 'package:client/services/entities/order.dart';
 import 'package:client/utils/bloc_provider.dart';
 

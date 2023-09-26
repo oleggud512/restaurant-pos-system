@@ -2,9 +2,7 @@ import 'package:client/l10n/app_localizations.g.dart';
 import 'package:client/services/entities/employee.dart';
 import 'package:client/utils/sizes.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../../services/repo.dart';
 import '../../../utils/dialog_widget.dart';
 
 

@@ -5,8 +5,8 @@
     "language": "Язык",
     "delete_inf_ab_sup": "Удалить всю информацию про удаленных поставщиков",
     "dark_theme": "Темная тема",
-    "yes": "Да",
-    "no": "Нет",
+    "yes": "ДА",
+    "no": "НЕТ",
     
     "store": "Склад",
     "stats": "Статистика",
@@ -143,6 +143,55 @@
     "order": "Заказ",
     "or_rec": "Заказ принято в",
     "or_paid": "Заказ оплачено в",
-    "or_list": "Состав заказа"
+    "or_list": "Состав заказа",
 
+    "confirm_delete_role_message": "Вы уверенны, что хотите удалить эту роль? Это действие необратимо",
+    "no_role_selected_placeholder": "[роль не выбрана]",
+    "no_group_selected_placeholder": "[группа не выбрана]",
+    "cancel": "Отменить",
+    "submit": "Сохранить",
+    "edit_role": "Редактировать роль",
+    "new_dish": "Новое блюдо",
+    "new_group": "Новая группа",
+    "dish_group": "Группа блюда",
+    "no_orders_placeholder": "Нет заказов.\nНажмите кнопку \"+\" чтобы добавить...",
+    "add_new_order": "Добавить новый заказ",
+    "no_waiter_selected_placeholder": "[официант не выбран]",
+    "order_list": "Список заказа",
+    
+    "order_per_period_chart_description": "Колличество заказов, сгруппированых по {group, select, DAY{дням} HOUR{часам} MONTH{месяцам} YEAR{годам} other{...}}",
+    "@order_per_period_chart_description": {
+        "placeholders": {
+            "group": {
+                "type": "String",
+                "example": "DAY"
+            }
+        }
+    },
+    "most_popular_dishes": "Самые популярные блюда",
+    "delete_supplier": "Удалить поставщика",
+    "select_grocery_placeholder": "Выберите ингредиент",
+    "add_grocery": "Добавить ингредиент",
+    "ok": "OK",
+    "new_supply": "Новая поставка",
+    "no_supplier_selected_placeholder": "[поставщик не выбран]",
+    "choose_supplier_hint": "Выберите поставщика",
+    "amount": "Итого: {s}",
+    "@amount": {
+        "placeholders": {
+            "s": {
+                "type": "double",
+                "example": "39.9"
+            }
+        }
+    },
+    "select_grocery_tooltip": "Выберите ингредиент из списка",
+    "select_supplier_placeholder": "Выберите поставщика",
+    "stats_page_title": "Статистика",
+    "store_page_title": "Склад",
+    "orders_page_title": "Заказы",
+    "employees_page_title": "Работники",
+    "menu_page_title": "Меню",
+    "supplies_page_title": "Поставки",
+    "settings_page_title": "Настройки"
 }

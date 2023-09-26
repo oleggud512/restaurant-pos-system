@@ -3,7 +3,6 @@ import 'package:client/l10n/app_localizations.g.dart';
 import 'package:client/features/orders/add_order/add_order_events.dart';
 import 'package:client/services/entities/dish.dart';
 import 'package:client/services/entities/dish_group.dart';
-import 'package:client/utils/extensions/string.dart';
 import 'package:client/utils/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,11 +24,11 @@ class AddOrderPage extends StatefulWidget {
 }
 
 class _AddOrderPageState extends State<AddOrderPage> {
-  late AppLocalizations l;
+  late AppLocalizations ll;
 
   @override
   Widget build(BuildContext context) {
-    l = AppLocalizations.of(context)!;
+    ll = AppLocalizations.of(context)!;
     return BlocProvider<AddOrderBloc>(
       create: (_) => AddOrderBloc(
         Provider.of<Repo>(context, listen: false),
@@ -49,7 +48,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('Add new order'.hc)
+              title: Text(ll.add_new_order)
             ),
             body: Padding(
               padding: const EdgeInsets.all(p16),
@@ -77,7 +76,10 @@ class _AddOrderPageState extends State<AddOrderPage> {
           isExpanded: true,
           value: state.order.empId,
           items: [
-            DropdownMenuItem(value: null, child: Text("[no waiter selected]".hc)),
+            DropdownMenuItem(
+              value: null, 
+              child: Text(ll.no_waiter_selected_placeholder)
+            ),
             for (var emp in state.employees.where((e) => e.isWaiter)) DropdownMenuItem(
               value: emp.empId,
               child: Text('${emp.empLname} ${emp.empFname}'),
@@ -89,7 +91,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
         ),
         h8gap,
         // ORDER LIST
-        Text('Order list'.hc,
+        Text(ll.order_list,
           style: Theme.of(context).textTheme.titleLarge
         ),
         Expanded(
@@ -134,7 +136,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
               bloc.add(AddOrderCommentChangedEvent(newVal));
             },
             decoration: InputDecoration(
-              labelText: l.comment,
+              labelText: ll.comment,
               border: const OutlineInputBorder()
             )
           ),
@@ -143,7 +145,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
         Row(
           children: [
             FilledButton(
-              child: Text(l.add),
+              child: Text(ll.add),
               onPressed: () async {
                 if (state.order.canAddOrder) {
                   // print(jsonEncode(bloc.order.toJson()));
@@ -157,7 +159,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
               },
             ),
             const Spacer(),
-            Text('${l.summ}: ${state.order.totalPrice}')
+            Text('${ll.summ}: ${state.order.totalPrice}')
           ]
         )
       ]
@@ -195,7 +197,7 @@ class _AddOrderPageState extends State<AddOrderPage> {
               flex: 4,
               child: TextFormField(
                 decoration: InputDecoration(
-                  labelText: l.dish_name,
+                  labelText: ll.dish_name,
                   border: const OutlineInputBorder()
                 ),
                 onChanged: (newVal) {

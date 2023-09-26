@@ -5,8 +5,8 @@
     "language": "Language",
     "delete_inf_ab_sup": "Delete all information about deleted suppliers",
     "dark_theme": "Dark Theme",
-    "yes": "Yes",
-    "no": "No",
+    "yes": "YES",
+    "no": "NO",
 
     "store": "Store",
     "stats": "Stats",
@@ -144,7 +144,56 @@
     "order": "Order",
     "or_rec": "order received in",
     "or_paid": "order paid at",
-    "or_list": "order list"
+    "or_list": "order list",
 
+    "confirm_delete_role_message": "Are you sure you want to delete this role? This action is irreversible",
+    "no_role_selected_placeholder": "[no role selected]",
+    "no_group_selected_placeholder": "[no group selected]",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "edit_role": "Edit role",
+    "new_dish": "New dish",
+    "new_group": "New group",
+    "dish_group": "Dish group",
+    "no_orders_placeholder": "No orders.\nPress \"+\" button to add one...",
+    "add_new_order": "Add new order",
+    "no_waiter_selected_placeholder": "[no waiter selected]",
+    "order_list": "Order list",
+
+    "order_per_period_chart_description": "Amount of orders, grouped by {group, select, DAY{дням} HOUR{часам} MONTH{месяцам} YEAR{годам} other{...}}",
+    "@order_per_period_chart_description": {
+        "placeholders": {
+            "group": {
+                "type": "String",
+                "example": "DAY"
+            }
+        }
+    },
+    "most_popular_dishes": "The most popular dishes",
+    "delete_supplier": "Delete supplier",
+    "select_grocery_placeholder": "Select a grocery",
+    "add_grocery": "Add grocery",
+    "ok": "OK",
+    "new_supply": "New supply",
+    "no_supplier_selected_placeholder": "[no supplier selected]",
+    "choose_supplier_hint": "Choose supplier",
+    "amount": "Amount: {s}",
+    "@amount": {
+        "placeholders": {
+            "s": {
+                "type": "double",
+                "example": "39.9"
+            }
+        }
+    },
+    "select_grocery_tooltip": "Select a new grocery from the list",
+    "select_supplier_placeholder": "Select supplier",
+    "stats_page_title": "Stats",
+    "store_page_title": "Store",
+    "orders_page_title": "Orders",
+    "employees_page_title": "Employees",
+    "menu_page_title": "Menu",
+    "supplies_page_title": "Supplys",
+    "settings_page_title": "Settings"
 
 }

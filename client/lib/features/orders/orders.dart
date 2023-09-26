@@ -3,8 +3,6 @@ import 'package:client/l10n/app_localizations.g.dart';
 import 'package:client/features/orders/orders_states_events.dart';
 import 'package:client/features/orders/widgets/order_container.dart';
 import 'package:client/features/orders/widgets/show_order_dialog.dart';
-import 'package:client/utils/extensions/string.dart';
-import 'package:client/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +26,7 @@ class _OrdersPageState extends State<OrdersPage> {
 
   @override
   Widget build(BuildContext context) {
-    var l = AppLocalizations.of(context)!;
+    var ll = AppLocalizations.of(context)!;
     return BlocProvider<OrdersBloc>(
       create: (_) => OrdersBloc(Provider.of<Repo>(context, listen: false))
         ..add(OrdersLoadEvent()),
@@ -46,7 +44,7 @@ class _OrdersPageState extends State<OrdersPage> {
                   key: key,
                   appBar: AppBar(
                     leading: const ToggleDrawerButton(),
-                    title: Center(child: Text(l.orders)),
+                    title: Center(child: Text(ll.orders)),
                     actions: [
                       IconButton(
                         icon: const Icon(Icons.add),
@@ -82,7 +80,7 @@ class _OrdersPageState extends State<OrdersPage> {
                     ],
                   )
                   : Center(
-                    child: Text('No orders\npress \'+\' button to add one'.hc,
+                    child: Text(ll.no_orders_placeholder,
                       style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.grey),
                       textAlign: TextAlign.center,
                     )

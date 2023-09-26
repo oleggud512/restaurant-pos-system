@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:client/features/home/current_route.dart';
 import 'package:client/router.dart';
 import 'package:client/utils/expanded_slider_track_shape.dart';
 import 'package:client/utils/sizes.dart';

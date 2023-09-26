@@ -1,4 +1,3 @@
-import 'package:client/features/home/current_route.dart';
 import 'package:client/router.dart';
 import 'package:flutter/material.dart';
 
@@ -12,10 +11,7 @@ class MenuPageNavigatorWrapper extends StatelessWidget {
     return Navigator(
       key: navigatorKey,
       onGenerateRoute: generateMenuScreenRoute,
-      initialRoute: MenuPageRoute.dishListRoute,
-      // observers: [
-      //   CurrentRouteNavigatorObserver()
-      // ],
+      initialRoute: MenuPageRoute.dishListRoute
     );
   }
 }

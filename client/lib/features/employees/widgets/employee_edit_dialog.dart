@@ -1,9 +1,8 @@
 import 'package:client/features/employees/widgets/gender_picker.dart';
-import 'package:client/l10n/app_localizations.g.dart';
+import 'package:client/l10n/localizations_context_ext.dart';
 import 'package:client/services/entities/employee.dart';
 import 'package:client/services/entities/role.dart';
 import 'package:client/utils/dialog_widget.dart';
-import 'package:client/utils/extensions/string.dart';
 import 'package:flutter/material.dart';
 
 
@@ -78,7 +77,7 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var l = AppLocalizations.of(context)!;
+    var ll = context.ll!;
     return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -94,7 +93,7 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                       title: TextFormField(
                         initialValue: emp.empFname,
                         decoration: InputDecoration(
-                          labelText: l.namee
+                          labelText: ll.namee
                         ),
                         onChanged: onFirstNameChanged,
                       ),
@@ -103,7 +102,7 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                       title: TextFormField(
                         initialValue: emp.empLname,
                         decoration: InputDecoration(
-                          labelText: l.surname
+                          labelText: ll.surname
                         ),
                         onChanged: onLastNameChanged,
                       ),
@@ -125,7 +124,10 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                         isExpanded: true,
                         value: emp.roleId,
                         items: [
-                          DropdownMenuItem(value: 0, child: Text("[no role selected]".hc)),
+                          DropdownMenuItem(
+                            value: 0, 
+                            child: Text(ll.no_role_selected_placeholder)
+                          ),
                           ...widget.roles.map((r) => DropdownMenuItem(
                             value: r.roleId,
                             child: Text(r.roleName)
@@ -137,7 +139,7 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                     ListTile(
                       title: TextFormField(
                         decoration: InputDecoration(
-                          labelText: l.hours_per_month
+                          labelText: ll.hours_per_month
                         ),
                         initialValue: emp.hoursPerMonth.toString(),
                         onChanged: onHoursPerMonthChanged,
@@ -148,7 +150,7 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                         value: emp.isWaiter,
                         onChanged: onIsWaiterChanged
                       ),
-                      title: Text(l.waiter)
+                      title: Text(ll.waiter)
                     )
                   ]
                 ),
@@ -160,13 +162,13 @@ class _EmployeeEditDialogState extends State<EmployeeEditDialog> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text('cancel'.hc),
+                    child: Text(ll.cancel),
                   ),
                   FilledButton(
                     onPressed: () {
                       Navigator.pop(context, emp);
                     },
-                    child: Text('submit'.hc)
+                    child: Text(ll.submit)
                   )
                 ]
               )

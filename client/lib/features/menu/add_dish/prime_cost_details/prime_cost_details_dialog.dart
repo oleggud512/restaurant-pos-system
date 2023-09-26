@@ -1,6 +1,5 @@
 import 'package:client/features/menu/domain/entities/prime_cost_data.dart';
 import 'package:client/services/entities/dish.dart';
-import 'package:client/utils/extensions/string.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

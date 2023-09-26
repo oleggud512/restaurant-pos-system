@@ -25,10 +25,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get dark_theme => 'Темная тема';
 
   @override
-  String get yes => 'Да';
+  String get yes => 'ДА';
 
   @override
-  String get no => 'Нет';
+  String get no => 'НЕТ';
 
   @override
   String get store => 'Склад';
@@ -316,4 +316,114 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get or_list => 'Состав заказа';
+
+  @override
+  String get confirm_delete_role_message => 'Вы уверенны, что хотите удалить эту роль? Это действие необратимо';
+
+  @override
+  String get no_role_selected_placeholder => '[роль не выбрана]';
+
+  @override
+  String get no_group_selected_placeholder => '[группа не выбрана]';
+
+  @override
+  String get cancel => 'Отменить';
+
+  @override
+  String get submit => 'Сохранить';
+
+  @override
+  String get edit_role => 'Редактировать роль';
+
+  @override
+  String get new_dish => 'Новое блюдо';
+
+  @override
+  String get new_group => 'Новая группа';
+
+  @override
+  String get dish_group => 'Группа блюда';
+
+  @override
+  String get no_orders_placeholder => 'Нет заказов.\nНажмите кнопку \"+\" чтобы добавить...';
+
+  @override
+  String get add_new_order => 'Добавить новый заказ';
+
+  @override
+  String get no_waiter_selected_placeholder => '[официант не выбран]';
+
+  @override
+  String get order_list => 'Список заказа';
+
+  @override
+  String order_per_period_chart_description(String group) {
+    String _temp0 = intl.Intl.selectLogic(
+      group,
+      {
+        'DAY': 'дням',
+        'HOUR': 'часам',
+        'MONTH': 'месяцам',
+        'YEAR': 'годам',
+        'other': '...',
+      },
+    );
+    return 'Колличество заказов, сгруппированых по $_temp0';
+  }
+
+  @override
+  String get most_popular_dishes => 'Самые популярные блюда';
+
+  @override
+  String get delete_supplier => 'Удалить поставщика';
+
+  @override
+  String get select_grocery_placeholder => 'Выберите ингредиент';
+
+  @override
+  String get add_grocery => 'Добавить ингредиент';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get new_supply => 'Новая поставка';
+
+  @override
+  String get no_supplier_selected_placeholder => '[поставщик не выбран]';
+
+  @override
+  String get choose_supplier_hint => 'Выберите поставщика';
+
+  @override
+  String amount(double s) {
+    return 'Итого: $s';
+  }
+
+  @override
+  String get select_grocery_tooltip => 'Выберите ингредиент из списка';
+
+  @override
+  String get select_supplier_placeholder => 'Выберите поставщика';
+
+  @override
+  String get stats_page_title => 'Статистика';
+
+  @override
+  String get store_page_title => 'Склад';
+
+  @override
+  String get orders_page_title => 'Заказы';
+
+  @override
+  String get employees_page_title => 'Работники';
+
+  @override
+  String get menu_page_title => 'Меню';
+
+  @override
+  String get supplies_page_title => 'Поставки';
+
+  @override
+  String get settings_page_title => 'Настройки';
 }

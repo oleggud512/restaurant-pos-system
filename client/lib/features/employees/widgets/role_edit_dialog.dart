@@ -2,7 +2,6 @@ import 'package:client/l10n/app_localizations.g.dart';
 import 'package:client/l10n/localizations_context_ext.dart';
 import 'package:client/services/entities/role.dart';
 import 'package:client/utils/dialog_widget.dart';
-import 'package:client/utils/extensions/string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -43,15 +42,15 @@ class _RoleEditDialogState extends State<RoleEditDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var l = AppLocalizations.of(context)!;
+    final ll = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: Text('some role...'.hc),
+      title: Text(ll.edit_role),
       content: Column(
         children: [
           ListTile(
             title: TextFormField(
               decoration: InputDecoration(
-                labelText: l.name
+                labelText: ll.name
               ),
               initialValue: role.roleName,
               onChanged: onRoleNameChanged
@@ -62,7 +61,7 @@ class _RoleEditDialogState extends State<RoleEditDialog> {
             title: TextFormField(
               initialValue: role.salaryPerHour.toString(),
               decoration: InputDecoration(
-                labelText: l.salary_per_hour
+                labelText: ll.salary_per_hour
               ),
               onChanged: onRoleSalaryChanged,
               inputFormatters: [

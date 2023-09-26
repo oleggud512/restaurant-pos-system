@@ -13,5 +13,7 @@ class Constants {
   static final DateFormat dateOnlyFormat = DateFormat('yyyy-MM-dd');
 
   static const dishPlaceholderAsset = 'assets/dish_placeholder.jpeg';
+
+  static final decimalValueRegExp = RegExp(r'^\d+\.?\d{0,3}');
 }
 

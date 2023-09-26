@@ -25,10 +25,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dark_theme => 'Dark Theme';
 
   @override
-  String get yes => 'Yes';
+  String get yes => 'YES';
 
   @override
-  String get no => 'No';
+  String get no => 'NO';
 
   @override
   String get store => 'Store';
@@ -316,4 +316,114 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get or_list => 'order list';
+
+  @override
+  String get confirm_delete_role_message => 'Are you sure you want to delete this role? This action is irreversible';
+
+  @override
+  String get no_role_selected_placeholder => '[no role selected]';
+
+  @override
+  String get no_group_selected_placeholder => '[no group selected]';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String get edit_role => 'Edit role';
+
+  @override
+  String get new_dish => 'New dish';
+
+  @override
+  String get new_group => 'New group';
+
+  @override
+  String get dish_group => 'Dish group';
+
+  @override
+  String get no_orders_placeholder => 'No orders.\nPress \"+\" button to add one...';
+
+  @override
+  String get add_new_order => 'Add new order';
+
+  @override
+  String get no_waiter_selected_placeholder => '[no waiter selected]';
+
+  @override
+  String get order_list => 'Order list';
+
+  @override
+  String order_per_period_chart_description(String group) {
+    String _temp0 = intl.Intl.selectLogic(
+      group,
+      {
+        'DAY': 'дням',
+        'HOUR': 'часам',
+        'MONTH': 'месяцам',
+        'YEAR': 'годам',
+        'other': '...',
+      },
+    );
+    return 'Amount of orders, grouped by $_temp0';
+  }
+
+  @override
+  String get most_popular_dishes => 'The most popular dishes';
+
+  @override
+  String get delete_supplier => 'Delete supplier';
+
+  @override
+  String get select_grocery_placeholder => 'Select a grocery';
+
+  @override
+  String get add_grocery => 'Add grocery';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get new_supply => 'New supply';
+
+  @override
+  String get no_supplier_selected_placeholder => '[no supplier selected]';
+
+  @override
+  String get choose_supplier_hint => 'Choose supplier';
+
+  @override
+  String amount(double s) {
+    return 'Amount: $s';
+  }
+
+  @override
+  String get select_grocery_tooltip => 'Select a new grocery from the list';
+
+  @override
+  String get select_supplier_placeholder => 'Select supplier';
+
+  @override
+  String get stats_page_title => 'Stats';
+
+  @override
+  String get store_page_title => 'Store';
+
+  @override
+  String get orders_page_title => 'Orders';
+
+  @override
+  String get employees_page_title => 'Employees';
+
+  @override
+  String get menu_page_title => 'Menu';
+
+  @override
+  String get supplies_page_title => 'Supplys';
+
+  @override
+  String get settings_page_title => 'Settings';
 }

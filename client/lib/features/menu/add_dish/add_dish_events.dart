@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:client/services/entities/dish.dart';
-import 'package:client/services/entities/dish_group.dart';
 import 'package:client/services/entities/grocery/grocery.dart';
 import 'package:equatable/equatable.dart';
 

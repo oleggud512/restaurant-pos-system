@@ -2,7 +2,6 @@ import 'package:client/services/entities/grocery/grocery.dart';
 import 'package:client/services/entities/supplier.dart';
 import 'package:client/services/entities/supply.dart';
 import 'package:client/services/entities/grocery/supply_grocery.dart';
-import 'package:client/utils/logger.dart';
 import 'package:equatable/equatable.dart';
 
 

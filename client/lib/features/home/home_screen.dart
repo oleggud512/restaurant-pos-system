@@ -1,4 +1,4 @@
-import 'package:client/features/home/current_route.dart';
+import 'package:client/l10n/localizations_context_ext.dart';
 import 'package:client/router.dart';
 import 'package:client/utils/sizes.dart';
 import 'package:flutter/material.dart';
@@ -38,60 +38,79 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
+  
   int currentRoute = 0;
 
-  final routes = const [
-    RouteNavigationDrawerDestination(
-      routeName: HomeScreenPage.stats,
-      icon: Icon(Icons.analytics_outlined),
-      selectedIcon: Icon(Icons.analytics),
-      label: Text('stats')
-    ),
-    RouteNavigationDrawerDestination(
-      routeName: HomeScreenPage.store,
-      icon: Icon(Icons.local_grocery_store_outlined),
-      selectedIcon: Icon(Icons.local_grocery_store),
-      label: Text('store')
-    ),
-    RouteNavigationDrawerDestination(
-      routeName: HomeScreenPage.orders,
-      icon: Icon(Icons.note_alt_outlined),
-      selectedIcon: Icon(Icons.note_alt),
-      label: Text('orders')
-    ),
-    RouteNavigationDrawerDestination(
-      routeName: HomeScreenPage.menu,
-      icon: Icon(Icons.book_outlined),
-      selectedIcon: Icon(Icons.book),
-      label: Text('menu')
-    ),
-    RouteNavigationDrawerDestination(
-      routeName: HomeScreenPage.employees,
-      icon: Icon(Icons.people_outline),
-      selectedIcon: Icon(Icons.people),
-      label: Text('employees')
-    ),
-    RouteNavigationDrawerDestination(
-      routeName: HomeScreenPage.supplys,
-      icon: Icon(Icons.local_shipping_outlined),
-      selectedIcon: Icon(Icons.local_shipping),
-      label: Text('supplies')
-    ),
-    RouteNavigationDrawerDestination(
-      routeName: HomeScreenPage.settings,
-      icon: Icon(Icons.settings_outlined),
-      selectedIcon: Icon(Icons.settings),
-      label: Text('settings')
-    ),
+  final routes = [
+    HomeScreenPage.stats,
+    HomeScreenPage.store,
+    HomeScreenPage.orders,
+    HomeScreenPage.menu,
+    HomeScreenPage.employees,
+    HomeScreenPage.supplys,
+    HomeScreenPage.settings,
   ];
+
+  List<RouteNavigationDrawerDestination> get displayRoutes => 
+    routes.map((route) => switch (route) {
+      HomeScreenPage.stats => RouteNavigationDrawerDestination(
+        routeName: route,
+        icon: const Icon(Icons.analytics_outlined),
+        selectedIcon: const Icon(Icons.analytics),
+        label: Text(context.ll!.stats_page_title)
+      ),
+      HomeScreenPage.store => RouteNavigationDrawerDestination(
+        routeName: route,
+        icon: const Icon(Icons.local_grocery_store_outlined),
+        selectedIcon: const Icon(Icons.local_grocery_store),
+        label: Text(context.ll!.store_page_title)
+      ),
+      HomeScreenPage.orders => RouteNavigationDrawerDestination(
+        routeName: route,
+        icon: const Icon(Icons.note_alt_outlined),
+        selectedIcon: const Icon(Icons.note_alt),
+        label: Text(context.ll!.orders_page_title)
+      ),
+      HomeScreenPage.menu => RouteNavigationDrawerDestination(
+        routeName: route,
+        icon: const Icon(Icons.book_outlined),
+        selectedIcon: const Icon(Icons.book),
+        label: Text(context.ll!.menu_page_title)
+      ),
+      HomeScreenPage.employees => RouteNavigationDrawerDestination(
+        routeName: route,
+        icon: const Icon(Icons.people_outline),
+        selectedIcon: const Icon(Icons.people),
+        label: Text(context.ll!.employees_page_title)
+      ),
+      HomeScreenPage.supplys => RouteNavigationDrawerDestination(
+        routeName: route,
+        icon: const Icon(Icons.local_shipping_outlined),
+        selectedIcon: const Icon(Icons.local_shipping),
+        label: Text(context.ll!.supplies_page_title)
+      ),
+      HomeScreenPage.settings => RouteNavigationDrawerDestination(
+        routeName: route,
+        icon: const Icon(Icons.settings_outlined),
+        selectedIcon: const Icon(Icons.settings),
+        label: Text(context.ll!.settings_page_title)
+      ),
+      _ => const RouteNavigationDrawerDestination(
+        routeName: 'unknown',
+        icon: Icon(Icons.question_mark),
+        selectedIcon: Icon(Icons.question_mark),
+        label: Text('unknown')
+      )
+    }).toList();
+
 
   void onDestinationSelected(i) {
     widget.navigatorKey.currentState!
-      .pushNamedAndRemoveUntil(routes[i].routeName, (route) => false);
+      .pushNamedAndRemoveUntil(routes[i], (route) => false);
     widget.scaffoldKey.currentState!.closeDrawer();
     setState(() => currentRoute = i);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -102,8 +121,10 @@ class _HomeScreenState extends State<HomeScreen> {
         onDestinationSelected: onDestinationSelected,
         children: [
           h16gap, 
-          for (final dest in routes) ...[
-            dest.routeName == HomeScreenPage.settings ? const Divider() : shrink, 
+          for (final dest in displayRoutes) ...[
+            dest.routeName == HomeScreenPage.settings 
+              ? const Divider() 
+              : shrink, 
             dest,
           ]
         ],

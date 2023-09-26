@@ -1,4 +1,3 @@
-import 'package:client/l10n/localizations_context_ext.dart';
 import 'package:client/services/entities/filter_sort_stats_data.dart';
 import 'package:client/utils/constants.dart';
 import 'package:client/utils/logger.dart';

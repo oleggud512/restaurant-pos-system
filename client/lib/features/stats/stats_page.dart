@@ -7,7 +7,6 @@ import 'package:client/features/stats/widgets/chart_controls.dart';
 import 'package:client/features/home/toggle_drawer_button.dart';
 import 'package:client/services/entities/dish_per_period.dart';
 import 'package:client/services/entities/orders_per_period.dart';
-import 'package:client/utils/extensions/string.dart';
 import 'package:client/utils/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -121,7 +120,7 @@ class _DashboardPageState extends State<DashboardPage> {
           onInfoPressed: () { 
             showDialog(context: context, builder: (context) => SimpleDialog(
               titlePadding: const EdgeInsets.all(p24),
-              title: Text('Amount of orders, grouped by ${bloc.fsStats?.group}'.hc)
+              title: Text(l.order_per_period_chart_description(bloc.fsStats!.group))
             ));
           }, 
           onFilterPressed: () => onChangeOppFilter(context)
@@ -171,7 +170,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
 
   Widget buildDishPerPeriodChart(BuildContext context, DashboardBloc bloc) {
-    final l = context.ll!;
+    final ll = context.ll!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -180,7 +179,7 @@ class _DashboardPageState extends State<DashboardPage> {
           onInfoPressed: () {
             showDialog(context: context, builder: (context) => SimpleDialog(
               titlePadding: const EdgeInsets.all(p24),
-              title: Text('The most popular dishes'.hc)
+              title: Text(ll.most_popular_dishes)
             ));
           },
           onFilterPressed: () => onChangeDppFilter(context)
@@ -208,7 +207,7 @@ class _DashboardPageState extends State<DashboardPage> {
             )
           ]
         ),
-        Text('${l.date}: ${bloc.fsStats!.dishFrom.toIso8601String().substring(0, 10)} - ${bloc.fsStats!.dishTo.toIso8601String().substring(0, 10)}', style: TextStyle(color: Colors.grey[600])),
+        Text('${ll.date}: ${bloc.fsStats!.dishFrom.toIso8601String().substring(0, 10)} - ${bloc.fsStats!.dishTo.toIso8601String().substring(0, 10)}', style: TextStyle(color: Colors.grey[600])),
       ]
     );
   }

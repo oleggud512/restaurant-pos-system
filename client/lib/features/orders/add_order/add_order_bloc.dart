@@ -2,7 +2,7 @@
 import 'package:client/features/orders/add_order/add_order_state.dart';
 import 'package:client/services/entities/dish.dart';
 import 'package:client/services/entities/dish_group.dart';
-import 'package:client/services/entities/order_node.dart';
+import 'package:client/services/entities/order_item.dart';
 import 'package:client/utils/logger.dart';
 import 'package:either_dart/either.dart';
 
@@ -117,7 +117,7 @@ class AddOrderBloc extends Bloc<AddOrderEvent, AddOrderState> {
     final newListOrders = [...state.order.listOrders];
 
     if (state.order.listOrders.where((e) => e.dish.dishId == dish.dishId).isEmpty) {
-      newListOrders.add(OrderNode.toAdd(dish, 1));
+      newListOrders.add(OrderItem.toAdd(dish, 1));
     } else {
       newListOrders.firstWhere((e) => e.dish.dishId == dish.dishId).increment();
     }

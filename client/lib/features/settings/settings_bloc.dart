@@ -25,7 +25,7 @@ class AppConfigBloc extends Bloc<SettingsBlocEvent, SettingsBlocState> {
       case SettingsBlocLanguageChangedEvent(locale: final ll):
         await setLocale(ll);
         break;
-    };
+    }
   }
 
   Future<void> loadConfig() async {

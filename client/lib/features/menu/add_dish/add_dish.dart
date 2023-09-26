@@ -1,12 +1,9 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:client/l10n/app_localizations.g.dart';
 import 'package:client/features/menu/add_dish/prime_cost_details/prime_cost_details_dialog.dart';
 import 'package:client/features/menu/widgets/text_editor.dart';
 import 'package:client/l10n/localizations_context_ext.dart';
-import 'package:client/services/entities/dish_group.dart';
-import 'package:client/utils/extensions/string.dart';
 import 'package:client/utils/sizes.dart';
 import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart';
@@ -19,7 +16,6 @@ import '../../../services/entities/grocery/dish_grocery.dart';
 import '../../../utils/bloc_provider.dart';
 import '../../../services/repo.dart';
 import '../../../utils/constants.dart';
-import '../../../utils/logger.dart';
 import 'add_dish_bloc.dart';
 import 'add_dish_events.dart';
 import 'add_dish_page_mode.dart';
@@ -49,7 +45,7 @@ class AddDishPage extends StatefulWidget {
 }
 
 class _AddDishPageState extends State<AddDishPage> {
-  late AppLocalizations l;
+  late AppLocalizations ll;
 
 
   Future<void> chooseImage(AddDishBloc bloc) async {
@@ -76,7 +72,7 @@ class _AddDishPageState extends State<AddDishPage> {
 
   @override
   Widget build(BuildContext context) {
-    l = context.ll!;
+    ll = context.ll!;
     return BlocProvider<AddDishBloc>(
       create: (_) => AddDishBloc(context.read<Repo>(),
         mode: widget.mode,
@@ -91,7 +87,7 @@ class _AddDishPageState extends State<AddDishPage> {
           return Scaffold(
             appBar: AppBar(
               title: Text(state.dish.dishName.isEmpty 
-                ? 'New dish'.hc 
+                ? context.ll!.new_dish 
                 : state.dish.dishName
               ),
             ),
@@ -196,7 +192,7 @@ class _AddDishPageState extends State<AddDishPage> {
         TextFormField(
           initialValue: state.dish.dishName,
           decoration: InputDecoration(
-            helperText: l.dish_name,
+            helperText: ll.dish_name,
           ),
           onChanged: (String newVal) {
             bloc.add(AddDishNameChangedEvent(newVal));
@@ -209,7 +205,7 @@ class _AddDishPageState extends State<AddDishPage> {
               child: DropdownButtonFormField<int>(
                 value: state.dish.dishGrId,
                 items: [
-                  DropdownMenuItem(value: 0, child: Text('No group'.hc)),
+                  DropdownMenuItem(value: 0, child: Text(ll.no_group_selected_placeholder)),
                   ...state.dishGroups.map((gr) => DropdownMenuItem<int>(
                     value: gr.groupId,
                     child: Text(gr.groupName)
@@ -217,7 +213,7 @@ class _AddDishPageState extends State<AddDishPage> {
                 ],
                 onChanged: (v) => bloc.add(AddDishGroupChangedEvent(v!)),
                 decoration: InputDecoration(
-                  helperText: 'Group'.hc
+                  helperText: ll.dish_group
                 ),
               ),
             ),
@@ -231,7 +227,7 @@ class _AddDishPageState extends State<AddDishPage> {
                   FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))
                 ],
                 decoration: InputDecoration(
-                  helperText: l.price,
+                  helperText: ll.price,
                 ),
                 onChanged: (String newVal) {
                   bloc.add(AddDishPriceChangedEvent(newVal));
@@ -306,7 +302,7 @@ class _AddDishPageState extends State<AddDishPage> {
                     vertical: 0,
                     horizontal: p8
                 ),
-                labelText: l.measure_short('gram'),
+                labelText: ll.measure_short('gram'),
               ),
               onChanged: (newVal) {
                 bloc.add(AddDishDishGrocCountChangedEvent(groc.grocId, newVal));
@@ -327,7 +323,7 @@ class _AddDishPageState extends State<AddDishPage> {
         children: [
           TextFormField(
             decoration: InputDecoration(
-              labelText: l.name,
+              labelText: ll.name,
               border: const OutlineInputBorder()
             ),
             onChanged: (newVal) {

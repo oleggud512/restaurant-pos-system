@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 from typing import NamedTuple
 
 from flask import Blueprint, jsonify, request, Response
@@ -10,6 +11,11 @@ from ...utils.default_srlz import default_srlz
 
 bp = Blueprint('stats', __name__, url_prefix='/stats')
 
+class GroupFilterValues(Enum):
+    day = 'DAY'
+    hour = 'HOUR'
+    month = 'MONTH'
+    year = 'YEAR'
 
 class StatsDefaults(NamedTuple):
     dish_from: str
@@ -33,7 +39,7 @@ def get_filtering_defaults(cur: CMySQLCursorDict) -> StatsDefaults:
     newest: datetime = order_time_bounds['newest']
 
     defaults = StatsDefaults(
-        group='DAY',  # HOUR | MONTH | YEAR
+        group=GroupFilterValues.day.value,
         dish_from=oldest.isoformat(),
         dish_to=newest.isoformat(),
         ord_from=oldest.isoformat(),

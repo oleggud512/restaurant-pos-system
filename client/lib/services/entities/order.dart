@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:client/services/entities/order_node.dart';
+import 'package:client/services/entities/order_item.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
-import '../../utils/logger.dart';
 
 List<Order> orderListFromJson(String str) => List<Order>.from(json.decode(str).map((x) => Order.fromJson(x)));
 
@@ -32,7 +30,7 @@ class Order extends Equatable {
     final int? empId;
     final String comm;
     final bool isEnd;
-    final List<OrderNode> listOrders;
+    final List<OrderItem> listOrders;
 
     final int? ordId;
     final DateTime ordDate;
@@ -60,7 +58,7 @@ class Order extends Equatable {
             ? true
             : false,
         listOrders: List.from(json['list_orders'])
-            .map((e) => OrderNode.fromJson(e))
+            .map((e) => OrderItem.fromJson(e))
             .toList(),
       );
     }
@@ -84,7 +82,7 @@ class Order extends Equatable {
         String? Function()? empName,
         String? comm,
         bool? isEnd,
-        List<OrderNode>? listOrders
+        List<OrderItem>? listOrders
     }) {
         return Order(
             ordId: ordId,

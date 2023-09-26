@@ -5,8 +5,8 @@
     "language": "Мова",
     "delete_inf_ab_sup": "Видалити всю інформацію про видалених постачальників",
     "dark_theme": "Темна тема",
-    "yes": "Так",
-    "no": "Ні",
+    "yes": "ТАК",
+    "no": "НІ",
     
     "store": "Склад",
     "stats": "Статистика",
@@ -144,7 +144,57 @@
     "order": "Замовлення",
     "or_rec": "Замовлення прийнято в",
     "or_paid": "Замовлення сплачено в",
-    "or_list": "Склад замовлення"
+    "or_list": "Склад замовлення",
+
+    "confirm_delete_role_message": "Ви впевнені що хочете видалити цю роль? Ця дія незворотна",
+    "no_role_selected_placeholder": "[роль не обрано]",
+    "no_group_selected_placeholder": "[група не обрано]",
+    "cancel": "Відмінити",
+    "submit": "Зберегти",
+    "edit_role": "Редагувати роль",
+    "new_dish": "Нова страва",
+    "new_group": "Новая група",
+    "dish_group": "Група страви",
+    "no_orders_placeholder": "Немає замовлень.\nНатисніть кнопку \"+\" щоб додати...",
+    "add_new_order": "Додати нове замовелння",
+    "no_waiter_selected_placeholder": "[офіціанта не обрано]",
+    "order_list": "Список замовлення",
+    
+    "order_per_period_chart_description": "Кількість замовлень, згрупованих по {group, select, DAY{дням} HOUR{часам} MONTH{месяцам} YEAR{годам} other{...}}",
+    "@order_per_period_chart_description": {
+        "placeholders": {
+            "group": {
+                "type": "String",
+                "example": "DAY"
+            }
+        }
+    },
+    "most_popular_dishes": "Найпопулярніші страви",
+    "delete_supplier": "Видалити постачальника",
+    "select_grocery_placeholder": "Оберіть інгредієнт",
+    "add_grocery": "Додати інгедієнт",
+    "ok": "OK",
+    "new_supply": "Нова поставка",
+    "no_supplier_selected_placeholder": "[постачальника не вибрано]",
+    "choose_supplier_hint": "Оберіть постачальника",
+    "amount": "Сума поставки: {s}",
+    "@amount": {
+        "placeholders": {
+            "s": {
+                "type": "double",
+                "example": "39.9"
+            }
+        }
+    },
+    "select_grocery_tooltip": "Оберіть інгредієнт зі списку",
+    "select_supplier_placeholder": "Оберіть постачальника",
+    "stats_page_title": "Статистика",
+    "store_page_title": "Склад",
+    "orders_page_title": "Замовлення",
+    "employees_page_title": "Робітники",
+    "menu_page_title": "Меню",
+    "supplies_page_title": "Поставки",
+    "settings_page_title": "Налаштування"
 
 
 }

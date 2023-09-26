@@ -1,23 +1,23 @@
 import 'package:client/services/entities/dish.dart';
 
-class OrderNode {
+class OrderItem {
   Dish dish;
   int count;
   double price;
 
-  OrderNode({
+  OrderItem({
     required this.dish,
     required this.count,
     required this.price
   });
 
-  factory OrderNode.toAdd(Dish dish, int count) => OrderNode(
+  factory OrderItem.toAdd(Dish dish, int count) => OrderItem(
     count: count,
     dish: dish,
     price: count * dish.dishPrice!
   );
 
-  factory OrderNode.fromJson(Map<String, dynamic> json) => OrderNode(
+  factory OrderItem.fromJson(Map<String, dynamic> json) => OrderItem(
     dish: Dish.fromJson(json['dish']),
     count: json['lord_count'],
     price: json['lord_price']
@@ -31,6 +31,7 @@ class OrderNode {
     };
   }
 
+  // TODO: (2) make OrderItem immutable
   void increment() {
     count += 1;
     price += dish.dishPrice!;

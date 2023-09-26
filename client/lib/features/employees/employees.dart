@@ -1,3 +1,4 @@
+import 'package:client/l10n/localizations_context_ext.dart';
 import 'package:client/services/entities/employee.dart';
 import 'package:client/services/entities/role.dart';
 import 'package:client/utils/bloc_provider.dart';
@@ -10,7 +11,6 @@ import 'package:client/features/employees/widgets/employee_edit_dialog.dart';
 import 'package:client/features/employees/widgets/role_edit_dialog.dart';
 import 'package:client/features/employees/widgets/role_container.dart';
 import 'package:client/l10n/app_localizations.g.dart';
-import 'package:client/utils/extensions/string.dart';
 import 'package:client/utils/yes_no_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -117,7 +117,7 @@ class _EmployeesState extends State<Employees> {
       EmployeeBloc bloc
       ) async {
     final isSure = await YesNoDialog(
-        message: 'Are you sure you want to delete this role? This action is irreversible'.hc
+        message: context.ll!.confirm_delete_role_message
     ).show(context);
 
     if (isSure != true) return;

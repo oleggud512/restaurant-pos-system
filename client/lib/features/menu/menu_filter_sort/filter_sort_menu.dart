@@ -1,7 +1,6 @@
 import 'package:client/features/menu/menu_states_events.dart';
 import 'package:client/l10n/localizations_context_ext.dart';
 import 'package:client/utils/bloc_provider.dart';
-import 'package:client/utils/extensions/string.dart';
 import 'package:client/utils/logger.dart';
 import 'package:client/utils/number_range_picker.dart';
 import 'package:client/utils/sizes.dart';
@@ -106,9 +105,9 @@ class _FilterSortMenuDrawerState extends State<FilterSortMenuDrawer> with Ticker
                 NumberRangePicker(
                   min: 100,
                   max: 7000,
-                  label: 'Price'.hc,
-                  toLabel: 'To'.hc,
-                  fromLabel: 'From'.hc,
+                  label: l.price,
+                  toLabel: l.to,
+                  fromLabel: l.from,
                   initial: const RangeValues(0.3, 0.8),
                   onChanged: (start, end) {
                     glogger.i('$start - $end');

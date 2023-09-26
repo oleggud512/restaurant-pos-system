@@ -1,6 +1,5 @@
 import 'package:client/l10n/app_localizations.g.dart';
 import 'package:client/services/entities/grocery/grocery.dart';
-import 'package:client/utils/extensions/string.dart';
 import 'package:client/utils/extensions/widget.dart';
 import 'package:client/utils/sizes.dart';
 import 'package:client/widgets/yes_no_dialog.dart';
@@ -25,7 +24,7 @@ class SupplierDetailsDialog extends StatefulWidget {
 }
 
 class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
-  late AppLocalizations l;
+  late AppLocalizations ll;
 
   // should be called under BlocBuilder<SupBloc, SupState>
   Future<void> deleteSupplier(BuildContext context, SupState state) async {
@@ -34,7 +33,7 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
     bool? save = await showDialog(
       context: context,
       builder: (contex) => YesNoDialog(
-        title: Text("Delete supplier?".hc),
+        title: Text(ll.delete_supplier),
         onNo: () {
           Navigator.pop(contex, false);
         }, 
@@ -51,7 +50,7 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    l = AppLocalizations.of(context)!;
+    ll = AppLocalizations.of(context)!;
     return BlocProvider(
       create: (_) => SupBloc(Provider.of<Repo>(context), widget.id, widget.groceries)..add(SupLoadEvent()), 
       child: Dialog(
@@ -91,14 +90,14 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
                 Row(
                   children: [
                     Expanded(
-                      child: Center(child: Text(l.grocery(2))),
+                      child: Center(child: Text(ll.grocery(2))),
                     ),
                     Expanded(
-                      child: Center(child: Text(l.price)),
+                      child: Center(child: Text(ll.price)),
                     )
                   ],
                 ),
-                for (int i = 0; i < state.supplier!.groceries!.length; i++) Theme(
+                for (int i = 0; i < state.supplier!.groceries.length; i++) Theme(
                   data: Theme.of(context).copyWith(
                     tooltipTheme: const TooltipThemeData(
                       decoration: BoxDecoration(
@@ -110,9 +109,9 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
                     itemBuilder: (context) {
                       return [
                         PopupMenuItem(
-                          child: Text("удалить".hc),
+                          child: Text(ll.delete),
                           onTap: () {
-                            bloc.add(SupDeleteGroceryEvent(state.supplier!.groceries![i].grocId));
+                            bloc.add(SupDeleteGroceryEvent(state.supplier!.groceries[i].grocId));
                           },
                         )
                       ];
@@ -120,10 +119,10 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: Center(child: Text(state.supplier!.groceries![i].grocName),)
+                          child: Center(child: Text(state.supplier!.groceries[i].grocName),)
                         ),
                         Expanded(
-                          child: Center(child: Text(state.supplier!.groceries![i].supGrocPrice.toString()),)
+                          child: Center(child: Text(state.supplier!.groceries[i].supGrocPrice.toString()),)
                         )
                       ],
                     )
@@ -153,7 +152,7 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
                 items: [
                   DropdownMenuItem(
                     value: null,
-                    child: Text('Select a grocery'.hc)
+                    child: Text(ll.select_grocery_placeholder)
                   ),
                   ...widget.groceries.map((e) => DropdownMenuItem(
                     value: e.grocId,
@@ -173,7 +172,7 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.all(p16),
-                  hintText: 'price'.hc
+                  hintText: ll.price
                 ),
                 onChanged: (newVal) {
                   bloc.add(ToAddGrocCountChanged(newVal));
@@ -192,7 +191,7 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
         FilledButton(
           onPressed: () => deleteSupplier(context, state), 
           child: const Icon(Icons.delete)
-        ).withTooltip("delete supplier".hc),
+        ).withTooltip(ll.delete_supplier),
 
         w8gap,
         ...!state.isShowAddGrocForm 
@@ -202,7 +201,7 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
                 bloc.add(SupShowAddGroceryFormEvent());
               },
               child: const Icon(Icons.add)
-            ).withTooltip("додати інгрeдієнт".hc)
+            ).withTooltip(ll.add_grocery)
           ] 
           : [ //                          |delete|saveGroc|hideForm|        |ok|
             FilledButton(
@@ -222,7 +221,7 @@ class _SupplierDetailsDialogState extends State<SupplierDetailsDialog> {
 
         const Spacer(),
         FilledButton(
-          child: Text("OK".hc),
+          child: Text(ll.ok),
           onPressed: () {
             Navigator.pop(context);
           },

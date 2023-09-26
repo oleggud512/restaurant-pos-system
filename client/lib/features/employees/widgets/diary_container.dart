@@ -3,7 +3,6 @@ import 'package:client/services/entities/diary.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../utils/constants.dart';
 import '../../../utils/sizes.dart';
 
 class DiaryContainer extends StatelessWidget {

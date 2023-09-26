@@ -1,4 +1,4 @@
-import 'package:client/utils/extensions/string.dart';
+import 'package:client/l10n/localizations_context_ext.dart';
 import 'package:flutter/material.dart';
 
 import 'dialog_widget.dart';
@@ -18,13 +18,13 @@ class YesNoDialog extends StatelessWidget with DialogWidget<bool> {
         title: Text(message),
         actions: [
           TextButton(
-            child: Text('NO'.hc),
+            child: Text(context.ll!.no),
             onPressed: () {
               Navigator.pop(context, false);
             },
           ),
           FilledButton(
-            child: Text('YES'.hc),
+            child: Text(context.ll!.yes),
             onPressed: () {
               Navigator.pop(context, true);
             },

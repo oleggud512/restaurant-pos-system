@@ -3,10 +3,8 @@ import 'package:client/features/menu/domain/entities/prime_cost_data.dart';
 import 'package:client/services/entities/dish.dart';
 import 'package:client/services/entities/dish_group.dart';
 
-import '../../../services/entities/filter_sort_menu_data.dart';
 import '../../../utils/bloc_provider.dart';
 import '../../../services/repo.dart';
-import '../../../utils/logger.dart';
 import 'dish_details_states_events.dart';
 
 class DishDtBloc extends Bloc<DishDtEvent, DishDtState> {

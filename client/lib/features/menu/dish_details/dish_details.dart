@@ -1,14 +1,9 @@
-import 'dart:io';
 
 import 'package:client/features/menu/add_dish/add_dish.dart';
 import 'package:client/features/menu/add_dish/prime_cost_details/prime_cost_details_dialog.dart';
 import 'package:client/features/menu/widgets/groc_picker.dart';
 import 'package:client/router.dart';
-import 'package:client/services/entities/dish.dart';
-import 'package:client/services/entities/dish_group.dart';
-import 'package:client/utils/logger.dart';
 import 'package:equatable/equatable.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

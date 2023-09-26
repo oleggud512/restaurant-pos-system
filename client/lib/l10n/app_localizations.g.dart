@@ -134,13 +134,13 @@ abstract class AppLocalizations {
   /// No description provided for @yes.
   ///
   /// In en, this message translates to:
-  /// **'Yes'**
+  /// **'YES'**
   String get yes;
 
   /// No description provided for @no.
   ///
   /// In en, this message translates to:
-  /// **'No'**
+  /// **'NO'**
   String get no;
 
   /// No description provided for @store.
@@ -556,6 +556,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'order list'**
   String get or_list;
+
+  /// No description provided for @confirm_delete_role_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this role? This action is irreversible'**
+  String get confirm_delete_role_message;
+
+  /// No description provided for @no_role_selected_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'[no role selected]'**
+  String get no_role_selected_placeholder;
+
+  /// No description provided for @no_group_selected_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'[no group selected]'**
+  String get no_group_selected_placeholder;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
+  /// No description provided for @edit_role.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit role'**
+  String get edit_role;
+
+  /// No description provided for @new_dish.
+  ///
+  /// In en, this message translates to:
+  /// **'New dish'**
+  String get new_dish;
+
+  /// No description provided for @new_group.
+  ///
+  /// In en, this message translates to:
+  /// **'New group'**
+  String get new_group;
+
+  /// No description provided for @dish_group.
+  ///
+  /// In en, this message translates to:
+  /// **'Dish group'**
+  String get dish_group;
+
+  /// No description provided for @no_orders_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'No orders.\nPress \"+\" button to add one...'**
+  String get no_orders_placeholder;
+
+  /// No description provided for @add_new_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Add new order'**
+  String get add_new_order;
+
+  /// No description provided for @no_waiter_selected_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'[no waiter selected]'**
+  String get no_waiter_selected_placeholder;
+
+  /// No description provided for @order_list.
+  ///
+  /// In en, this message translates to:
+  /// **'Order list'**
+  String get order_list;
+
+  /// No description provided for @order_per_period_chart_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount of orders, grouped by {group, select, DAY{дням} HOUR{часам} MONTH{месяцам} YEAR{годам} other{...}}'**
+  String order_per_period_chart_description(String group);
+
+  /// No description provided for @most_popular_dishes.
+  ///
+  /// In en, this message translates to:
+  /// **'The most popular dishes'**
+  String get most_popular_dishes;
+
+  /// No description provided for @delete_supplier.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete supplier'**
+  String get delete_supplier;
+
+  /// No description provided for @select_grocery_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a grocery'**
+  String get select_grocery_placeholder;
+
+  /// No description provided for @add_grocery.
+  ///
+  /// In en, this message translates to:
+  /// **'Add grocery'**
+  String get add_grocery;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @new_supply.
+  ///
+  /// In en, this message translates to:
+  /// **'New supply'**
+  String get new_supply;
+
+  /// No description provided for @no_supplier_selected_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'[no supplier selected]'**
+  String get no_supplier_selected_placeholder;
+
+  /// No description provided for @choose_supplier_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose supplier'**
+  String get choose_supplier_hint;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount: {s}'**
+  String amount(double s);
+
+  /// No description provided for @select_grocery_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a new grocery from the list'**
+  String get select_grocery_tooltip;
+
+  /// No description provided for @select_supplier_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Select supplier'**
+  String get select_supplier_placeholder;
+
+  /// No description provided for @stats_page_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get stats_page_title;
+
+  /// No description provided for @store_page_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Store'**
+  String get store_page_title;
+
+  /// No description provided for @orders_page_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get orders_page_title;
+
+  /// No description provided for @employees_page_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Employees'**
+  String get employees_page_title;
+
+  /// No description provided for @menu_page_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get menu_page_title;
+
+  /// No description provided for @supplies_page_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Supplys'**
+  String get supplies_page_title;
+
+  /// No description provided for @settings_page_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings_page_title;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
