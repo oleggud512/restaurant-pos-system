@@ -45,8 +45,8 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
           : fsEmp!.gender = fsEmp!.gender.replaceAll(event.gender, '');
       emit(EmployeeLoadedState());
     }
-    else if (event is EmployeeRoleSelectedEvent) {
-      roles[event.index].selected = event.newVal;
+    else if (event case EmployeeRoleSelectedEvent(:final index, :final newVal)) {
+      roles[index] = roles[index].copyWith(selected: newVal);
       event.newVal
           ? fsEmp!.roles.add(roles[event.index].roleId!)
           : fsEmp!.roles.removeWhere((e) => e == roles[event.index].roleId);

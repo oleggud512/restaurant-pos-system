@@ -127,19 +127,19 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         Expanded(
           child: SfCartesianChart(
-            primaryXAxis: CategoryAxis(
-              visibleMaximum: 8,
-              visibleMinimum: 0  
+            primaryXAxis: const CategoryAxis(
+              initialVisibleMaximum: 8,
+              initialVisibleMinimum: 0
             ),
             zoomPanBehavior: ZoomPanBehavior(
               enablePanning: true
             ),
             
-            series: <ChartSeries<OrdersPerPeriod, String>>[
-              ColumnSeries(
-                dataSource: bloc.sdata.ordPerPeriod, 
-                xValueMapper: (OrdersPerPeriod opp, _) => opp.ordStartTime.toString().substring(0, 10), 
-                yValueMapper: (OrdersPerPeriod opp, _) => opp.count
+            series: [
+              ColumnSeries<OrdersPerPeriod, DateTime>(
+                dataSource: bloc.sdata.ordPerPeriod,
+                xValueMapper: (opp, _) => opp.ordStartTime, 
+                yValueMapper: (opp, _) => opp.count
               )
             ]
           ),
@@ -154,7 +154,6 @@ class _DashboardPageState extends State<DashboardPage> {
 
 
   Widget buildSecondColumn(BuildContext context, DashboardBloc bloc) {
-    final l = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -185,9 +184,9 @@ class _DashboardPageState extends State<DashboardPage> {
           onFilterPressed: () => onChangeDppFilter(context)
         ),
         SfCartesianChart(
-          primaryXAxis: CategoryAxis(
-            visibleMaximum: 8,
-            visibleMinimum: 0
+          primaryXAxis: const CategoryAxis(
+            initialVisibleMaximum: 8,
+            initialVisibleMinimum: 0
           ),
           zoomPanBehavior: ZoomPanBehavior(
             enablePanning: true,
@@ -199,11 +198,11 @@ class _DashboardPageState extends State<DashboardPage> {
               return Text('${data.dishName}', style: const TextStyle(color: Colors.white));
             },
           ),
-          series: <ChartSeries<DishPerPeriod, int>>[
+          series: [
             ColumnSeries<DishPerPeriod, int>(
               dataSource: bloc.sdata.dishPerPeriod,
-              xValueMapper: (DishPerPeriod data, _) => data.dishId,
-              yValueMapper: (DishPerPeriod data, _) => data.count
+              xValueMapper: (data, _) => data.dishId,
+              yValueMapper: (data, _) => data.count
             )
           ]
         ),

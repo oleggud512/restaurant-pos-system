@@ -8,17 +8,17 @@ String roleToJson(List<Role> data) => json.encode(List<dynamic>.from(data.map((x
 
 class Role extends Equatable {
 
-    Role({
+    const Role({
         this.roleId,
         this.roleName = '',
         this.salaryPerHour = 0.0,
         this.selected = false
     });
 
-    int? roleId;
-    String roleName;
-    double salaryPerHour;
-    bool selected;
+    final int? roleId;
+    final String roleName;
+    final double salaryPerHour;
+    final bool selected;
 
     factory Role.fromJson(Map<String, dynamic> json) => Role(
         roleId: json["role_id"],
